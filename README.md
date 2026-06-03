@@ -12,3 +12,7 @@ A demonstration of [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%
 ## Getting Started
 
 Coming soon.
+
+## Notes
+
+Working on studying perturbation of game of life here.
