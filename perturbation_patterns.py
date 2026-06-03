@@ -19,6 +19,7 @@ Outputs per pattern  →  figures/<name>/
   06_baseline_vs_top.png
   07_difference_maps.png
   08_sensitivity_gif.gif
+  09_evolution_comparison.gif  – side-by-side: baseline | perturbed | diff
 """
 
 import os
@@ -371,7 +372,53 @@ def analyse_pattern(name: str, cfg: dict):
               writer=animation.PillowWriter(fps=10))
     plt.close(fig8)
 
-    print(f"  Saved 8 figures → {out_dir}/")
+    # ── Fig 09: side-by-side evolution gif (baseline | perturbed | diff) ──────
+    fig9, axes9 = plt.subplots(1, 3, figsize=(12, 4.2))
+    fig9.patch.set_facecolor("black")
+    for ax in axes9:
+        ax.set_facecolor("black")
+        ax.axis("off")
+
+    im9_b = axes9[0].imshow(baseline[0],  cmap="inferno", vmin=0, vmax=1,
+                             interpolation="nearest")
+    im9_p = axes9[1].imshow(top_traj[0],  cmap="inferno", vmin=0, vmax=1,
+                             interpolation="nearest")
+    diff0 = baseline[0].astype(int) - top_traj[0].astype(int)
+    im9_d = axes9[2].imshow(diff0, cmap="RdBu_r", vmin=-1, vmax=1,
+                             interpolation="nearest")
+
+    axes9[0].set_title("Baseline",             color="white", fontsize=11)
+    axes9[1].set_title(f"Perturbed {top_idx}", color="white", fontsize=11)
+    axes9[2].set_title("Difference",           color="white", fontsize=11)
+    suptitle9 = fig9.suptitle(f"{name}  [{category}]  t=0",
+                               color="white", fontsize=12, fontweight="bold")
+    fig9.tight_layout()
+
+    # mark the flipped cell on baseline and perturbed panels at t=0
+    dot_b = axes9[0].scatter([top_idx[1]], [top_idx[0]], s=90, c="cyan",
+                              marker="*", zorder=5)
+    dot_p = axes9[1].scatter([top_idx[1]], [top_idx[0]], s=90, c="cyan",
+                              marker="*", zorder=5)
+
+    def _upd9(frame):
+        im9_b.set_data(baseline[frame])
+        im9_p.set_data(top_traj[frame])
+        diff = baseline[frame].astype(int) - top_traj[frame].astype(int)
+        im9_d.set_data(diff)
+        suptitle9.set_text(f"{name}  [{category}]  t={frame}")
+        # hide marker after t=0 so it doesn't clutter later frames
+        visible = (frame == 0)
+        dot_b.set_visible(visible)
+        dot_p.set_visible(visible)
+        return im9_b, im9_p, im9_d, suptitle9, dot_b, dot_p
+
+    ani9 = animation.FuncAnimation(fig9, _upd9, frames=STEPS + 1,
+                                    interval=150, blit=True)
+    ani9.save(f"{out_dir}/09_evolution_comparison.gif",
+              writer=animation.PillowWriter(fps=8))
+    plt.close(fig9)
+
+    print(f"  Saved 9 figures → {out_dir}/")
 
     return {
         "name":      name,
