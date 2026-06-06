@@ -1,3 +1,6 @@
 .DS_Store
 __pycache__/
+nn/__pycache__/
+nn/data/
+nn/checkpoints/
 *.pyc
