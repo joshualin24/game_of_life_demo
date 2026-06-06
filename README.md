@@ -132,6 +132,45 @@ figures_move/                   ← move-perturbation results
 
 ---
 
+## Die-down Analysis
+
+A perturbation **dies down** when the perturbed trajectory fully converges back to the baseline by the final step (final divergence = 0).
+
+### Results
+
+Across all 11 patterns × orders 1–3 × 1,973 valid perturbations, only **8 die down (0.41%)**. Running the simulation 5× or 20× longer produces the same count — die-downs are not an artefact of a short window; trajectories either converge immediately or diverge permanently.
+
+| Pattern | Order | Die-downs | Out of valid cells | Mechanism |
+|---------|-------|-----------|-------------------|-----------|
+| random (seed 42) | 1 | 4 | 548 (0.7%) | Moved cell lands in a locally stable position |
+| block | 1 | 4 | 4 (100%) | Block self-repairs in 1 step |
+| all others | 1–3 | 0 | — | Permanent divergence |
+
+The 4 block die-downs each have cumulative divergence of exactly **1** — the grid differs from baseline for only 1 step before full convergence. All 8 die-down cases occur only at order 1 (the smallest displacement).
+
+### Animated GIFs
+
+Animated GIFs for all 8 cases are in `figures_move/die_down/`. Each shows three panels: baseline evolution (left), perturbed evolution (centre), difference map (right). Source cell is marked cyan (★), destination yellow (●).
+
+```
+figures_move/die_down/
+  block_order1_cell_r24_c24_dir-1+0.gif
+  block_order1_cell_r24_c25_dir-1+0.gif
+  block_order1_cell_r25_c24_dir+0-1.gif
+  block_order1_cell_r25_c25_dir+0+1.gif
+  random_order1_cell_r5_c29_dir+0-1.gif
+  random_order1_cell_r7_c29_dir+0+1.gif
+  random_order1_cell_r9_c2_dir+1+0.gif
+  random_order1_cell_r19_c5_dir+0-1.gif
+```
+
+To regenerate:
+```bash
+python generate_diedown_gifs.py
+```
+
+---
+
 ## Notes
 
 - The logistic-map cobweb simulation in `period_coexist.py` is a companion study of periodicity in a related 1D dynamical system.
