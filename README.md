@@ -134,39 +134,60 @@ figures_move/                   ← move-perturbation results
 
 ## Die-down Analysis
 
-A perturbation **dies down** when the perturbed trajectory fully converges back to the baseline by the final step (final divergence = 0).
+A perturbation **dies down** when the perturbed trajectory fully converges back to the baseline by the final step (final divergence = 0). The analysis uses two definitions:
 
-### Results
+- **Worst-case (max-cumulative direction):** only the direction that caused the largest total divergence per cell is checked. A cell dies down only if even its worst perturbation converges back.
+- **Any-direction:** a cell dies down if *any* of its valid displacement directions converges back. This is the more natural definition and is reported below.
 
-Across all 11 patterns × orders 1–3 × 1,973 valid perturbations, only **8 die down (0.41%)**. Running the simulation 5× or 20× longer produces the same count — die-downs are not an artefact of a short window; trajectories either converge immediately or diverge permanently.
+Running simulations at 5× and 20× the original step count produces identical die-down counts, confirming that convergence happens immediately or not at all.
 
-| Pattern | Order | Die-downs | Out of valid cells | Mechanism |
-|---------|-------|-----------|-------------------|-----------|
-| random (seed 42) | 1 | 4 | 548 (0.7%) | Moved cell lands in a locally stable position |
-| block | 1 | 4 | 4 (100%) | Block self-repairs in 1 step |
-| all others | 1–3 | 0 | — | Permanent divergence |
+### Results (any-direction die-down)
 
-The 4 block die-downs each have cumulative divergence of exactly **1** — the grid differs from baseline for only 1 step before full convergence. All 8 die-down cases occur only at order 1 (the smallest displacement).
+| Pattern | Order | Die-down pairs / valid pairs | Cells with ≥1 die-down dir | Notes |
+|---------|-------|-----------------------------|-----------------------------|-------|
+| block | 1 | 8 / 8 (100%) | 4 / 4 (100%) | Self-repairs in 1 step |
+| block | 2 | 12 / 28 (43%) | 4 / 4 (100%) | Some directions recover |
+| block | 3 | 24 / 48 (50%) | 4 / 4 (100%) | Half of directions recover |
+| beehive | 1 | 2 / 20 (10%) | 2 / 6 (33%) | Two cells have a safe direction |
+| beehive | 2–3 | 0 | 0 | — |
+| glider | 1 | 2 / 14 (14%) | 2 / 5 (40%) | Two cells have a safe direction |
+| glider | 2 | 1 / 32 (3%) | 1 / 5 (20%) | |
+| glider | 3 | 0 | 0 | — |
+| lwss | 1 | 4 / 26 (15%) | 2 / 9 (22%) | Spaceship is partially resilient |
+| lwss | 2 | 4 / 58 (7%) | 1 / 9 (11%) | |
+| lwss | 3 | 6 / 94 (6%) | 1 / 9 (11%) | |
+| acorn | 1 | 1 / 22 (5%) | 1 / 7 (14%) | |
+| acorn | 2 | 1 / 50 (2%) | 1 / 7 (14%) | |
+| acorn | 3 | 0 | 0 | — |
+| random (seed 42) | 1 | 22 / 1424 (1.5%) | 20 / 548 (3.7%) | |
+| random | 2–3 | ≤4 / 2872+ (<0.2%) | ≤3 | — |
+| blinker / toad / beacon / pulsar / r_pentomino | 1–3 | 0 | 0 | No recovery in any direction |
+| **TOTAL** | | **93 / 10612 (0.88%)** | **48 / 1973 (2.43%)** | |
 
-### Animated GIFs
+### Key observations
 
-Animated GIFs for all 8 cases are in `figures_move/die_down/`. Each shows three panels: baseline evolution (left), perturbed evolution (centre), difference map (right). Source cell is marked cyan (★), destination yellow (●).
+- **Still lifes (block, beehive)** are the most resilient: the block recovers in 100% of cells at every order because its symmetric structure can self-repair from many directions.
+- **Spaceships (glider, lwss)** have a small but nonzero recovery rate — certain displacement directions preserve enough local structure for the spaceship to reform.
+- **Oscillators (blinker, toad, beacon, pulsar)** have zero die-downs at all orders. Their periodic dynamics appear to be fragile to any displacement.
+- **Methuselahs (r_pentomino)** also show zero die-downs, consistent with their explosive and chaotic growth phase.
+- Overall, **97.6% of valid cells diverge permanently** under their best-recovery direction, confirming that Game of Life trajectories are overwhelmingly sensitive to move perturbations.
+
+### Animated GIFs (worst-case die-downs)
+
+The 8 cases where even the *worst-case* direction converges are in `figures_move/die_down/`. Each GIF shows three panels: baseline (left), perturbed (centre), difference map (right). Source cell marked cyan (★), destination yellow (●).
 
 ```
 figures_move/die_down/
-  block_order1_cell_r24_c24_dir-1+0.gif
-  block_order1_cell_r24_c25_dir-1+0.gif
-  block_order1_cell_r25_c24_dir+0-1.gif
-  block_order1_cell_r25_c25_dir+0+1.gif
-  random_order1_cell_r5_c29_dir+0-1.gif
-  random_order1_cell_r7_c29_dir+0+1.gif
-  random_order1_cell_r9_c2_dir+1+0.gif
-  random_order1_cell_r19_c5_dir+0-1.gif
+  block_order1_cell_r24_c24_dir-1+0.gif    random_order1_cell_r5_c29_dir+0-1.gif
+  block_order1_cell_r24_c25_dir-1+0.gif    random_order1_cell_r7_c29_dir+0+1.gif
+  block_order1_cell_r25_c24_dir+0-1.gif    random_order1_cell_r9_c2_dir+1+0.gif
+  block_order1_cell_r25_c25_dir+0+1.gif    random_order1_cell_r19_c5_dir+0-1.gif
 ```
 
 To regenerate:
 ```bash
-python generate_diedown_gifs.py
+python generate_diedown_gifs.py   # worst-case die-down GIFs (8 cases)
+python collect_stats_any_dir.py   # full any-direction die-down table
 ```
 
 ---
