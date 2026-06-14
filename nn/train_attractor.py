@@ -26,11 +26,23 @@ TASK        = "task6_attractor"
 N_SAMPLES   = 2000
 GRID_SIZE   = 32
 FATE_STEPS  = 200
-EPOCHS      = 80
+EPOCHS      = 60
 BATCH_SIZE  = 64
 LR          = 3e-4
 SEED        = 42
 LABEL_NAMES = ["dies", "still_life", "oscillator", "active"]
+
+
+def augment(grids: np.ndarray, labels: np.ndarray) -> tuple:
+    """8× augmentation via 4 rotations × 2 flips (GoL is isotropic)."""
+    aug_g, aug_l = [grids], [labels]
+    for k in (1, 2, 3):
+        aug_g.append(np.rot90(grids, k, axes=(1, 2)))
+        aug_l.append(labels)
+    for g_set, l_set in zip(aug_g[:], aug_l[:]):
+        aug_g.append(np.flip(g_set, axis=2))
+        aug_l.append(l_set)
+    return np.concatenate(aug_g), np.concatenate(aug_l)
 
 
 def plot_confusion(model, val_dl, task_name):
@@ -43,23 +55,28 @@ def plot_confusion(model, val_dl, task_name):
             all_pred.extend(preds)
             all_true.extend(y_b.numpy())
 
-    cm  = confusion_matrix(all_true, all_pred)
+    present = sorted(set(all_true) | set(all_pred))
+    cm  = confusion_matrix(all_true, all_pred, labels=present)
+    pnames = [LABEL_NAMES[i] for i in present]
     fig, ax = plt.subplots(figsize=(6, 5))
     im = ax.imshow(cm, cmap="Blues")
-    ax.set_xticks(range(4)); ax.set_xticklabels(LABEL_NAMES, rotation=30, ha="right")
-    ax.set_yticks(range(4)); ax.set_yticklabels(LABEL_NAMES)
+    ax.set_xticks(range(len(present))); ax.set_xticklabels(pnames, rotation=30, ha="right")
+    ax.set_yticks(range(len(present))); ax.set_yticklabels(pnames)
     plt.colorbar(im, ax=ax)
-    for i in range(4):
-        for j in range(4):
-            ax.text(j, i, str(cm[i,j]), ha="center", va="center", fontsize=9,
-                    color="white" if cm[i,j] > cm.max()/2 else "black")
+    present = sorted(set(all_true) | set(all_pred))
+    for ii, i in enumerate(present):
+        for jj, j in enumerate(present):
+            ax.text(jj, ii, str(cm[ii, jj]), ha="center", va="center", fontsize=9,
+                    color="white" if cm[ii, jj] > cm.max()/2 else "black")
     ax.set_title(f"{task_name} — confusion matrix", fontweight="bold")
     fig.tight_layout()
     path = os.path.join(RESULTS_DIR, f"{task_name}_confusion.png")
     fig.savefig(path, dpi=150)
     print(f"  Confusion matrix → {path}")
     plt.close(fig)
-    print(classification_report(all_true, all_pred, target_names=LABEL_NAMES))
+    print(classification_report(all_true, all_pred,
+                                labels=present,
+                                target_names=[LABEL_NAMES[i] for i in present]))
 
 
 def main():
@@ -74,11 +91,15 @@ def main():
 
     grids  = data["grids"].astype(np.float32)
     labels = data["labels"].astype(np.int64)
+
+    # 8× spatial augmentation (rotations + flips) before splitting
+    grids, labels = augment(grids, labels)
     counts = np.bincount(labels, minlength=4)
+    print(f"  After augmentation: {len(grids):,} samples")
     print(f"  Label distribution: { {n:c for n,c in zip(LABEL_NAMES, counts)} }")
 
-    X = torch.tensor(grids[:, None])  # (N,1,H,W)
-    Y = torch.tensor(labels)          # (N,)
+    X = torch.tensor(np.ascontiguousarray(grids[:, None]))  # (N,1,H,W)
+    Y = torch.tensor(labels)                                 # (N,)
 
     train_dl, val_dl = make_loaders(X, Y, batch_size=BATCH_SIZE, seed=SEED)
 
@@ -87,8 +108,8 @@ def main():
     weights = weights / weights.sum() * len(LABEL_NAMES)
     loss_fn = nn.CrossEntropyLoss(weight=weights.to(DEVICE))
 
-    model     = FateClassifier(base_ch=32, n_classes=4)
-    optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=1e-4)
+    model     = FateClassifier(base_ch=16, n_classes=4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=1e-3)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, patience=8, factor=0.5)
     n_params  = sum(p.numel() for p in model.parameters() if p.requires_grad)
