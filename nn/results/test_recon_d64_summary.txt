@@ -1,0 +1,6 @@
+TrajectoryTransformer d_model=64  test n=500
+Mean accuracy      : 49.57%
+Trajectories ≥95%  : 33.6%
+Trajectories ≥99%  : 19.0%
+Min accuracy       : 12.28%
+Max accuracy       : 99.81%

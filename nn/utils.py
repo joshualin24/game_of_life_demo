@@ -14,7 +14,12 @@ CKPT_DIR     = os.path.join(os.path.dirname(__file__), "checkpoints")
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(CKPT_DIR,    exist_ok=True)
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if torch.cuda.is_available():
+    DEVICE = torch.device("cuda")
+elif torch.backends.mps.is_available():
+    DEVICE = torch.device("mps")
+else:
+    DEVICE = torch.device("cpu")
 
 
 def set_seed(seed: int = 42):

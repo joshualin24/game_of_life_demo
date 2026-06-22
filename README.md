@@ -192,6 +192,75 @@ python collect_stats_any_dir.py   # full any-direction die-down table
 
 ---
 
+## Neural Network Models (`nn/`)
+
+A suite of neural network experiments applying deep learning to Game of Life dynamics on 40×40 toroidal grids. All models are defined in `nn/models.py` and trained with MPS (Apple Silicon) acceleration.
+
+### Tasks 1–6: Convolutional baselines
+
+| Task | Model | Objective |
+|------|-------|-----------|
+| 1 | `NextStatePredictor` | Predict t+1 from t (residual CNN) |
+| 2 | `SensitivityUNet` | Predict per-cell sensitivity map (U-Net) |
+| 3 | `ChaosPredictor` | Predict divergence score from initial grid + perturbation location |
+| 4 | `NeuralCA` | Learn the GoL update rule as a tiny conv net |
+| 5 | `RolloutPredictor` | Predict t+k directly (residual tower + step embedding) |
+| 6 | `FateClassifier` | Classify attractor type: dies / still-life / oscillator / active |
+
+### Task 7: Trajectory Transformer (embedding)
+
+`TrajectoryTransformer` encodes a full T=60 step GoL trajectory into a single embedding vector via a ViT-style [CLS] token.
+
+**Architecture**: CNN frame encoder (shared weights across frames) → sinusoidal positional encoding → 4-layer pre-norm transformer → CLS embedding (d_model=64 or 128). Trained on 5000 trajectories (40% random, 60% named patterns with D4 augmentation) with BCE reconstruction loss.
+
+**Training**: `nn/train_trajectory_embedding.py` — trains d_model=64 and d_model=128 variants. Best val loss: 0.953 (d=64), 0.946 (d=128).
+
+```bash
+python -m nn.train_trajectory_embedding
+```
+
+Results (loss curves, embedding visualisations): `nn/results/traj_emb_d{64,128}_*.png`
+
+### Task 8: Next-Step Transformer (ViT-style)
+
+`NextStepTransformer` predicts the GoL state at t+1 given t, and can be unrolled autoregressively for any number of steps.
+
+**Architecture**: Raw 40×40 grid divided into 100 non-overlapping 4×4 patches → linear patch embedding → learnable 2D positional encoding → 4-layer pre-norm transformer → per-patch linear head → 40×40 next-state logits. 208K parameters.
+
+**Training**: `nn/train_next_step_transformer.py` — 200K (state_t, state_t+1) pairs from 2000 random trajectories, with D4 symmetry augmentation applied per batch (GoL is exactly D4-equivariant). 50 epochs, BCE loss. **Val accuracy: 92%**.
+
+```bash
+python -m nn.train_next_step_transformer
+```
+
+**Limitation**: The 4×4 patching cuts across the 3×3 GoL neighbourhood, so cells at patch boundaries must rely on global attention to see their neighbours. This causes stripe/checkerboard artifacts in long autoregressive rollouts.
+
+Results: `nn/results/task8_next_step_transformer_*.png`
+
+### Task 9: CNN-Transformer Hybrid
+
+`CNNTransformer` addresses the patch-boundary problem by inserting a CNN local encoder before the transformer.
+
+**Architecture**:
+1. **CNN local encoder** (RF=5×5): `Conv(1→32, 3×3) → GroupNorm → GELU → Conv(32→64, 3×3) → GroupNorm → GELU` — every position already sees its full 3×3 GoL neighbourhood before tokenisation. GroupNorm (not BatchNorm) ensures train/eval consistency.
+2. **Patch tokenisation**: spatial avg-pool over 4×4 windows → (B, 100, 64) tokens + learnable positional embeddings.
+3. **Transformer encoder**: 4-layer pre-norm, global self-attention for long-range context.
+4. **Per-patch head**: linear → 4×4 cell logits → reshape to 40×40.
+
+226K parameters (comparable to Task 8 for a fair comparison).
+
+**Training**: `nn/train_cnn_transformer.py` — same data and D4 augmentation as Task 8. 50 epochs. **Val accuracy: 89.4%**. Val loss was still declining at epoch 50; longer training expected to improve further.
+
+```bash
+python -m nn.train_cnn_transformer
+```
+
+**Vs. pure ViT**: Better at sustaining sparse out-of-distribution patterns (glider stays alive for 30+ steps vs. collapsing to a static dot); slightly lower flat accuracy on random grids (89% vs. 92%). Horizontal stripe artifacts remain in long rollouts — likely addressable with 2D sinusoidal positional embeddings.
+
+Results: `nn/results/task9_cnn_transformer_*.png`
+
+---
+
 ## Notes
 
 - The logistic-map cobweb simulation in `period_coexist.py` is a companion study of periodicity in a related 1D dynamical system.
