@@ -1,5 +1,5 @@
 """
-Task 9: CNN-Transformer Hybrid next-step predictor
+Task 10: CNN-Transformer V2 (2D sinusoidal PE) next-step predictor
 ----------------------------------------------------
 Trains a CNNTransformer to predict the GoL state at t+1 given t.
 
@@ -12,10 +12,10 @@ Dataset  : 2000 × 100-step trajectories → 200K (state_t, state_t+1) pairs.
            D4 augmentation applied per batch (GoL is D4-equivariant) → 8× effective data.
 Objective: BCE loss on next-state prediction.
 Outputs  :
-  nn/checkpoints/task9_cnn_transformer_best.pt
-  nn/results/task9_cnn_transformer_loss.png
-  nn/results/task9_cnn_transformer_rollout_random.png
-  nn/results/task9_cnn_transformer_rollout_glider.png
+  nn/checkpoints/task10_cnn_transformer_2d_best.pt
+  nn/results/task10_cnn_transformer_2d_loss.png
+  nn/results/task10_cnn_transformer_2d_rollout_random.png
+  nn/results/task10_cnn_transformer_2d_rollout_glider.png
 """
 
 import os, sys, time, json
@@ -26,7 +26,7 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 
-from nn.models   import CNNTransformer
+from nn.models   import CNNTransformerV2 as CNNTransformer
 from nn.data_gen import run_trajectory
 from nn.utils    import set_seed, CKPT_DIR, RESULTS_DIR, DEVICE
 
@@ -44,7 +44,7 @@ EPOCHS     = 100
 BATCH_SIZE = 64
 LR         = 3e-4
 SEED       = 42
-TASK       = "task9_cnn_transformer"
+TASK       = "task10_cnn_transformer_2d"
 
 
 # ── Data generation ────────────────────────────────────────────────────────────

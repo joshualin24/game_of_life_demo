@@ -471,6 +471,124 @@ class CNNTransformer(nn.Module):
         return (torch.sigmoid(self.forward(x)) >= threshold).float()
 
 
+# ── Task 10: CNN-Transformer V2 (2D sinusoidal positional encoding) ───────────
+
+class _SinusoidalPE2D(nn.Module):
+    """
+    Fixed 2D sinusoidal positional encoding for a grid of (grid_h × grid_w) patches.
+    Each patch (i, j) receives embedding = [sinusoidal(i) | sinusoidal(j)],
+    using the first d_model//2 dimensions for rows and the second half for columns.
+    No learnable parameters → no row-major ordering bias.
+    """
+    def __init__(self, d_model: int, grid_h: int, grid_w: int):
+        super().__init__()
+        assert d_model % 2 == 0, "d_model must be even for 2D sinusoidal PE"
+        d_half = d_model // 2
+
+        div = torch.exp(torch.arange(0, d_half, 2, dtype=torch.float)
+                        * (-math.log(10000.0) / d_half))
+
+        pe_row = torch.zeros(grid_h, d_half)
+        pos_r  = torch.arange(grid_h, dtype=torch.float).unsqueeze(1)
+        pe_row[:, 0::2] = torch.sin(pos_r * div)
+        pe_row[:, 1::2] = torch.cos(pos_r * div)
+
+        pe_col = torch.zeros(grid_w, d_half)
+        pos_c  = torch.arange(grid_w, dtype=torch.float).unsqueeze(1)
+        pe_col[:, 0::2] = torch.sin(pos_c * div)
+        pe_col[:, 1::2] = torch.cos(pos_c * div)
+
+        # Combine: (grid_h, grid_w, d_model)
+        pe = torch.zeros(grid_h, grid_w, d_model)
+        pe[:, :, :d_half] = pe_row.unsqueeze(1).expand(grid_h, grid_w, d_half)
+        pe[:, :, d_half:] = pe_col.unsqueeze(0).expand(grid_h, grid_w, d_half)
+
+        self.register_buffer("pe", pe.reshape(1, grid_h * grid_w, d_model))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return x + self.pe
+
+
+class CNNTransformerV2(nn.Module):
+    """
+    CNN-Transformer hybrid with 2D sinusoidal positional encoding.
+
+    Identical to CNNTransformer (Task 9) except the 1D learnable positional
+    embedding is replaced by a fixed 2D sinusoidal encoding that assigns each
+    patch (row i, col j) an independent row embedding and column embedding.
+    This eliminates the row-major index bias that caused right-edge artifacts
+    in long autoregressive rollouts.
+
+    Architecture:
+      Stage 1 — CNN local encoder (RF=5×5, GroupNorm)
+      Stage 2 — Spatial avg-pool → tokens + 2D sinusoidal PE (no learned params)
+      Stage 3 — 4-layer pre-norm transformer encoder
+      Per-patch linear head → (B, 1, H, W) next-state logits
+    """
+
+    def __init__(
+        self,
+        grid_size:  int   = 40,
+        patch_size: int   = 4,
+        d_model:    int   = 64,
+        nhead:      int   = 4,
+        num_layers: int   = 4,
+        dropout:    float = 0.1,
+    ):
+        super().__init__()
+        assert grid_size % patch_size == 0
+        assert d_model % 2 == 0, "d_model must be even for 2D sinusoidal PE"
+        self.grid_size  = grid_size
+        self.patch_size = patch_size
+        self.d_model    = d_model
+        n_patches_1d    = grid_size // patch_size
+        self.n_patches  = n_patches_1d ** 2
+
+        # Stage 1: local CNN encoder (GroupNorm, no running-stats divergence)
+        self.cnn = nn.Sequential(
+            nn.Conv2d(1,       32,      3, padding=1, bias=False),
+            nn.GroupNorm(8, 32),
+            nn.GELU(),
+            nn.Conv2d(32, d_model,     3, padding=1, bias=False),
+            nn.GroupNorm(8, d_model),
+            nn.GELU(),
+        )
+
+        # Stage 2: 2D sinusoidal PE (fixed, no parameters)
+        self.pos_enc = _SinusoidalPE2D(d_model, n_patches_1d, n_patches_1d)
+
+        # Stage 3: transformer encoder
+        enc_layer = nn.TransformerEncoderLayer(
+            d_model=d_model, nhead=nhead,
+            dim_feedforward=d_model * 4,
+            dropout=dropout, batch_first=True,
+            norm_first=True, activation="gelu",
+        )
+        self.transformer = nn.TransformerEncoder(
+            enc_layer, num_layers=num_layers, enable_nested_tensor=False)
+
+        self.patch_head = nn.Linear(d_model, patch_size * patch_size)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        B  = x.shape[0]
+        p  = self.patch_size
+        gs = self.grid_size
+
+        feat   = self.cnn(x)                                       # (B, d_model, H, W)
+        tokens = F.avg_pool2d(feat, kernel_size=p, stride=p)      # (B, d_model, H//p, W//p)
+        tokens = tokens.flatten(2).transpose(1, 2)                # (B, n_patches, d_model)
+        tokens = self.pos_enc(tokens)                              # add 2D sinusoidal PE
+
+        out    = self.transformer(tokens)                          # (B, n_patches, d_model)
+        logits = self.patch_head(out)                              # (B, n_patches, p²)
+
+        h = w  = gs // p
+        logits = logits.reshape(B, h, w, p, p)
+        logits = logits.permute(0, 1, 3, 2, 4)
+        return logits.reshape(B, 1, gs, gs)
+
+    def step(self, x: torch.Tensor, threshold: float = 0.5) -> torch.Tensor:
+        return (torch.sigmoid(self.forward(x)) >= threshold).float()
 
 
 class NextStepTransformer(nn.Module):

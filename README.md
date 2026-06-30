@@ -259,6 +259,22 @@ python -m nn.train_cnn_transformer
 
 Results: `nn/results/task9_cnn_transformer_*.png`
 
+### Task 10: CNN-Transformer V2 (2D sinusoidal positional encoding)
+
+`CNNTransformerV2` replaces the 1D learnable positional embedding of Task 9 with a fixed 2D sinusoidal encoding. Each patch (row i, col j) receives `[sinusoidal(i) | sinusoidal(j)]` — no learnable positional parameters, no row-major index bias.
+
+**Architecture**: Identical to Task 9 except `pos_embed` (learnable, 6.4K params) is replaced by `_SinusoidalPE2D` (fixed buffer). 219K parameters.
+
+**Training**: `nn/train_cnn_transformer_v2.py` — same data and augmentation as Tasks 8–9, 100 epochs. **Best val accuracy: 84%** (best checkpoint from epoch 1; training showed large val-loss oscillations throughout).
+
+```bash
+python -m nn.train_cnn_transformer_v2
+```
+
+**Findings**: The 2D sinusoidal PE did not improve over the learnable embedding — training was less stable and rollout quality was worse. The core bottleneck is **error compounding in autoregressive rollout**: at 92% single-step accuracy, ~40% of cells are wrong after just 6 steps. Architectural fixes (patch size, positional encoding) have limited impact; the next step is **scheduled sampling** during training to teach the model to recover from its own prediction errors.
+
+Results: `nn/results/task10_cnn_transformer_2d_*.png`
+
 ---
 
 ## Notes
