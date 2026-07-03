@@ -275,6 +275,31 @@ python -m nn.train_cnn_transformer_v2
 
 Results: `nn/results/task10_cnn_transformer_2d_*.png`
 
+### Task 11: CNN-Transformer V3 (lossless flatten+linear tokenization) ⭐
+
+`CNNTransformerV3` fixes the key information bottleneck of V1/V2: the `avg_pool2d` that compressed each 4×4 patch of CNN features into a single vector is replaced by a **flatten + learned linear projection** (`Linear(d_model·p², d_model)` = `Linear(1024, 64)`). All CNN features within each patch are preserved — the transformer decides via learned weights which aspects to keep, rather than a fixed average that discards spatial detail.
+
+**Why this matters for GoL**: a single alive cell in the corner of a patch contributes only 1/16 of its signal after avg_pool, but its full signal after flatten+project. GoL is a sparse binary rule — every cell counts.
+
+**Architecture**: identical to V1 except Stage 2 tokenization. 291K parameters (65K extra for `patch_proj`).
+
+**Training**: `nn/train_cnn_transformer_v3.py` — same 200K pairs and D4 augmentation. Converges in the very first epoch. **Val accuracy: 99.0%**, best val loss: 0.021.
+
+```bash
+python -m nn.train_cnn_transformer_v3
+```
+
+**Results**: First model to produce qualitatively correct long-run autoregressive rollouts — random grids evolve with realistic GoL dynamics for 10+ steps; glider stays alive and evolving for all 30 steps. The avg_pool was the primary bottleneck across all previous architectures.
+
+| Model | Val accuracy | Random rollout | Glider rollout |
+|---|---|---|---|
+| Task 8 — Pure ViT | 92% | freezes to checkerboard | static dot |
+| Task 9 — CNN + avg_pool | 89% | near-dead + edge artifact | dynamic blob |
+| Task 10 — CNN + sinusoidal PE | 84% | 2 dots | static dot |
+| **Task 11 — CNN + flatten+proj** | **99%** | **realistic GoL dynamics** | **stays alive + evolves** |
+
+Results: `nn/results/task11_cnn_transformer_v3_*.png`
+
 ---
 
 ## Notes

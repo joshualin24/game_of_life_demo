@@ -471,6 +471,115 @@ class CNNTransformer(nn.Module):
         return (torch.sigmoid(self.forward(x)) >= threshold).float()
 
 
+# ── Task 11: CNN-Transformer V3 (lossless flatten+linear tokenization) ────────
+
+class CNNTransformerV3(nn.Module):
+    """
+    CNN-Transformer with lossless patch tokenization.
+
+    The key difference from V1/V2: the avg_pool2d that compressed each
+    4×4 patch of CNN features into a single vector is replaced by a
+    flatten + learned linear projection.  All d_model × p × p = 1024
+    CNN features per patch are preserved before being projected to
+    d_model — the transformer decides via learned weights which aspects
+    to keep, rather than a fixed average that erases spatial detail.
+
+    This matters for GoL: a single alive cell in the corner of a patch
+    contributes only 1/16 of its signal after avg_pool but its full
+    signal after flatten+project.
+
+    Architecture:
+      Stage 1 — CNN local encoder (RF=5×5, GroupNorm)  [same as V1]
+      Stage 2 — Reshape into patches → flatten → Linear(d_model·p², d_model)
+                + learnable 2D positional embedding
+      Stage 3 — 4-layer pre-norm transformer encoder
+      Per-patch linear head → (B, 1, H, W) next-state logits
+
+    Args:
+        grid_size  : spatial size of each frame (H = W, divisible by patch_size)
+        patch_size : patch side length (default 4 → 100 patches on 40×40)
+        d_model    : channel dimension throughout
+        nhead      : attention heads
+        num_layers : transformer encoder depth
+        dropout    : dropout inside transformer layers
+    """
+
+    def __init__(
+        self,
+        grid_size:  int   = 40,
+        patch_size: int   = 4,
+        d_model:    int   = 64,
+        nhead:      int   = 4,
+        num_layers: int   = 4,
+        dropout:    float = 0.1,
+    ):
+        super().__init__()
+        assert grid_size % patch_size == 0
+        self.grid_size  = grid_size
+        self.patch_size = patch_size
+        self.d_model    = d_model
+        n_patches_1d    = grid_size // patch_size
+        self.n_patches  = n_patches_1d ** 2
+        patch_feat_dim  = d_model * patch_size * patch_size   # 64 × 16 = 1024
+
+        # Stage 1: local CNN encoder (GroupNorm, RF=5×5)
+        self.cnn = nn.Sequential(
+            nn.Conv2d(1,       32,      3, padding=1, bias=False),
+            nn.GroupNorm(8, 32),
+            nn.GELU(),
+            nn.Conv2d(32, d_model,     3, padding=1, bias=False),
+            nn.GroupNorm(8, d_model),
+            nn.GELU(),
+        )
+
+        # Stage 2: lossless patch projection
+        # Linear(d_model*p², d_model) replaces avg_pool2d — no information discarded
+        self.patch_proj = nn.Linear(patch_feat_dim, d_model)
+        self.pos_embed  = nn.Parameter(torch.zeros(1, self.n_patches, d_model))
+        nn.init.trunc_normal_(self.pos_embed, std=0.02)
+
+        # Stage 3: transformer encoder
+        enc_layer = nn.TransformerEncoderLayer(
+            d_model=d_model, nhead=nhead,
+            dim_feedforward=d_model * 4,
+            dropout=dropout, batch_first=True,
+            norm_first=True, activation="gelu",
+        )
+        self.transformer = nn.TransformerEncoder(
+            enc_layer, num_layers=num_layers, enable_nested_tensor=False)
+
+        self.patch_head = nn.Linear(d_model, patch_size * patch_size)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """x: (B, 1, H, W) binary float → (B, 1, H, W) next-state logits."""
+        B  = x.shape[0]
+        p  = self.patch_size
+        gs = self.grid_size
+
+        # Stage 1: CNN local features
+        feat = self.cnn(x)                              # (B, d_model, H, W)
+
+        # Stage 2: lossless patch tokenization
+        C, H, W = feat.shape[1], feat.shape[2], feat.shape[3]
+        h = w = H // p
+        feat   = feat.reshape(B, C, h, p, w, p)
+        feat   = feat.permute(0, 2, 4, 1, 3, 5)        # (B, h, w, C, p, p)
+        feat   = feat.reshape(B, self.n_patches, C * p * p)   # (B, 100, 1024)
+        tokens = self.patch_proj(feat) + self.pos_embed # (B, 100, d_model)
+
+        # Stage 3: transformer
+        out    = self.transformer(tokens)               # (B, 100, d_model)
+
+        # Reconstruction
+        logits = self.patch_head(out)                   # (B, 100, p²)
+        logits = logits.reshape(B, h, w, p, p)
+        logits = logits.permute(0, 1, 3, 2, 4)         # (B, h, p, w, p)
+        return logits.reshape(B, 1, gs, gs)
+
+    def step(self, x: torch.Tensor, threshold: float = 0.5) -> torch.Tensor:
+        return (torch.sigmoid(self.forward(x)) >= threshold).float()
+
+
 # ── Task 10: CNN-Transformer V2 (2D sinusoidal positional encoding) ───────────
 
 class _SinusoidalPE2D(nn.Module):
