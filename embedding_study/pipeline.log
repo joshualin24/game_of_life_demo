@@ -1,64 +1,105 @@
-Verifying pattern periods:
-  block            kind=still_life period=  1 envelope=2x2  OK
-  beehive          kind=still_life period=  1 envelope=3x4  OK
-  loaf             kind=still_life period=  1 envelope=4x4  OK
-  boat             kind=still_life period=  1 envelope=3x3  OK
-  tub              kind=still_life period=  1 envelope=3x3  OK
-  blinker          kind=oscillator period=  2 envelope=3x3  OK
-  toad             kind=oscillator period=  2 envelope=4x4  OK
-  beacon           kind=oscillator period=  2 envelope=4x4  OK
-  pulsar           kind=oscillator period=  3 envelope=15x15  OK
-  pentadecathlon   kind=oscillator period= 15 envelope=9x16  OK
-  glider           kind=spaceship  period=  4 envelope=4x4  OK
-  lwss             kind=spaceship  period=  4 envelope=5x7  OK
-
-Generating 50,000 images (64x64) …
-  5,000/50,000
-  10,000/50,000
-  15,000/50,000
-  20,000/50,000
-  25,000/50,000
-  30,000/50,000
-  35,000/50,000
-  40,000/50,000
-  45,000/50,000
-  50,000/50,000
-
-Saved 50,000 images → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/data/gol_images.npz (6.4 MB)
-Category distribution: {'spaceship': 4904, 'oscillator': 19903, 'still_life': 7554, 'soup': 9981, 'mixed': 7658}
-Preview grid → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/data/preview.png
 Device: cuda
 Loaded 50,000 images from /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/data/gol_images.npz
-epoch   1/30  train bce=  649.13 kl= 22.45  val bce=  518.22 kl= 13.44  [1s]
-epoch   2/30  train bce=  521.42 kl= 11.53  val bce=  515.04 kl= 10.45  [3s]
-epoch   3/30  train bce=  509.34 kl=  8.50  val bce=  488.64 kl=  7.58  [4s]
-epoch   4/30  train bce=  478.65 kl=  9.55  val bce=  456.54 kl= 13.39  [5s]
-epoch   5/30  train bce=  451.14 kl= 15.08  val bce=  441.70 kl= 16.21  [6s]
-epoch   6/30  train bce=  441.51 kl= 17.29  val bce=  436.17 kl= 17.32  [8s]
-epoch   7/30  train bce=  436.24 kl= 18.44  val bce=  430.46 kl= 19.30  [9s]
-epoch   8/30  train bce=  431.71 kl= 19.60  val bce=  427.21 kl= 19.88  [10s]
-epoch   9/30  train bce=  427.30 kl= 20.84  val bce=  421.71 kl= 21.73  [12s]
-epoch  10/30  train bce=  422.63 kl= 22.34  val bce=  417.55 kl= 23.50  [13s]
-epoch  11/30  train bce=  418.71 kl= 23.59  val bce=  414.71 kl= 23.47  [14s]
-epoch  12/30  train bce=  414.92 kl= 24.85  val bce=  410.95 kl= 25.35  [16s]
-epoch  13/30  train bce=  411.89 kl= 25.86  val bce=  406.79 kl= 27.65  [17s]
-epoch  14/30  train bce=  409.49 kl= 26.61  val bce=  406.63 kl= 26.74  [18s]
-epoch  15/30  train bce=  407.81 kl= 27.19  val bce=  404.54 kl= 27.74  [20s]
-epoch  16/30  train bce=  406.51 kl= 27.51  val bce=  403.88 kl= 27.82  [21s]
-epoch  17/30  train bce=  405.38 kl= 27.88  val bce=  404.79 kl= 28.08  [22s]
-epoch  18/30  train bce=  404.34 kl= 28.16  val bce=  402.89 kl= 27.81  [23s]
-epoch  19/30  train bce=  403.29 kl= 28.45  val bce=  402.45 kl= 28.00  [25s]
-epoch  20/30  train bce=  402.23 kl= 28.71  val bce=  400.18 kl= 29.44  [26s]
-epoch  21/30  train bce=  401.26 kl= 28.98  val bce=  399.06 kl= 29.89  [27s]
-epoch  22/30  train bce=  400.21 kl= 29.18  val bce=  400.87 kl= 27.90  [28s]
-epoch  23/30  train bce=  399.28 kl= 29.47  val bce=  398.75 kl= 29.36  [30s]
-epoch  24/30  train bce=  398.39 kl= 29.75  val bce=  398.02 kl= 29.85  [31s]
-epoch  25/30  train bce=  397.40 kl= 29.88  val bce=  397.35 kl= 29.75  [32s]
-epoch  26/30  train bce=  396.43 kl= 30.20  val bce=  396.06 kl= 30.59  [34s]
-epoch  27/30  train bce=  395.46 kl= 30.45  val bce=  395.33 kl= 30.76  [35s]
-epoch  28/30  train bce=  394.41 kl= 30.70  val bce=  395.83 kl= 29.79  [36s]
-epoch  29/30  train bce=  393.56 kl= 30.92  val bce=  394.39 kl= 31.13  [37s]
-epoch  30/30  train bce=  392.75 kl= 31.16  val bce=  394.16 kl= 30.74  [39s]
+epoch   1/100  train bce= 2037.78 kl=104.50  val bce= 1699.23 kl=115.19  [3s]
+epoch   2/100  train bce= 1643.54 kl=113.74  val bce= 1623.03 kl=114.87  [6s]
+epoch   3/100  train bce= 1546.76 kl=118.29  val bce= 1541.23 kl=122.62  [8s]
+epoch   4/100  train bce= 1485.66 kl=120.62  val bce= 1449.97 kl=123.49  [11s]
+epoch   5/100  train bce= 1444.32 kl=121.63  val bce= 1429.63 kl=121.92  [13s]
+epoch   6/100  train bce= 1421.19 kl=122.34  val bce= 1416.57 kl=118.82  [16s]
+epoch   7/100  train bce= 1405.24 kl=122.51  val bce= 1393.93 kl=122.52  [19s]
+epoch   8/100  train bce= 1389.07 kl=123.55  val bce= 1395.10 kl=126.76  [22s]
+epoch   9/100  train bce= 1378.48 kl=123.73  val bce= 1381.09 kl=124.76  [24s]
+epoch  10/100  train bce= 1372.49 kl=124.26  val bce= 1372.89 kl=124.70  [27s]
+epoch  11/100  train bce= 1358.18 kl=124.54  val bce= 1366.54 kl=122.55  [30s]
+epoch  12/100  train bce= 1354.27 kl=125.58  val bce= 1377.44 kl=119.22  [32s]
+epoch  13/100  train bce= 1353.25 kl=125.64  val bce= 1355.43 kl=127.30  [35s]
+epoch  14/100  train bce= 1338.97 kl=126.27  val bce= 1361.46 kl=131.08  [37s]
+epoch  15/100  train bce= 1331.36 kl=126.94  val bce= 1367.95 kl=120.79  [40s]
+epoch  16/100  train bce= 1329.70 kl=127.30  val bce= 1342.07 kl=130.07  [43s]
+epoch  17/100  train bce= 1318.26 kl=128.75  val bce= 1352.51 kl=129.22  [45s]
+epoch  18/100  train bce= 1313.49 kl=129.64  val bce= 1357.01 kl=126.08  [48s]
+epoch  19/100  train bce= 1309.70 kl=129.93  val bce= 1349.37 kl=129.67  [51s]
+epoch  20/100  train bce= 1303.29 kl=130.41  val bce= 1338.30 kl=129.68  [53s]
+epoch  21/100  train bce= 1296.66 kl=131.27  val bce= 1339.73 kl=127.83  [56s]
+epoch  22/100  train bce= 1291.36 kl=131.97  val bce= 1374.09 kl=132.18  [59s]
+epoch  23/100  train bce= 1287.08 kl=132.28  val bce= 1343.90 kl=127.84  [61s]
+epoch  24/100  train bce= 1284.20 kl=132.74  val bce= 1341.24 kl=127.01  [64s]
+epoch  25/100  train bce= 1278.88 kl=133.48  val bce= 1341.88 kl=133.52  [67s]
+epoch  26/100  train bce= 1278.83 kl=133.59  val bce= 1342.73 kl=130.36  [69s]
+epoch  27/100  train bce= 1273.50 kl=134.04  val bce= 1354.45 kl=136.42  [72s]
+epoch  28/100  train bce= 1269.72 kl=134.40  val bce= 1355.07 kl=133.90  [75s]
+epoch  29/100  train bce= 1264.64 kl=134.75  val bce= 1334.50 kl=128.10  [77s]
+epoch  30/100  train bce= 1261.90 kl=135.29  val bce= 1337.22 kl=132.41  [80s]
+epoch  31/100  train bce= 1258.61 kl=135.73  val bce= 1337.87 kl=139.71  [83s]
+epoch  32/100  train bce= 1258.46 kl=135.66  val bce= 1366.39 kl=129.68  [85s]
+epoch  33/100  train bce= 1255.44 kl=136.01  val bce= 1359.31 kl=133.61  [88s]
+epoch  34/100  train bce= 1250.21 kl=136.30  val bce= 1343.65 kl=133.50  [90s]
+epoch  35/100  train bce= 1248.52 kl=136.94  val bce= 1368.52 kl=136.54  [93s]
+epoch  36/100  train bce= 1245.45 kl=137.09  val bce= 1371.62 kl=134.78  [96s]
+epoch  37/100  train bce= 1249.63 kl=136.91  val bce= 1368.81 kl=129.21  [98s]
+epoch  38/100  train bce= 1238.81 kl=137.52  val bce= 1354.69 kl=135.65  [101s]
+epoch  39/100  train bce= 1235.79 kl=138.06  val bce= 1365.98 kl=130.06  [104s]
+epoch  40/100  train bce= 1235.27 kl=138.03  val bce= 1340.96 kl=133.20  [106s]
+epoch  41/100  train bce= 1233.42 kl=138.34  val bce= 1349.40 kl=135.54  [109s]
+epoch  42/100  train bce= 1227.93 kl=138.99  val bce= 1345.69 kl=134.53  [112s]
+epoch  43/100  train bce= 1230.53 kl=138.99  val bce= 1377.87 kl=139.10  [114s]
+epoch  44/100  train bce= 1227.13 kl=139.19  val bce= 1382.83 kl=141.45  [117s]
+epoch  45/100  train bce= 1224.90 kl=139.64  val bce= 1378.61 kl=138.19  [119s]
+epoch  46/100  train bce= 1221.35 kl=139.58  val bce= 1383.70 kl=136.48  [122s]
+epoch  47/100  train bce= 1220.58 kl=140.03  val bce= 1378.05 kl=139.24  [125s]
+epoch  48/100  train bce= 1218.59 kl=140.05  val bce= 1404.59 kl=141.06  [127s]
+epoch  49/100  train bce= 1214.06 kl=140.34  val bce= 1399.34 kl=137.49  [130s]
+epoch  50/100  train bce= 1212.39 kl=140.79  val bce= 1396.16 kl=139.45  [132s]
+epoch  51/100  train bce= 1213.55 kl=140.80  val bce= 1421.69 kl=141.13  [135s]
+epoch  52/100  train bce= 1209.75 kl=141.02  val bce= 1425.03 kl=138.64  [138s]
+epoch  53/100  train bce= 1208.28 kl=141.15  val bce= 1428.59 kl=140.77  [140s]
+epoch  54/100  train bce= 1204.31 kl=141.51  val bce= 1441.17 kl=136.71  [143s]
+epoch  55/100  train bce= 1204.22 kl=141.29  val bce= 1460.07 kl=136.26  [146s]
+epoch  56/100  train bce= 1202.77 kl=141.59  val bce= 1422.76 kl=137.11  [148s]
+epoch  57/100  train bce= 1200.07 kl=141.89  val bce= 1422.72 kl=139.16  [151s]
+epoch  58/100  train bce= 1198.11 kl=142.03  val bce= 1430.75 kl=139.68  [154s]
+epoch  59/100  train bce= 1197.46 kl=142.18  val bce= 1450.25 kl=137.93  [156s]
+epoch  60/100  train bce= 1194.20 kl=142.55  val bce= 1412.05 kl=137.58  [159s]
+epoch  61/100  train bce= 1199.23 kl=142.17  val bce= 1448.67 kl=145.99  [162s]
+epoch  62/100  train bce= 1194.08 kl=142.16  val bce= 1432.67 kl=135.45  [164s]
+epoch  63/100  train bce= 1189.25 kl=142.96  val bce= 1405.44 kl=141.92  [167s]
+epoch  64/100  train bce= 1189.01 kl=142.85  val bce= 1526.15 kl=145.27  [170s]
+epoch  65/100  train bce= 1185.86 kl=143.14  val bce= 1497.98 kl=145.94  [172s]
+epoch  66/100  train bce= 1186.14 kl=143.15  val bce= 1469.94 kl=139.73  [175s]
+epoch  67/100  train bce= 1183.13 kl=143.75  val bce= 1498.07 kl=143.75  [178s]
+epoch  68/100  train bce= 1183.50 kl=143.52  val bce= 1480.59 kl=142.72  [180s]
+epoch  69/100  train bce= 1179.82 kl=143.79  val bce= 1528.99 kl=147.50  [183s]
+epoch  70/100  train bce= 1182.46 kl=143.81  val bce= 1482.35 kl=140.38  [186s]
+epoch  71/100  train bce= 1178.95 kl=143.84  val bce= 1490.48 kl=142.91  [188s]
+epoch  72/100  train bce= 1176.27 kl=144.13  val bce= 1547.24 kl=149.98  [191s]
+epoch  73/100  train bce= 1175.21 kl=144.06  val bce= 1499.33 kl=142.52  [194s]
+epoch  74/100  train bce= 1176.74 kl=143.99  val bce= 1518.98 kl=141.56  [196s]
+epoch  75/100  train bce= 1172.72 kl=144.57  val bce= 1505.15 kl=138.68  [199s]
+epoch  76/100  train bce= 1171.04 kl=144.80  val bce= 1496.31 kl=144.41  [202s]
+epoch  77/100  train bce= 1170.21 kl=144.83  val bce= 1577.31 kl=140.72  [204s]
+epoch  78/100  train bce= 1169.18 kl=144.85  val bce= 1533.93 kl=141.90  [207s]
+epoch  79/100  train bce= 1166.82 kl=144.89  val bce= 1542.90 kl=140.42  [209s]
+epoch  80/100  train bce= 1167.81 kl=145.13  val bce= 1540.10 kl=148.28  [212s]
+epoch  81/100  train bce= 1166.25 kl=145.04  val bce= 1589.38 kl=139.66  [215s]
+epoch  82/100  train bce= 1163.33 kl=145.49  val bce= 1525.31 kl=139.81  [217s]
+epoch  83/100  train bce= 1163.89 kl=145.17  val bce= 1610.15 kl=144.65  [220s]
+epoch  84/100  train bce= 1163.41 kl=145.24  val bce= 1566.78 kl=135.88  [222s]
+epoch  85/100  train bce= 1160.49 kl=145.37  val bce= 1627.47 kl=144.68  [225s]
+epoch  86/100  train bce= 1162.47 kl=145.61  val bce= 1594.99 kl=140.88  [228s]
+epoch  87/100  train bce= 1158.35 kl=145.41  val bce= 1587.27 kl=136.78  [230s]
+epoch  88/100  train bce= 1158.79 kl=145.65  val bce= 1612.82 kl=141.64  [233s]
+epoch  89/100  train bce= 1155.11 kl=146.05  val bce= 1722.05 kl=151.58  [236s]
+epoch  90/100  train bce= 1155.95 kl=145.66  val bce= 1608.91 kl=143.86  [238s]
+epoch  91/100  train bce= 1155.70 kl=146.11  val bce= 1673.43 kl=143.52  [241s]
+epoch  92/100  train bce= 1154.41 kl=145.95  val bce= 1618.52 kl=140.71  [244s]
+epoch  93/100  train bce= 1151.73 kl=146.26  val bce= 1613.05 kl=143.26  [246s]
+epoch  94/100  train bce= 1153.19 kl=146.39  val bce= 1582.64 kl=143.92  [249s]
+epoch  95/100  train bce= 1151.36 kl=146.31  val bce= 1617.96 kl=141.13  [252s]
+epoch  96/100  train bce= 1150.38 kl=146.09  val bce= 1630.13 kl=144.76  [254s]
+epoch  97/100  train bce= 1148.69 kl=146.25  val bce= 1759.08 kl=145.24  [257s]
+epoch  98/100  train bce= 1145.52 kl=146.70  val bce= 1748.00 kl=148.74  [260s]
+epoch  99/100  train bce= 1147.48 kl=146.44  val bce= 1725.06 kl=149.33  [262s]
+epoch 100/100  train bce= 1148.74 kl=146.46  val bce= 1695.52 kl=143.93  [265s]
 Saved encoder.pt / decoder.pt / vae.pt → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/models
-Saved embeddings ((50000, 32)) → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/results/embeddings.npz
+Saved embeddings ((50000, 64)) → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/results/embeddings.npz
 Done.

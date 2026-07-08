@@ -25,11 +25,12 @@ from vae import VAE
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def loss_fn(logits, x, mu, logvar):
+def loss_fn(logits, x, mu, logvar, pos_weight=15.0, beta=0.5):
     """Per-sample mean of (reconstruction BCE + KL)."""
-    bce = F.binary_cross_entropy_with_logits(logits, x, reduction="sum") / x.size(0)
+    pw = torch.tensor([pos_weight], device=x.device)
+    bce = F.binary_cross_entropy_with_logits(logits, x, pos_weight=pw, reduction="sum") / x.size(0)
     kl = (-0.5 * (1 + logvar - mu.pow(2) - logvar.exp()).sum(dim=1)).mean()
-    return bce, kl
+    return bce, kl, beta
 
 
 @torch.no_grad()
@@ -69,10 +70,12 @@ def compute_embeddings(model, images, device, batch=512):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default=os.path.join(HERE, "data", "gol_images.npz"))
-    ap.add_argument("--epochs", type=int, default=30)
+    ap.add_argument("--epochs", type=int, default=100)
     ap.add_argument("--batch", type=int, default=256)
-    ap.add_argument("--latent", type=int, default=32)
+    ap.add_argument("--latent", type=int, default=64)
     ap.add_argument("--lr", type=float, default=1e-3)
+    ap.add_argument("--pos-weight", type=float, default=15.0)
+    ap.add_argument("--beta", type=float, default=0.5)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out-dir", default=os.path.join(HERE, "models"))
     ap.add_argument("--results-dir", default=os.path.join(HERE, "results"))
@@ -119,8 +122,8 @@ def main():
         for step, (x,) in enumerate(train_loader):
             x = x.to(device, non_blocking=True)
             logits, mu, logvar = model(x)
-            bce, kl = loss_fn(logits, x, mu, logvar)
-            loss = bce + kl
+            bce, kl, beta = loss_fn(logits, x, mu, logvar, args.pos_weight, args.beta)
+            loss = bce + beta * kl
             opt.zero_grad()
             loss.backward()
             opt.step()
@@ -136,7 +139,7 @@ def main():
             for (x,) in val_loader:
                 x = x.to(device, non_blocking=True)
                 logits, mu, logvar = model(x)
-                bce, kl = loss_fn(logits, x, mu, logvar)
+                bce, kl, beta = loss_fn(logits, x, mu, logvar, args.pos_weight, args.beta)
                 va_bce += bce.item() * x.size(0)
                 va_kl += kl.item() * x.size(0)
                 va_n += x.size(0)
@@ -162,6 +165,7 @@ def main():
     with open(os.path.join(args.out_dir, "config.json"), "w") as f:
         json.dump(dict(latent_dim=args.latent, image_size=64, epochs=args.epochs,
                        batch=args.batch, lr=args.lr, seed=args.seed,
+                       pos_weight=args.pos_weight, beta=args.beta,
                        final=history[-1]), f, indent=2)
     print(f"Saved encoder.pt / decoder.pt / vae.pt → {args.out_dir}")
 

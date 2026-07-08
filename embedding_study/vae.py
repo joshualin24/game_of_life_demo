@@ -1,18 +1,25 @@
-"""Convolutional VAE for 64x64 binary Game of Life grids."""
+"""Convolutional VAE for 64x64 binary Game of Life grids.
+
+Architecture improvements over v1:
+- BatchNorm after every conv/deconv (except final output)
+- Decoder uses Upsample + Conv2d instead of ConvTranspose2d to avoid
+  checkerboard artifacts
+- Default latent_dim raised to 64
+"""
 
 import torch
 import torch.nn as nn
 
 
 class Encoder(nn.Module):
-    def __init__(self, latent_dim: int = 32):
+    def __init__(self, latent_dim: int = 64):
         super().__init__()
         self.latent_dim = latent_dim
         self.conv = nn.Sequential(
-            nn.Conv2d(1, 32, 4, 2, 1), nn.ReLU(),    # 64 → 32
-            nn.Conv2d(32, 64, 4, 2, 1), nn.ReLU(),   # 32 → 16
-            nn.Conv2d(64, 128, 4, 2, 1), nn.ReLU(),  # 16 → 8
-            nn.Conv2d(128, 256, 4, 2, 1), nn.ReLU(), # 8 → 4
+            nn.Conv2d(1, 32, 4, 2, 1), nn.BatchNorm2d(32), nn.ReLU(),    # 64 → 32
+            nn.Conv2d(32, 64, 4, 2, 1), nn.BatchNorm2d(64), nn.ReLU(),   # 32 → 16
+            nn.Conv2d(64, 128, 4, 2, 1), nn.BatchNorm2d(128), nn.ReLU(), # 16 → 8
+            nn.Conv2d(128, 256, 4, 2, 1), nn.BatchNorm2d(256), nn.ReLU(),# 8 → 4
         )
         self.fc_mu = nn.Linear(256 * 4 * 4, latent_dim)
         self.fc_logvar = nn.Linear(256 * 4 * 4, latent_dim)
@@ -23,24 +30,32 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, latent_dim: int = 32):
+    def __init__(self, latent_dim: int = 64):
         super().__init__()
         self.latent_dim = latent_dim
         self.fc = nn.Linear(latent_dim, 256 * 4 * 4)
-        self.deconv = nn.Sequential(
-            nn.ConvTranspose2d(256, 128, 4, 2, 1), nn.ReLU(),  # 4 → 8
-            nn.ConvTranspose2d(128, 64, 4, 2, 1), nn.ReLU(),   # 8 → 16
-            nn.ConvTranspose2d(64, 32, 4, 2, 1), nn.ReLU(),    # 16 → 32
-            nn.ConvTranspose2d(32, 1, 4, 2, 1),                # 32 → 64
+        self.up = nn.Sequential(
+            # 4 → 8
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.Conv2d(256, 128, 3, 1, 1), nn.BatchNorm2d(128), nn.ReLU(),
+            # 8 → 16
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.Conv2d(128, 64, 3, 1, 1), nn.BatchNorm2d(64), nn.ReLU(),
+            # 16 → 32
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.Conv2d(64, 32, 3, 1, 1), nn.BatchNorm2d(32), nn.ReLU(),
+            # 32 → 64
+            nn.Upsample(scale_factor=2, mode='nearest'),
+            nn.Conv2d(32, 1, 3, 1, 1),  # logits; no BN before output
         )
 
     def forward(self, z):
         h = self.fc(z).view(-1, 256, 4, 4)
-        return self.deconv(h)  # logits; apply sigmoid for probabilities
+        return self.up(h)  # logits; apply sigmoid for probabilities
 
 
 class VAE(nn.Module):
-    def __init__(self, latent_dim: int = 32):
+    def __init__(self, latent_dim: int = 64):
         super().__init__()
         self.latent_dim = latent_dim
         self.encoder = Encoder(latent_dim)

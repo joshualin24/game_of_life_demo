@@ -1,16 +1,18 @@
 {
-  "latent_dim": 32,
+  "latent_dim": 64,
   "image_size": 64,
-  "epochs": 30,
+  "epochs": 100,
   "batch": 256,
   "lr": 0.001,
   "seed": 0,
+  "pos_weight": 15.0,
+  "beta": 0.5,
   "final": {
-    "epoch": 30,
-    "train_bce": 392.7460596191406,
-    "train_kl": 31.15914841661955,
-    "val_bce": 394.16106616210936,
-    "val_kl": 30.73607485961914,
-    "elapsed_s": 38.7
+    "epoch": 100,
+    "train_bce": 1148.7428606702304,
+    "train_kl": 146.45549069053249,
+    "val_bce": 1695.5153806640626,
+    "val_kl": 143.93306401367187,
+    "elapsed_s": 264.9
   }
 }
