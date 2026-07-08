@@ -1,0 +1,16 @@
+{
+  "latent_dim": 32,
+  "image_size": 64,
+  "epochs": 30,
+  "batch": 256,
+  "lr": 0.001,
+  "seed": 0,
+  "final": {
+    "epoch": 30,
+    "train_bce": 392.7460596191406,
+    "train_kl": 31.15914841661955,
+    "val_bce": 394.16106616210936,
+    "val_kl": 30.73607485961914,
+    "elapsed_s": 38.7
+  }
+}

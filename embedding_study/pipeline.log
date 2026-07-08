@@ -1,0 +1,64 @@
+Verifying pattern periods:
+  block            kind=still_life period=  1 envelope=2x2  OK
+  beehive          kind=still_life period=  1 envelope=3x4  OK
+  loaf             kind=still_life period=  1 envelope=4x4  OK
+  boat             kind=still_life period=  1 envelope=3x3  OK
+  tub              kind=still_life period=  1 envelope=3x3  OK
+  blinker          kind=oscillator period=  2 envelope=3x3  OK
+  toad             kind=oscillator period=  2 envelope=4x4  OK
+  beacon           kind=oscillator period=  2 envelope=4x4  OK
+  pulsar           kind=oscillator period=  3 envelope=15x15  OK
+  pentadecathlon   kind=oscillator period= 15 envelope=9x16  OK
+  glider           kind=spaceship  period=  4 envelope=4x4  OK
+  lwss             kind=spaceship  period=  4 envelope=5x7  OK
+
+Generating 50,000 images (64x64) …
+  5,000/50,000
+  10,000/50,000
+  15,000/50,000
+  20,000/50,000
+  25,000/50,000
+  30,000/50,000
+  35,000/50,000
+  40,000/50,000
+  45,000/50,000
+  50,000/50,000
+
+Saved 50,000 images → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/data/gol_images.npz (6.4 MB)
+Category distribution: {'spaceship': 4904, 'oscillator': 19903, 'still_life': 7554, 'soup': 9981, 'mixed': 7658}
+Preview grid → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/data/preview.png
+Device: cuda
+Loaded 50,000 images from /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/data/gol_images.npz
+epoch   1/30  train bce=  649.13 kl= 22.45  val bce=  518.22 kl= 13.44  [1s]
+epoch   2/30  train bce=  521.42 kl= 11.53  val bce=  515.04 kl= 10.45  [3s]
+epoch   3/30  train bce=  509.34 kl=  8.50  val bce=  488.64 kl=  7.58  [4s]
+epoch   4/30  train bce=  478.65 kl=  9.55  val bce=  456.54 kl= 13.39  [5s]
+epoch   5/30  train bce=  451.14 kl= 15.08  val bce=  441.70 kl= 16.21  [6s]
+epoch   6/30  train bce=  441.51 kl= 17.29  val bce=  436.17 kl= 17.32  [8s]
+epoch   7/30  train bce=  436.24 kl= 18.44  val bce=  430.46 kl= 19.30  [9s]
+epoch   8/30  train bce=  431.71 kl= 19.60  val bce=  427.21 kl= 19.88  [10s]
+epoch   9/30  train bce=  427.30 kl= 20.84  val bce=  421.71 kl= 21.73  [12s]
+epoch  10/30  train bce=  422.63 kl= 22.34  val bce=  417.55 kl= 23.50  [13s]
+epoch  11/30  train bce=  418.71 kl= 23.59  val bce=  414.71 kl= 23.47  [14s]
+epoch  12/30  train bce=  414.92 kl= 24.85  val bce=  410.95 kl= 25.35  [16s]
+epoch  13/30  train bce=  411.89 kl= 25.86  val bce=  406.79 kl= 27.65  [17s]
+epoch  14/30  train bce=  409.49 kl= 26.61  val bce=  406.63 kl= 26.74  [18s]
+epoch  15/30  train bce=  407.81 kl= 27.19  val bce=  404.54 kl= 27.74  [20s]
+epoch  16/30  train bce=  406.51 kl= 27.51  val bce=  403.88 kl= 27.82  [21s]
+epoch  17/30  train bce=  405.38 kl= 27.88  val bce=  404.79 kl= 28.08  [22s]
+epoch  18/30  train bce=  404.34 kl= 28.16  val bce=  402.89 kl= 27.81  [23s]
+epoch  19/30  train bce=  403.29 kl= 28.45  val bce=  402.45 kl= 28.00  [25s]
+epoch  20/30  train bce=  402.23 kl= 28.71  val bce=  400.18 kl= 29.44  [26s]
+epoch  21/30  train bce=  401.26 kl= 28.98  val bce=  399.06 kl= 29.89  [27s]
+epoch  22/30  train bce=  400.21 kl= 29.18  val bce=  400.87 kl= 27.90  [28s]
+epoch  23/30  train bce=  399.28 kl= 29.47  val bce=  398.75 kl= 29.36  [30s]
+epoch  24/30  train bce=  398.39 kl= 29.75  val bce=  398.02 kl= 29.85  [31s]
+epoch  25/30  train bce=  397.40 kl= 29.88  val bce=  397.35 kl= 29.75  [32s]
+epoch  26/30  train bce=  396.43 kl= 30.20  val bce=  396.06 kl= 30.59  [34s]
+epoch  27/30  train bce=  395.46 kl= 30.45  val bce=  395.33 kl= 30.76  [35s]
+epoch  28/30  train bce=  394.41 kl= 30.70  val bce=  395.83 kl= 29.79  [36s]
+epoch  29/30  train bce=  393.56 kl= 30.92  val bce=  394.39 kl= 31.13  [37s]
+epoch  30/30  train bce=  392.75 kl= 31.16  val bce=  394.16 kl= 30.74  [39s]
+Saved encoder.pt / decoder.pt / vae.pt → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/models
+Saved embeddings ((50000, 32)) → /nvme1/data/git_work_zone/game_of_life_demo/embedding_study/results/embeddings.npz
+Done.
