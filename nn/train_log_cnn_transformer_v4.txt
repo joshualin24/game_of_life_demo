@@ -1,0 +1,36 @@
+[data] Generating 2000 × 100-step trajectories …
+  200/2000
+  400/2000
+  600/2000
+  800/2000
+  1000/2000
+  1200/2000
+  1400/2000
+  1600/2000
+  1800/2000
+  2000/2000
+  → 200,000 (state, next) pairs
+  train=170,000  val=30,000  train batches=2657  val batches=469
+
+  CNNTransformerV4  params=291,888  device=mps
+  Loaded V3 weights from /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task11_cnn_transformer_v3_best.pt
+
+============================================================
+  epoch   1/100  train=0.21530  val=0.43201  f1=0.7162  prec=67.0%  rec=76.9%  born=75.9%  surv=77.6%  died=93.2%  best=0.43201  t=249s
+  epoch  10/100  train=0.19890  val=0.35038  f1=0.7574  prec=61.0%  rec=100.0%  born=100.0%  surv=100.0%  died=85.6%  best=0.26323  t=2493s
+  epoch  20/100  train=0.19885  val=0.32285  f1=0.7610  prec=65.4%  rec=91.0%  born=90.9%  surv=91.1%  died=92.8%  best=0.26323  t=4962s
+  epoch  30/100  train=0.19862  val=0.30359  f1=0.8078  prec=70.6%  rec=94.5%  born=94.4%  surv=94.5%  died=92.4%  best=0.24816  t=7372s
+  epoch  40/100  train=0.19861  val=0.25292  f1=0.9677  prec=100.0%  rec=93.7%  born=93.8%  surv=93.7%  died=100.0%  best=0.23401  t=19602s
+  epoch  50/100  train=0.19856  val=0.23317  f1=0.9827  prec=100.0%  rec=96.6%  born=96.5%  surv=96.7%  died=100.0%  best=0.23317  t=27618s
+  epoch  60/100  train=0.19855  val=0.27983  f1=0.8235  prec=73.4%  rec=93.8%  born=93.8%  surv=93.7%  died=95.1%  best=0.23317  t=32303s
+  epoch  70/100  train=0.19853  val=0.23278  f1=0.9679  prec=100.0%  rec=93.8%  born=93.8%  surv=93.8%  died=100.0%  best=0.23042  t=45357s
+  epoch  80/100  train=0.19853  val=0.23160  f1=0.9680  prec=100.0%  rec=93.8%  born=93.8%  surv=93.8%  died=100.0%  best=0.23042  t=60278s
+  epoch  90/100  train=0.19853  val=0.22928  f1=0.9692  prec=100.0%  rec=94.0%  born=94.1%  surv=94.0%  died=100.0%  best=0.22773  t=69053s
+  epoch 100/100  train=0.19853  val=0.22640  f1=0.9705  prec=100.0%  rec=94.3%  born=94.3%  surv=94.2%  died=100.0%  best=0.22623  t=71501s
+
+  Best val loss: 0.22623  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task12_cnn_transformer_v4_best.pt
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task12_cnn_transformer_v4_rollout_random.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task12_cnn_transformer_v4_rollout_glider.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task12_cnn_transformer_v4_rollout_blinker.png
+
+Done.

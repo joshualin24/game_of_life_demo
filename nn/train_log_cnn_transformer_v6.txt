@@ -1,0 +1,69 @@
+[data] Random grids …
+  density=0.02  +5,600 samples
+  density=0.05  +5,600 samples
+  density=0.10  +5,600 samples
+  density=0.20  +5,600 samples
+  density=0.35  +5,600 samples
+  density=0.50  +5,600 samples
+  density=0.65  +5,600 samples
+  density=0.80  +5,600 samples
+[data] Named patterns …
+  block       +1,080 samples
+  beehive     +1,080 samples
+  loaf        +1,080 samples
+  boat        +1,080 samples
+  tub         +1,080 samples
+  blinker     +1,080 samples
+  toad        +1,080 samples
+  beacon      +1,080 samples
+  pulsar      +1,080 samples
+  glider      +1,080 samples
+  lwss        +1,080 samples
+  r_pent      +1,080 samples
+  acorn       +1,080 samples
+[data] Combo patterns …
+  200/1000
+  400/1000
+  600/1000
+  800/1000
+  1000/1000
+  combos  +28,000 samples
+  → total 86,840 samples  (each has 3 target frames)
+  train=73,814  val=13,026  train batches=1154  val batches=204
+
+  CNNTransformerV6 (V4 arch)  params=291,888  device=mps
+  Loaded V5 weights from /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task13_cnn_transformer_v5_best.pt
+
+  K_STEPS=3  (unrolled multi-step loss)
+============================================================
+  epoch   1/50  train=0.20129  val=0.32901  f1=0.5065  prec=34.9%  rec=93.8%  born=93.7%  surv=93.8%  died=92.5%  best=0.32901  t=310s
+  epoch   5/50  train=0.25343  val=0.23421  f1=0.9599  prec=92.7%  rec=99.5%  born=99.5%  surv=99.5%  died=91.6%  best=0.23421  t=1539s
+  epoch  10/50  train=0.27837  val=0.80310  f1=0.3336  prec=20.2%  rec=98.4%  born=98.7%  surv=98.2%  died=72.3%  best=0.23421  t=3079s
+  epoch  15/50  train=0.26431  val=1.72835  f1=0.2995  prec=17.7%  rec=99.7%  born=99.8%  surv=99.7%  died=68.0%  best=0.23421  t=4549s
+  epoch  20/50  train=0.24248  val=0.50768  f1=0.5929  prec=54.9%  rec=64.7%  born=65.6%  surv=64.1%  died=91.7%  best=0.23421  t=6038s
+  epoch  25/50  train=0.22315  val=0.59710  f1=0.3783  prec=24.6%  rec=81.8%  born=83.1%  surv=80.9%  died=59.3%  best=0.23421  t=7517s
+  epoch  30/50  train=0.29236  val=0.85426  f1=0.2204  prec=13.5%  rec=60.5%  born=62.4%  surv=59.2%  died=67.1%  best=0.23421  t=8949s
+  epoch  35/50  train=0.25109  val=0.51993  f1=0.3588  prec=22.6%  rec=88.9%  born=90.1%  surv=88.0%  died=76.8%  best=0.23421  t=10381s
+  epoch  40/50  train=0.26654  val=0.50324  f1=0.3807  prec=24.9%  rec=82.6%  born=83.1%  surv=82.3%  died=87.0%  best=0.23421  t=11814s
+  epoch  45/50  train=0.25058  val=0.52922  f1=0.3881  prec=25.9%  rec=79.3%  born=79.7%  surv=78.9%  died=88.0%  best=0.23421  t=13247s
+  epoch  50/50  train=0.24954  val=0.54884  f1=0.3695  prec=24.3%  rec=78.7%  born=79.3%  surv=78.3%  died=87.6%  best=0.23421  t=14680s
+
+  Best val loss: 0.23421  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task14_cnn_transformer_v6_best.pt
+
+[rollouts] best checkpoint
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_best_random_sparse.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_best_random_medium.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_best_random_dense.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_best_glider.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_best_blinker.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_best_pulsar.png
+
+[rollouts] final checkpoint (epoch 50)
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_final_random_sparse.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_final_random_medium.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_final_random_dense.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_final_glider.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_final_blinker.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task14_cnn_transformer_v6_rollout_final_pulsar.png
+
+Done.

@@ -580,6 +580,96 @@ class CNNTransformerV3(nn.Module):
         return (torch.sigmoid(self.forward(x)) >= threshold).float()
 
 
+# ── Task 12: CNN-Transformer V4 (all fixes: circular padding + better training) ─
+
+class CNNTransformerV4(nn.Module):
+    """
+    CNN-Transformer V4 — architecture identical to V3 with one fix:
+    circular (toroidal) padding in the CNN encoder.
+
+    V3 used zero-padding, so the ~156 cells along the grid border saw wrong
+    neighbor counts every step (their GoL neighborhood wraps around but the
+    CNN padded with zeros).  `padding_mode='circular'` makes the convolution
+    respect the toroidal topology of the grid.
+
+    All other improvements (focal loss, scheduled sampling, D4+translation
+    augmentation, mixed pattern/random data) are in the training script.
+
+    Architecture identical to V3 otherwise:
+      Stage 1 — CNN local encoder (RF=5×5, GroupNorm, CIRCULAR padding)
+      Stage 2 — Flatten patches → Linear(d_model·p², d_model) + learnable 2D pos emb
+      Stage 3 — 4-layer pre-norm transformer encoder
+      Per-patch linear head → (B, 1, H, W) next-state logits
+    """
+
+    def __init__(
+        self,
+        grid_size:  int   = 40,
+        patch_size: int   = 4,
+        d_model:    int   = 64,
+        nhead:      int   = 4,
+        num_layers: int   = 4,
+        dropout:    float = 0.1,
+    ):
+        super().__init__()
+        assert grid_size % patch_size == 0
+        self.grid_size  = grid_size
+        self.patch_size = patch_size
+        self.d_model    = d_model
+        n_patches_1d    = grid_size // patch_size
+        self.n_patches  = n_patches_1d ** 2
+        patch_feat_dim  = d_model * patch_size * patch_size
+
+        # Stage 1: CNN with circular padding (respects toroidal grid topology)
+        self.cnn = nn.Sequential(
+            nn.Conv2d(1,       32,      3, padding=1, padding_mode='circular', bias=False),
+            nn.GroupNorm(8, 32),
+            nn.GELU(),
+            nn.Conv2d(32, d_model,     3, padding=1, padding_mode='circular', bias=False),
+            nn.GroupNorm(8, d_model),
+            nn.GELU(),
+        )
+
+        # Stage 2: lossless patch projection + learnable 2D positional embedding
+        self.patch_proj = nn.Linear(patch_feat_dim, d_model)
+        self.pos_embed  = nn.Parameter(torch.zeros(1, self.n_patches, d_model))
+        nn.init.trunc_normal_(self.pos_embed, std=0.02)
+
+        # Stage 3: transformer encoder
+        enc_layer = nn.TransformerEncoderLayer(
+            d_model=d_model, nhead=nhead,
+            dim_feedforward=d_model * 4,
+            dropout=dropout, batch_first=True,
+            norm_first=True, activation="gelu",
+        )
+        self.transformer = nn.TransformerEncoder(
+            enc_layer, num_layers=num_layers, enable_nested_tensor=False)
+
+        self.patch_head = nn.Linear(d_model, patch_size * patch_size)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        B  = x.shape[0]
+        p  = self.patch_size
+        gs = self.grid_size
+
+        feat = self.cnn(x)
+        C, H, W = feat.shape[1], feat.shape[2], feat.shape[3]
+        h = w = H // p
+        feat   = feat.reshape(B, C, h, p, w, p)
+        feat   = feat.permute(0, 2, 4, 1, 3, 5)
+        feat   = feat.reshape(B, self.n_patches, C * p * p)
+        tokens = self.patch_proj(feat) + self.pos_embed
+
+        out    = self.transformer(tokens)
+        logits = self.patch_head(out)
+        logits = logits.reshape(B, h, w, p, p)
+        logits = logits.permute(0, 1, 3, 2, 4)
+        return logits.reshape(B, 1, gs, gs)
+
+    def step(self, x: torch.Tensor, threshold: float = 0.5) -> torch.Tensor:
+        return (torch.sigmoid(self.forward(x)) >= threshold).float()
+
+
 # ── Task 10: CNN-Transformer V2 (2D sinusoidal positional encoding) ───────────
 
 class _SinusoidalPE2D(nn.Module):

@@ -1,0 +1,110 @@
+[data] Random grids …
+  density=0.02  +5,800 samples
+  density=0.05  +5,800 samples
+  density=0.10  +5,800 samples
+  density=0.20  +5,800 samples
+  density=0.35  +5,800 samples
+  density=0.50  +5,800 samples
+  density=0.65  +5,800 samples
+  density=0.80  +5,800 samples
+[data] Named patterns …
+  block       +1,140 samples
+  beehive     +1,140 samples
+  loaf        +1,140 samples
+  boat        +1,140 samples
+  tub         +1,140 samples
+  blinker     +1,140 samples
+  toad        +1,140 samples
+  beacon      +1,140 samples
+  pulsar      +1,140 samples
+  glider      +1,140 samples
+  lwss        +1,140 samples
+  r_pent      +1,140 samples
+  acorn       +1,140 samples
+[data] Combo patterns …
+  200/1000
+  400/1000
+  600/1000
+  800/1000
+  1000/1000
+  combos  +29,000 samples
+  → total 90,220 samples  (each has 2 target frames)
+  train=76,687  val=13,533  train batches=1199  val batches=212
+
+  CNNTransformerV7 (V4 arch)  params=291,888  device=mps
+  Loaded V6 best weights from /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task14_cnn_transformer_v6_best.pt
+
+  K_STEPS=2  LR=1e-05  (stabilised multi-step)
+============================================================
+  epoch   1/50  train=0.20904  val=0.26390  f1=0.6861  prec=52.6%  rec=99.0%  born=98.5%  surv=99.4%  died=93.2%  best=0.26390  t=205s
+  epoch   5/50  train=0.20332  val=0.32954  f1=0.6032  prec=43.3%  rec=99.8%  born=99.7%  surv=99.9%  died=87.0%  best=0.26390  t=1016s
+  epoch  10/50  train=0.20323  val=0.37348  f1=0.5222  prec=35.5%  rec=99.8%  born=99.7%  surv=99.9%  died=84.4%  best=0.25094  t=2027s
+[data] Random grids …
+  density=0.02  +5,600 samples
+  density=0.05  +5,600 samples
+  density=0.10  +5,600 samples
+  density=0.20  +5,600 samples
+  density=0.35  +5,600 samples
+  density=0.50  +5,600 samples
+  density=0.65  +5,600 samples
+  density=0.80  +5,600 samples
+[data] Named patterns …
+  block       +1,080 samples
+  beehive     +1,080 samples
+  loaf        +1,080 samples
+  boat        +1,080 samples
+  tub         +1,080 samples
+  blinker     +1,080 samples
+  toad        +1,080 samples
+  beacon      +1,080 samples
+  pulsar      +1,080 samples
+  glider      +1,080 samples
+  lwss        +1,080 samples
+  r_pent      +1,080 samples
+  acorn       +1,080 samples
+[data] Combo patterns …
+  200/1000
+  400/1000
+  600/1000
+  800/1000
+  1000/1000
+  combos  +28,000 samples
+  → total 86,840 samples  (each has 3 target frames)
+  train=73,814  val=13,026  train batches=1154  val batches=204
+
+  CNNTransformerV7 (V4 arch)  params=291,888  device=mps
+  Loaded V5 best weights from /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task13_cnn_transformer_v5_best.pt
+
+  K_STEPS=3  LR=1e-05  P_MAX=1.0  (scheduled sampling)
+============================================================
+  epoch   1/50  p=0.00  train=0.19947  val=0.21728  f1=0.9878  prec=99.6%  rec=98.0%  born=97.9%  surv=98.0%  died=99.7%  best=0.21728  t=302s
+  epoch   5/50  p=0.08  train=0.19879  val=0.20855  f1=0.9977  prec=99.7%  rec=99.8%  born=99.8%  surv=99.8%  died=99.7%  best=0.20855  t=1526s
+  epoch  10/50  p=0.18  train=0.19871  val=0.20518  f1=0.9982  prec=99.7%  rec=99.9%  born=99.9%  surv=99.9%  died=99.7%  best=0.20518  t=3055s
+  epoch  15/50  p=0.29  train=0.19865  val=0.20296  f1=0.9983  prec=99.7%  rec=100.0%  born=100.0%  surv=100.0%  died=99.7%  best=0.20296  t=4574s
+  epoch  20/50  p=0.39  train=0.19869  val=0.20313  f1=0.9983  prec=99.7%  rec=100.0%  born=99.9%  surv=100.0%  died=99.7%  best=0.20168  t=6073s
+  epoch  25/50  p=0.49  train=0.19863  val=0.20119  f1=0.9984  prec=99.7%  rec=100.0%  born=100.0%  surv=100.0%  died=99.7%  best=0.20119  t=7621s
+  epoch  30/50  p=0.59  train=0.19861  val=0.20169  f1=0.9984  prec=99.7%  rec=100.0%  born=99.9%  surv=100.0%  died=99.7%  best=0.20118  t=9056s
+  epoch  35/50  p=0.69  train=0.19858  val=0.20121  f1=0.9985  prec=99.7%  rec=100.0%  born=100.0%  surv=100.0%  died=99.7%  best=0.20114  t=10479s
+  epoch  40/50  p=0.80  train=0.19857  val=0.20137  f1=0.9985  prec=99.7%  rec=100.0%  born=100.0%  surv=100.0%  died=99.7%  best=0.20114  t=11904s
+  epoch  45/50  p=0.90  train=0.19856  val=0.20135  f1=0.9985  prec=99.7%  rec=100.0%  born=100.0%  surv=100.0%  died=99.7%  best=0.20114  t=13327s
+  epoch  50/50  p=1.00  train=0.19857  val=0.20137  f1=0.9985  prec=99.7%  rec=100.0%  born=100.0%  surv=100.0%  died=99.7%  best=0.20114  t=14751s
+
+  Best val loss: 0.20114  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task15_cnn_transformer_v7_best.pt
+
+[rollouts] best checkpoint
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_best_random_sparse.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_best_random_medium.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_best_random_dense.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_best_glider.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_best_blinker.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_best_pulsar.png
+
+[rollouts] final checkpoint (epoch 50)
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_final_random_sparse.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_final_random_medium.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_final_random_dense.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_final_glider.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_final_blinker.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task15_cnn_transformer_v7_rollout_final_pulsar.png
+
+Done.
