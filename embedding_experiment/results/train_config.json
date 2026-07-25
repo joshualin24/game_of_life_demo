@@ -1,0 +1,15 @@
+{
+  "latent_dim": 64,
+  "proj_dim": 128,
+  "tau": 0.07,
+  "lr": 0.0003,
+  "epochs": 50,
+  "batch": 256,
+  "seed": 0,
+  "final": {
+    "epoch": 50,
+    "train_loss": 1.3876910789592847,
+    "val_loss": 2.5699470043182373,
+    "elapsed_s": 45.6
+  }
+}
