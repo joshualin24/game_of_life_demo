@@ -114,6 +114,7 @@ def main():
     os.makedirs(args.out_dir, exist_ok=True)
     history = []
     t0 = time.time()
+    best_val = float("inf")
 
     for epoch in range(1, args.epochs + 1):
         model.train()
@@ -139,19 +140,33 @@ def main():
                 va_loss += loss.item() * fi.size(0)
                 va_n += fi.size(0)
 
+        val_l = va_loss / va_n
         rec = dict(epoch=epoch,
                    train_loss=tr_loss / tr_n,
-                   val_loss=va_loss / va_n,
+                   val_loss=val_l,
                    elapsed_s=round(time.time() - t0, 1))
         history.append(rec)
         print(f"epoch {epoch:3d}/{args.epochs}  "
               f"train={rec['train_loss']:.4f}  val={rec['val_loss']:.4f}  "
               f"[{rec['elapsed_s']:.0f}s]", flush=True)
 
-    # Save
+        # Save epoch-1 checkpoint (barely trained)
+        if epoch == 1:
+            ckpt_e1 = os.path.join(args.out_dir, "encoder_epoch001.pt")
+            torch.save(model.state_dict(), ckpt_e1)
+            print(f"  → Saved epoch-1 checkpoint: {ckpt_e1}")
+
+        # Save best-val checkpoint
+        if val_l < best_val:
+            best_val = val_l
+            ckpt_best = os.path.join(args.out_dir, "encoder_best_val.pt")
+            torch.save(model.state_dict(), ckpt_best)
+            print(f"  → New best val={best_val:.4f}, saved: {ckpt_best}")
+
+    # Save final checkpoint
     ckpt = os.path.join(args.out_dir, "encoder.pt")
     torch.save(model.state_dict(), ckpt)
-    print(f"Saved checkpoint → {ckpt}")
+    print(f"Saved final checkpoint → {ckpt}")
 
     cfg = dict(latent_dim=args.latent, proj_dim=args.proj_dim,
                tau=args.tau, lr=args.lr, epochs=args.epochs,
