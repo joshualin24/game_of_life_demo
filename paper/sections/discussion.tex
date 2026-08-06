@@ -1,0 +1,79 @@
+\section{Discussion and Conclusion}
+
+Three broad lessons emerge from this study.
+
+\textbf{Exposure bias is a first-order concern for autoregressive
+cellular-automaton models, and its fix must be chosen carefully.} Teacher
+forcing alone (V5) produces excellent single-step metrics that do not
+predict rollout stability. The most direct-seeming fix for multi-step
+training --- a straight-through estimator (V6) --- fails due to a
+systematic directional gradient bias rather than an optimization-stability
+issue, and is not rescued by gradient clipping or a lower learning rate.
+Scheduled sampling (V7), which avoids passing gradients across unrolled
+steps entirely, resolves the problem cleanly. This distinction --- between
+instabilities caused by gradient \emph{magnitude} and those caused by
+gradient \emph{direction} --- recurred later in the polynomial-activation
+negative result (Section~\ref{sec:v11}), where we again observed a
+divergence with a similar signature (stable training loss, exploding
+validation loss) under a different mechanism (an unbounded activation
+interacting with autoregressive feedback rather than an STE gradient path).
+
+\textbf{Aggregate validation metrics can hide severe, structured
+regressions.} The V8-to-V9 comparison (Section~\ref{sec:training-evolution})
+is the clearest demonstration: V9's validation loss and precision/recall
+are statistically indistinguishable from V8's, yet its per-grid error count
+at high density is an order of magnitude worse. This was only detectable
+via a targeted, density-stratified failure search --- a general reminder
+that i.i.d.\ validation splits can fail to surface regressions concentrated
+in identifiable input subpopulations, and that practitioners should audit
+per-subgroup behavior rather than relying on a single scalar validation
+metric, especially before deciding that a change (like scaling up training
+data) has helped.
+
+\textbf{Once a model is capacity-limited, only capacity fixes the problem.}
+The clearest evidence for this is negative: V9 attempted to resolve V8's
+residual high-density errors purely with more data (of a kind the model
+already saw extensively) and made things worse. V10 held the data
+distribution fixed and scaled the model 5.15$\times$, and eliminated all
+2,500 evaluated per-grid errors. This is consistent with, though not
+identical to, the picture in Ahmed \& Davis \cite{ahmed2026polynomial}: they
+show that a poorly-matched inductive bias (ReLU) can make a
+network fail to learn a rule it is representationally capable of encoding
+with very few parameters, while we show that once a specific
+\emph{well-matched} architecture (GELU CNN-Transformer with scheduled
+sampling) has saturated its capacity at a given width, adding width is what
+resolves the remaining gap --- not more data of the same kind. Our
+attempt to combine both ideas (Section~\ref{sec:v11}) was unsuccessful in
+its first iteration, underscoring that these two levers do not necessarily
+compose for free, particularly once autoregressive training is involved.
+
+\textbf{The embedding analysis (Section~\ref{sec:embedding-analysis})}
+provides a mechanistic complement to the accuracy results: it shows
+directly, via patch-level cosine similarity and PCA projections, that the
+model's learned absolute positional embedding is responsible for most of
+its sensitivity to geometric transformations on dense grids, while sparse
+configurations are nearly embedding-invariant simply because most patches
+are empty on both sides of any transformation. This is consistent with the
+architectural choice (Section~\ref{sec:architecture}) to augment with the
+dihedral group $D_4$ but not with translation, since translation
+augmentation would directly conflict with a learnable absolute positional
+embedding.
+
+\subsection*{Limitations and future work}
+
+This report reflects a single training run per configuration for the
+CNN-Transformer experiments (V5--V11), aside from the deliberately
+multi-seed reproduction in Section~\ref{sec:reproduction}; conclusions
+about V6/V9/V11 instability would be strengthened by repeating those runs
+across seeds, as we did for the minimal-CNN verification. The V11 negative
+result (Section~\ref{sec:v11}) was not root-caused beyond the hypothesis
+offered; a natural next step is to test the polynomial activation in a
+single-step-only (teacher-forcing) training regime at V8/V10 model scale,
+isolating whether the instability is intrinsic to the activation at this
+model size or specific to its interaction with scheduled sampling. The
+per-grid failure-search protocol used throughout
+(Section~\ref{sec:training-evolution}) covers five densities and a small
+set of named patterns; a more exhaustive audit (finer density grid,
+targeted adversarial search) might reveal further tail-case regressions
+not captured here, including for V10 despite its zero-error result on the
+2,500 grids tested.

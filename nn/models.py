@@ -670,6 +670,111 @@ class CNNTransformerV4(nn.Module):
         return (torch.sigmoid(self.forward(x)) >= threshold).float()
 
 
+# ── Task 19: PolyKAN-inspired activation + CNN-Transformer V11 ────────────────
+#
+# Motivated by Ahmed & Davis, "It's Much Easier for Neural Networks to Learn
+# Game of Life Dynamics with the Right Activation Function: Polynomial
+# Kolmogorov-Arnold Networks" (arXiv:2606.23587). The GoL transition rule is a
+# non-monotonic function of live-neighbor count (flat-0, spike at N=2/3,
+# flat-0 again), which a monotonic ReLU/GELU can only approximate piecewise.
+# A learnable 2nd-degree polynomial activation can represent that bump shape
+# directly. The paper tests this on a tiny bespoke CNN; here it's swapped
+# into the CNN feature-extraction stage of the existing CNNTransformerV4
+# architecture to see whether it lets a V8-sized model (~291K params) match
+# V10's larger-model accuracy without the extra width/depth.
+
+class PolyActivation(nn.Module):
+    """
+    Learnable per-channel 2nd-degree polynomial activation:
+        phi(x) = w0 + w1 * x + w2 * x^2
+    Initialized near-identity (w0=0, w1=1, w2~0) so early training behaves
+    like a linear unit before the quadratic term is learned.
+    """
+    def __init__(self, num_channels: int, init_std: float = 0.02):
+        super().__init__()
+        self.w0 = nn.Parameter(torch.zeros(1, num_channels, 1, 1))
+        self.w1 = nn.Parameter(torch.ones(1, num_channels, 1, 1))
+        self.w2 = nn.Parameter(torch.randn(1, num_channels, 1, 1) * init_std)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.w0 + self.w1 * x + self.w2 * x * x
+
+
+class CNNTransformerV11(nn.Module):
+    """
+    CNNTransformerV4 architecture with PolyActivation replacing GELU in the
+    CNN feature-extraction stage (Stage 1 only — the transformer encoder
+    still uses GELU). Everything else identical to V4.
+    """
+
+    def __init__(
+        self,
+        grid_size:  int   = 40,
+        patch_size: int   = 4,
+        d_model:    int   = 64,
+        nhead:      int   = 4,
+        num_layers: int   = 4,
+        dropout:    float = 0.1,
+    ):
+        super().__init__()
+        assert grid_size % patch_size == 0
+        self.grid_size  = grid_size
+        self.patch_size = patch_size
+        self.d_model    = d_model
+        n_patches_1d    = grid_size // patch_size
+        self.n_patches  = n_patches_1d ** 2
+        patch_feat_dim  = d_model * patch_size * patch_size
+
+        # Stage 1: CNN with circular padding + learnable polynomial activation
+        self.cnn = nn.Sequential(
+            nn.Conv2d(1,       32,      3, padding=1, padding_mode='circular', bias=False),
+            nn.GroupNorm(8, 32),
+            PolyActivation(32),
+            nn.Conv2d(32, d_model,     3, padding=1, padding_mode='circular', bias=False),
+            nn.GroupNorm(8, d_model),
+            PolyActivation(d_model),
+        )
+
+        # Stage 2: lossless patch projection + learnable 2D positional embedding
+        self.patch_proj = nn.Linear(patch_feat_dim, d_model)
+        self.pos_embed  = nn.Parameter(torch.zeros(1, self.n_patches, d_model))
+        nn.init.trunc_normal_(self.pos_embed, std=0.02)
+
+        # Stage 3: transformer encoder (unchanged — GELU activation)
+        enc_layer = nn.TransformerEncoderLayer(
+            d_model=d_model, nhead=nhead,
+            dim_feedforward=d_model * 4,
+            dropout=dropout, batch_first=True,
+            norm_first=True, activation="gelu",
+        )
+        self.transformer = nn.TransformerEncoder(
+            enc_layer, num_layers=num_layers, enable_nested_tensor=False)
+
+        self.patch_head = nn.Linear(d_model, patch_size * patch_size)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        B  = x.shape[0]
+        p  = self.patch_size
+        gs = self.grid_size
+
+        feat = self.cnn(x)
+        C, H, W = feat.shape[1], feat.shape[2], feat.shape[3]
+        h = w = H // p
+        feat   = feat.reshape(B, C, h, p, w, p)
+        feat   = feat.permute(0, 2, 4, 1, 3, 5)
+        feat   = feat.reshape(B, self.n_patches, C * p * p)
+        tokens = self.patch_proj(feat) + self.pos_embed
+
+        out    = self.transformer(tokens)
+        logits = self.patch_head(out)
+        logits = logits.reshape(B, h, w, p, p)
+        logits = logits.permute(0, 1, 3, 2, 4)
+        return logits.reshape(B, 1, gs, gs)
+
+    def step(self, x: torch.Tensor, threshold: float = 0.5) -> torch.Tensor:
+        return (torch.sigmoid(self.forward(x)) >= threshold).float()
+
+
 # ── Task 10: CNN-Transformer V2 (2D sinusoidal positional encoding) ───────────
 
 class _SinusoidalPE2D(nn.Module):

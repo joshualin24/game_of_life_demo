@@ -1,0 +1,126 @@
+{
+  "ReLU": [
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.8765000104904175,
+      "n_params": 25
+    },
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.871749997138977,
+      "n_params": 25
+    },
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.871749997138977,
+      "n_params": 25
+    },
+    {
+      "success": true,
+      "epochs": 159,
+      "final_acc": 1.0,
+      "n_params": 25
+    },
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.9159374833106995,
+      "n_params": 25
+    },
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.871749997138977,
+      "n_params": 25
+    },
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.871749997138977,
+      "n_params": 25
+    },
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.9159374833106995,
+      "n_params": 25
+    },
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.871749997138977,
+      "n_params": 25
+    },
+    {
+      "success": false,
+      "epochs": 500,
+      "final_acc": 0.871749997138977,
+      "n_params": 25
+    }
+  ],
+  "Poly": [
+    {
+      "success": true,
+      "epochs": 170,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 132,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 168,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 117,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 255,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 225,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 215,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 162,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 252,
+      "final_acc": 1.0,
+      "n_params": 34
+    },
+    {
+      "success": true,
+      "epochs": 160,
+      "final_acc": 1.0,
+      "n_params": 34
+    }
+  ]
+}

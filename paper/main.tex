@@ -1,0 +1,60 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{microtype}
+
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+\title{Learning Conway's Game of Life with CNN-Transformer Hybrids:\\
+Architecture Scaling, Exposure Bias, and Activation Inductive Bias}
+\author{Hao-Yuan}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We study the problem of learning the one-step transition rule of Conway's
+Game of Life (GoL) on a $40\times40$ toroidal grid using a CNN-Transformer
+hybrid architecture. Starting from a model trained with pure teacher forcing,
+we show that autoregressive rollout suffers from exposure bias: the model
+diverges on sparse configurations it never sees during single-step training.
+We show that a straight-through-estimator (STE) multi-step training scheme
+fails due to a systematic gradient bias, while scheduled sampling resolves
+the issue cleanly. We further show that once a $291$K-parameter model
+saturates its representational capacity, scaling the training set five-fold
+\emph{regresses} performance, while scaling the model five-fold to $1.5$M
+parameters eliminates essentially all remaining errors. Motivated by recent
+work on activation-function inductive bias for cellular automata
+(Ahmed \& Davis, 2026), we independently reproduce their central finding
+that a learnable second-degree polynomial activation lets a $25$--$34$
+parameter CNN learn GoL reliably where ReLU fails almost completely, and we
+report a negative result from attempting to transfer this activation into
+our larger multi-step model. Finally, we analyze the learned patch
+embeddings of our best models under geometric transformations and cellular
+perturbations, characterizing how content, absolute position, and
+attention-mediated context interact in the representation space.
+\end{abstract}
+
+\tableofcontents
+
+\input{sections/introduction}
+\input{sections/architecture}
+\input{sections/training_evolution}
+\input{sections/results_table}
+\input{sections/embedding_analysis}
+\input{sections/verification}
+\input{sections/discussion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

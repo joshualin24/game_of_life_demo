@@ -1,0 +1,53 @@
+\section{Introduction}
+
+Conway's Game of Life (GoL) is a deterministic cellular automaton defined on
+a two-dimensional grid, where each cell is alive or dead and updates
+synchronously according to a fixed local rule (B3/S23): a dead cell with
+exactly 3 live neighbors becomes alive (\emph{birth}); a live cell with 2 or
+3 live neighbors stays alive (\emph{survival}); all other cells die or
+remain dead. Despite the simplicity of the rule, GoL exhibits rich emergent
+dynamics (oscillators, spaceships, and chaotic regimes at high density),
+which makes it a useful and cheaply-simulated testbed for studying whether
+neural networks can learn a precisely-specified local update rule from
+examples, and how architectural and training choices affect that learning.
+
+This report documents an iterative series of experiments training a
+CNN-Transformer hybrid to predict one GoL step ahead on a $40\times 40$
+toroidal (periodic-boundary) grid. The narrative proceeds through three
+largely independent threads:
+
+\begin{enumerate}
+  \item \textbf{Training dynamics for multi-step prediction}
+  (Section~\ref{sec:training-evolution}). A model trained purely with
+  teacher forcing (always conditioning on the ground-truth previous frame)
+  performs well on single-step prediction but collapses under its own
+  autoregressive rollout, particularly on sparse configurations. We compare
+  a straight-through-estimator (STE) approach to multi-step training against
+  scheduled sampling, and show that only the latter is stable.
+
+  \item \textbf{Model capacity vs.\ data scale}
+  (Section~\ref{sec:results-table}). Once a model of a given size is
+  performing near-perfectly on average, we show that increasing the
+  \emph{training set size} five-fold can \emph{regress} accuracy on hard
+  (high-density) grids, while increasing \emph{model capacity} five-fold
+  removes essentially all remaining errors. This is consistent with the
+  model having saturated its representational capacity rather than being
+  data-limited.
+
+  \item \textbf{Activation-function inductive bias}
+  (Section~\ref{sec:verification}). Motivated by a recent paper on
+  Kolmogorov-Arnold-style polynomial activations for GoL
+  \cite{ahmed2026polynomial}, we independently reproduce its central claim
+  on our own $40\times 40$ toroidal setup using an from-scratch
+  reimplementation of their minimal architecture, and separately report a
+  negative result from attempting to transfer the same activation into our
+  larger multi-step CNN-Transformer.
+\end{enumerate}
+
+Section~\ref{sec:architecture} describes the shared CNN-Transformer
+architecture used throughout. Section~\ref{sec:embedding-analysis} presents
+an interpretability study of the learned patch embeddings under geometric
+transformations (rotation, reflection, translation) and local perturbations
+(single-cell flips and moves), aimed at understanding how content,
+positional encoding, and attention-mediated context jointly determine the
+representation of a grid patch.

@@ -1,0 +1,35 @@
+[data] Generating 2000 × 100-step trajectories …
+  200/2000
+  400/2000
+  600/2000
+  800/2000
+  1000/2000
+  1200/2000
+  1400/2000
+  1600/2000
+  1800/2000
+  2000/2000
+  → 200,000 (state, next) pairs
+  train=170,000  val=30,000  train batches=2657  val batches=469
+
+  CNNTransformer  params=226,288  device=mps
+  patches=100  patch_size=4×4  d_model=64  layers=4
+
+============================================================
+  epoch   1/100  train=0.17718  val=0.50336  val_acc=86.32%  best=0.50336  t=156s
+  epoch  10/100  train=0.06505  val=0.77446  val_acc=78.19%  best=0.50336  t=1563s
+  epoch  20/100  train=0.05430  val=0.79160  val_acc=84.54%  best=0.50336  t=3125s
+  epoch  30/100  train=0.05012  val=0.94018  val_acc=71.50%  best=0.50336  t=4645s
+  epoch  40/100  train=0.04779  val=0.55879  val_acc=85.05%  best=0.50336  t=6110s
+  epoch  50/100  train=0.04641  val=0.50999  val_acc=84.22%  best=0.41399  t=7576s
+  epoch  60/100  train=0.04518  val=0.36643  val_acc=87.16%  best=0.35081  t=9043s
+  epoch  70/100  train=0.04408  val=0.37346  val_acc=84.67%  best=0.31183  t=10511s
+  epoch  80/100  train=0.04348  val=0.35907  val_acc=87.18%  best=0.29039  t=11979s
+  epoch  90/100  train=0.04315  val=0.26312  val_acc=89.15%  best=0.25590  t=13448s
+  epoch 100/100  train=0.04311  val=0.25675  val_acc=89.37%  best=0.25547  t=14915s
+
+  Best val loss: 0.25547  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task9_cnn_transformer_best.pt
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task9_cnn_transformer_rollout_random.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task9_cnn_transformer_rollout_glider.png
+
+Done.

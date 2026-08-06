@@ -1,0 +1,30 @@
+[data] Generating 2000 × 100-step trajectories …
+  200/2000
+  400/2000
+  600/2000
+  800/2000
+  1000/2000
+  1200/2000
+  1400/2000
+  1600/2000
+  1800/2000
+  2000/2000
+  → 200,000 (state, next) pairs
+  train=170,000  val=30,000  train batches=2657  val batches=469
+
+  CNNTransformer  params=226,288  device=mps
+  patches=100  patch_size=4×4  d_model=64  layers=4
+
+============================================================
+  epoch   1/50  train=0.17718  val=0.48254  val_acc=86.45%  best=0.48254  t=155s
+  epoch  10/50  train=0.06529  val=0.78024  val_acc=73.87%  best=0.48254  t=1520s
+  epoch  20/50  train=0.05463  val=0.89288  val_acc=84.65%  best=0.48254  t=5405s
+  epoch  30/50  train=0.05071  val=0.91658  val_acc=74.82%  best=0.48254  t=6941s
+  epoch  40/50  train=0.04878  val=0.41385  val_acc=87.00%  best=0.41174  t=8481s
+  epoch  50/50  train=0.04830  val=0.27802  val_acc=89.40%  best=0.27802  t=10026s
+
+  Best val loss: 0.27802  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task9_cnn_transformer_best.pt
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task9_cnn_transformer_rollout_random.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task9_cnn_transformer_rollout_glider.png
+
+Done.

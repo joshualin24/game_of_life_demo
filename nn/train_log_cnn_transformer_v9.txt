@@ -1,0 +1,70 @@
+[data] Random grids (normal densities) …
+  density=0.02  +28,000 samples
+  density=0.05  +28,000 samples
+  density=0.10  +28,000 samples
+  density=0.20  +28,000 samples
+  density=0.35  +28,000 samples
+  density=0.50  +28,000 samples
+[data] High-density grids (3000 trajs each) …
+  density=0.65  +84,000 samples
+  density=0.80  +84,000 samples
+[data] Named patterns …
+  block       +5,400 samples
+  beehive     +5,400 samples
+  loaf        +5,400 samples
+  boat        +5,400 samples
+  tub         +5,400 samples
+  blinker     +5,400 samples
+  toad        +5,400 samples
+  beacon      +5,400 samples
+  pulsar      +5,400 samples
+  glider      +5,400 samples
+  lwss        +5,400 samples
+  r_pent      +5,400 samples
+  acorn       +5,400 samples
+[data] Combo patterns …
+  1000/5000
+  2000/5000
+  3000/5000
+  4000/5000
+  5000/5000
+  combos  +140,000 samples
+  → total 546,200 samples  (each has 3 target frames)
+  train=464,270  val=81,930  train batches=7255  val batches=1281
+
+  CNNTransformerV9 (V4 arch)  params=291,888  device=mps
+  Loaded V8 best weights from /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task16_cnn_transformer_v8_best.pt
+
+  K_STEPS=3  LR=5e-06  P_MAX=1.0  5× data scale-up
+============================================================
+  epoch   1/20  p=0.00  train=0.19856  val=0.20129  f1=0.9983  prec=99.8%  rec=99.8%  born=99.8%  surv=99.8%  died=99.8%  best=0.20129  t=8682s
+  epoch   5/20  p=0.21  train=0.19857  val=0.20185  f1=0.9972  prec=99.7%  rec=99.7%  born=99.7%  surv=99.7%  died=99.7%  best=0.20118  t=39527s
+  epoch  10/20  p=0.47  train=0.19857  val=0.20193  f1=0.9970  prec=99.7%  rec=99.7%  born=99.7%  surv=99.7%  died=99.7%  best=0.20118  t=49047s
+  epoch  15/20  p=0.74  train=0.19858  val=0.20212  f1=0.9968  prec=99.7%  rec=99.6%  born=99.6%  surv=99.6%  died=99.7%  best=0.20118  t=58531s
+  epoch  20/20  p=1.00  train=0.19858  val=0.20195  f1=0.9968  prec=99.7%  rec=99.6%  born=99.6%  surv=99.6%  died=99.7%  best=0.20118  t=79693s
+
+  Best val loss: 0.20118  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task17_cnn_transformer_v9_best.pt
+
+[rollouts] best checkpoint
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_random_sparse.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_random_medium.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_random_dense65.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_random_dense80.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_glider.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_blinker.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_pulsar.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_lwss.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_best_acorn.png
+
+[rollouts] final checkpoint (epoch 20)
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_random_sparse.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_random_medium.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_random_dense65.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_random_dense80.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_glider.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_blinker.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_pulsar.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_lwss.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task17_cnn_transformer_v9_rollout_final_acorn.png
+
+Done.

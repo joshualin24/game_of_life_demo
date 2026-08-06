@@ -1,0 +1,67 @@
+\section{Summary of All Versions}
+\label{sec:results-table}
+
+Table~\ref{tab:version-summary} summarizes the full progression of models
+discussed in Section~\ref{sec:training-evolution}. ``Per-grid errors''
+figures (where available) come from a fixed failure-search protocol: 500
+random grids at each of five densities ($0.20$, $0.35$, $0.50$, $0.65$,
+$0.80$), same random seed across models, counting total false
+positive + false negative cells summed over all 500 grids at each density.
+
+\begin{table}[htbp]
+\centering
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lp{4.7cm}ccccl}
+\toprule
+Ver.\ & Key change & Best val loss & Prec.\ & Rec.\ & Born & Status \\
+\midrule
+V5 & Single-step teacher forcing (baseline) & 0.20125 & 99.4\% & 99.7\% & 93.8\% & Collapses under rollout \\
+V6 & +STE multi-step ($K=3$) & 0.23421\textsuperscript{a} & 92.7\%\textsuperscript{a} & --- & 99.5\%\textsuperscript{a} & \textbf{Failed} --- diverges \\
+V7 & STE $\to$ scheduled sampling & 0.20114 & 99.7\% & 100\% & 100\% & Stable, strong \\
+V8 & +3$\times$ high-density upsample & 0.20064 & 100\% & 99.9\% & 99.9\% & Best per-grid accuracy (291K) \\
+V9 & +5$\times$ all data & 0.20118 & 99.7\% & 99.6\% & 99.6\% & \textbf{Regressed} per-grid errors \\
+V10 & 5.15$\times$ model size, from scratch & 0.19852 & 100\% & 100\% & 100\% & \textbf{Zero errors}, 2{,}500/2{,}500 grids \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Version summary. \textsuperscript{a}V6's best epoch (5) before
+divergence; the model never recovers after this point.}
+\label{tab:version-summary}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Density & V8 total errors & V9 total errors & V10 total errors \\
+\midrule
+0.20 & 0     & --   & 0 \\
+0.35 & 192   & ---  & 0 \\
+0.50 & 94    & 6{,}948\textsuperscript{b} & 0 \\
+0.65 & 1{,}891 & ---  & 0 \\
+0.80 & 3{,}358 & 22{,}190 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Per-grid error counts (false positives + false negatives, summed
+over 500 grids per density) for the three model sizes discussed in
+Section~\ref{sec:training-evolution}. \textsuperscript{b}V9 figure is false
+negatives specifically, quoted as reported during the original failure
+comparison; full V9 error breakdown at other densities was not re-collected
+after the regression was identified and model capacity scaling (V10) was
+pursued instead.}
+\label{tab:per-grid-errors}
+\end{table}
+
+The central empirical claim of this section is visible directly in
+Table~\ref{tab:per-grid-errors}: V9's aggregate validation metrics
+(Table~\ref{tab:version-summary}) are statistically indistinguishable from
+V8's, yet its per-grid tail-case error count is an order of magnitude
+\emph{worse}. This discrepancy would not have been visible from validation
+loss or aggregate precision/recall alone --- it required a targeted,
+density-stratified failure search to detect. We consider this the main
+practical lesson of the V8--V10 progression: \emph{aggregate metrics on a
+held-out validation set with the same distribution as training data can
+silently hide severe regressions in specific, identifiable subpopulations
+of the input space}, and per-subgroup error auditing is necessary to catch
+this class of regression.

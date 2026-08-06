@@ -1,0 +1,40 @@
+[data] Generating 2000 × 100-step trajectories on 40×40 grids …
+  100/2000
+  200/2000
+  300/2000
+  400/2000
+  500/2000
+  600/2000
+  700/2000
+  800/2000
+  900/2000
+  1000/2000
+  1100/2000
+  1200/2000
+  1300/2000
+  1400/2000
+  1500/2000
+  1600/2000
+  1700/2000
+  1800/2000
+  1900/2000
+  2000/2000
+  → 200,000 (state, next) pairs
+  train=170,000  val=30,000  train batches=2657  val batches=469
+
+  NextStepTransformer  params=208,464  device=mps
+  patches=100  patch_size=4×4  d_model=64  layers=4
+
+============================================================
+  epoch   1/50  train=0.20296  val=0.34670  val_acc=86.88%  best=0.34670  t=115s
+  epoch  10/50  train=0.17832  val=0.60443  val_acc=87.53%  best=0.34670  t=1144s
+  epoch  20/50  train=0.17718  val=0.24383  val_acc=90.49%  best=0.20630  t=2286s
+  epoch  30/50  train=0.17680  val=0.18704  val_acc=91.95%  best=0.18704  t=3429s
+  epoch  40/50  train=0.17656  val=0.18431  val_acc=92.02%  best=0.18395  t=4623s
+  epoch  50/50  train=0.17648  val=0.18364  val_acc=92.04%  best=0.18363  t=5833s
+
+  Best val loss: 0.18363  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task8_next_step_transformer_best.pt
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task8_next_step_transformer_rollout_random.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task8_next_step_transformer_rollout_glider.png
+
+Done.

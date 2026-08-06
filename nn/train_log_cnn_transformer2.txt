@@ -1,0 +1,34 @@
+[data] Generating 2000 × 100-step trajectories …
+  200/2000
+  400/2000
+  600/2000
+  800/2000
+  1000/2000
+  1200/2000
+  1400/2000
+  1600/2000
+  1800/2000
+  2000/2000
+  → 200,000 (state, next) pairs
+  train=170,000  val=30,000  train batches=2657  val batches=469
+
+  CNNTransformer  params=226,288  device=mps
+  patches=100  patch_size=4×4  d_model=64  layers=4
+  Resumed from /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task9_cnn_transformer_best.pt
+/opt/anaconda3/envs/pytorch-env/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:224: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn(
+  Continuing from epoch 51  best_val=0.27802
+
+============================================================
+  epoch  60/110  train=0.19969  val=60.01060  val_acc=40.33%  best=0.27802  t=1540s
+  epoch  70/110  train=0.16447  val=127.17465  val_acc=32.70%  best=0.27802  t=3063s
+  epoch  80/110  train=0.12403  val=15.42057  val_acc=78.77%  best=0.27802  t=7630s
+  epoch  90/110  train=0.09613  val=30.83872  val_acc=54.77%  best=0.27802  t=17342s
+  epoch 100/110  train=0.09740  val=19.40618  val_acc=62.28%  best=0.27802  t=20741s
+  epoch 110/110  train=0.08787  val=20.01884  val_acc=76.61%  best=0.27802  t=25069s
+
+  Best val loss: 0.27802  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/task9_cnn_transformer_best.pt
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task9_cnn_transformer_rollout_random.png
+  Rollout → /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/task9_cnn_transformer_rollout_glider.png
+
+Done.

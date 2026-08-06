@@ -1,0 +1,43 @@
+[data] Random grids (normal densities) …
+  density=0.02  +5,600 samples
+  density=0.05  +5,600 samples
+  density=0.10  +5,600 samples
+  density=0.20  +5,600 samples
+  density=0.35  +5,600 samples
+  density=0.50  +5,600 samples
+[data] High-density grids (600 trajs each) …
+  density=0.65  +16,800 samples
+  density=0.80  +16,800 samples
+[data] Named patterns …
+  block       +1,080 samples
+  beehive     +1,080 samples
+  loaf        +1,080 samples
+  boat        +1,080 samples
+  tub         +1,080 samples
+  blinker     +1,080 samples
+  toad        +1,080 samples
+  beacon      +1,080 samples
+  pulsar      +1,080 samples
+  glider      +1,080 samples
+  lwss        +1,080 samples
+  r_pent      +1,080 samples
+  acorn       +1,080 samples
+[data] Combo patterns …
+  200/1000
+  400/1000
+  600/1000
+  800/1000
+  1000/1000
+  combos  +28,000 samples
+  → total 109,240 samples  (each has 3 target frames)
+  train=92,854  val=16,386  train batches=1451  val batches=257
+
+  CNNTransformerV11  params=292,176  device=mps
+  d_model=64  nhead=4  num_layers=4  dim_ff=256  CNN activation=PolyActivation(deg=2)  (training from scratch)
+
+  K_STEPS=3  LR=0.0001  P_MAX=1.0  scheduled sampling
+============================================================
+  epoch   1/60  p=0.00  train=0.26957  val=0.26159  f1=0.5810  prec=65.5%  rec=52.2%  born=12.4%  surv=79.7%  died=60.1%  best=0.26159  t=424s
+  epoch   5/60  p=0.07  train=0.20663  val=0.22656  f1=0.8876  prec=88.3%  rec=89.3%  born=86.8%  surv=91.1%  died=93.5%  best=0.21970  t=2110s
+  epoch  10/60  p=0.15  train=0.20965  val=0.49100  f1=0.3858  prec=28.8%  rec=59.3%  born=53.4%  surv=63.4%  died=84.5%  best=0.21970  t=4220s
+  epoch  15/60  p=0.24  train=0.21220  val=1.04525  f1=0.1691  prec=10.5%  rec=43.9%  born=38.4%  surv=47.7%  died=73.4%  best=0.21970  t=14076s

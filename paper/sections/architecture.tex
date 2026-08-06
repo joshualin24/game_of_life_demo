@@ -1,0 +1,65 @@
+\section{Architecture}
+\label{sec:architecture}
+
+All models in Sections~\ref{sec:training-evolution}--\ref{sec:embedding-analysis}
+share the same \emph{CNN-Transformer} architecture (referred to as
+\texttt{CNNTransformerV4} in the codebase), operating on a $40 \times 40$
+binary grid with toroidal (periodic) boundary conditions. The forward pass
+has three stages:
+
+\paragraph{Stage 1 --- Local CNN feature extractor.}
+Two $3\times 3$ convolutions with \texttt{circular} padding mode (so that
+convolution respects the toroidal topology exactly, rather than treating
+the grid border as a hard edge), each followed by GroupNorm and a GELU
+nonlinearity:
+\[
+  \text{Conv2d}(1 \to 32) \to \text{GroupNorm} \to \text{GELU}
+  \to \text{Conv2d}(32 \to d_{\text{model}}) \to \text{GroupNorm} \to \text{GELU}.
+\]
+The receptive field of this stage is $5\times 5$, matching (and slightly
+exceeding) the Moore neighborhood relevant to the GoL update rule.
+
+\paragraph{Stage 2 --- Patch tokenization.}
+The $40\times 40$ feature map is partitioned into non-overlapping
+$4\times 4$ patches (a $10\times 10$ arrangement, $100$ patches total),
+following the patch-tokenization scheme of Vision Transformers
+\cite{dosovitskiy2020vit}. Each
+patch's $d_{\text{model}} \times 4 \times 4$ feature block is flattened and
+linearly projected to a $d_{\text{model}}$-dimensional token, and a
+\emph{learnable} absolute positional embedding
+$\texttt{pos\_embed} \in \mathbb{R}^{100 \times d_{\text{model}}}$ is added:
+\[
+  \text{token}_i = \text{Linear}(\text{feat}_i) + \text{pos\_embed}_i,
+  \qquad i = 1, \dots, 100.
+\]
+We refer to this as the \textbf{pre-transformer embedding} in
+Section~\ref{sec:embedding-analysis}.
+
+\paragraph{Stage 3 --- Transformer encoder.}
+A pre-norm Transformer encoder \cite{vaswani2017attention} (GELU
+activation, $\text{dim\_feedforward} = 4 d_{\text{model}}$) mixes
+information across all 100 patch tokens via
+self-attention. We refer to its output as the \textbf{post-transformer
+embedding}. A final linear head maps each output token back to
+$4\times 4 = 16$ logits, reconstructing next-state predictions for every
+cell in the patch.
+
+\paragraph{Model sizes used.} Two sizes appear throughout this report:
+
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+Name & $d_{\text{model}}$ & heads & layers & dim\_feedforward & params \\
+\midrule
+V8 (baseline size)  & 64  & 4 & 4 & 256 & 291{,}888 \\
+V10 (scaled size)   & 128 & 8 & 6 & 512 & 1{,}504{,}240 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Data augmentation.} Training uses the dihedral group $D_4$
+(90$^\circ$ rotations and horizontal/vertical reflections) applied jointly
+to input and target frames. Translation augmentation is deliberately
+\emph{not} used, since it directly conflicts with the learnable absolute
+positional embedding in Stage 2 (a translated patch would need a different
+position embedding than the one it is assigned).

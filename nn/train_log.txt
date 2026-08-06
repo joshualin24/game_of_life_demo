@@ -1,0 +1,44 @@
+[data] Building dataset  n=5000  grid=40  T=60 …
+[TrajectoryDataset] 5000 samples  (2000 random, 3000 pattern-based)  grid=40×40  T=60
+  Pre-computing trajectories (~488 MB) …
+    1000/5000
+    2000/5000
+    3000/5000
+    4000/5000
+    5000/5000
+  Done.
+  train batches: 266  val batches: 47
+
+============================================================
+  TrajectoryTransformer  d_model=64  params=331,568
+  device=mps  epochs=80  batch=16  lr=0.0003
+============================================================
+  epoch    1/80  train=47766376.23572  val=0.48692  best=0.48692  t=55s
+  epoch   10/80  train=11800292.58899  val=0.22998  best=0.22997  t=534s
+  epoch   20/80  train=2001210.62573  val=0.22859  best=0.22675  t=1063s
+  epoch   30/80  train=626906.28640  val=0.23008  best=0.22675  t=1593s
+  epoch   40/80  train=304095.69843  val=0.22742  best=0.22395  t=2124s
+  epoch   50/80  train=223182.17434  val=0.22408  best=0.22358  t=2903s
+  epoch   60/80  train=81020.94821  val=0.22529  best=0.22358  t=3941s
+  epoch   70/80  train=54705.32952  val=0.22329  best=0.22329  t=4946s
+  epoch   80/80  train=50141.19394  val=0.22335  best=0.22325  t=11965s
+  Best val loss: 0.22325  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/traj_emb_d64_best.pt
+  Loss curve  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/traj_emb_d64_loss.png
+
+============================================================
+  TrajectoryTransformer  d_model=128  params=1,031,344
+  device=mps  epochs=80  batch=16  lr=0.0003
+============================================================
+  epoch    1/80  train=2027868.31496  val=0.25044  best=0.25044  t=455s
+  epoch   10/80  train=260265.34661  val=0.24277  best=0.23094  t=5744s
+  epoch   20/80  train=26599.53014  val=0.23864  best=0.23094  t=10825s
+  epoch   30/80  train=12591.34762  val=0.22741  best=0.22700  t=13635s
+  e  epoch   40/80  train=2759.85617  val=0.22371  best=0.22370  t=16737s
+  epoch   50/80  train=1650.61577  val=0.22408  best=0.22331  t=20003s
+  epoch   60/80  train=1083.63128  val=0.22328  best=0.22319  t=23707s
+  epoch   70/80  train=467.47884  val=0.22303  best=0.22303  t=27249s
+  epoch   80/80  train=434.31406  val=0.22280  best=0.22279  t=30847s
+  Best val loss: 0.22279  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/checkpoints/traj_emb_d128_best.pt
+  Loss curve  →  /Users/Hao-Yuan/game_of_life_demo/nn/../nn/results/traj_emb_d128_loss.png
+
+All models trained.

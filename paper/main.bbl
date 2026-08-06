@@ -1,0 +1,37 @@
+\begin{thebibliography}{1}
+
+\bibitem{ahmed2026polynomial}
+Tashin Ahmed and Q.~Tyrell Davis.
+\newblock It's much easier for neural networks to learn game of life dynamics
+  with the right activation function: Polynomial kolmogorov-arnold networks.
+\newblock {\em arXiv preprint arXiv:2606.23587}, 2026.
+
+\bibitem{bengio2015scheduled}
+Samy Bengio, Oriol Vinyals, Navdeep Jaitly, and Noam Shazeer.
+\newblock Scheduled sampling for sequence prediction with recurrent neural
+  networks.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  2015.
+
+\bibitem{dosovitskiy2020vit}
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn,
+  Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg
+  Heigold, Sylvain Gelly, Jakob Uszkoreit, and Neil Houlsby.
+\newblock An image is worth 16x16 words: Transformers for image recognition at
+  scale.
+\newblock {\em arXiv preprint arXiv:2010.11929}, 2020.
+
+\bibitem{springer2021minimal}
+Jacob~M. Springer and Garrett~T. Kenyon.
+\newblock It's hard for neural networks to learn the game of life.
+\newblock {\em International Joint Conference on Neural Networks (IJCNN)},
+  2021.
+
+\bibitem{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N. Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  2017.
+
+\end{thebibliography}

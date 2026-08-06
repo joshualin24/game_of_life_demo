@@ -1,0 +1,35 @@
+Generating dataset: 100 train + 20 val grids (40x40, density 0.1-0.9) ...
+
+=== ReLU (m=1) ===
+  seed  0  [FAIL]  epochs= 500  val_acc= 87.65%  params=25  t=4.1s
+  seed  1  [FAIL]  epochs= 500  val_acc= 87.17%  params=25  t=3.5s
+  seed  2  [FAIL]  epochs= 500  val_acc= 87.17%  params=25  t=3.6s
+  seed  3  [OK  ]  epochs= 159  val_acc=100.00%  params=25  t=1.1s
+  seed  4  [FAIL]  epochs= 500  val_acc= 91.59%  params=25  t=3.5s
+  seed  5  [FAIL]  epochs= 500  val_acc= 87.17%  params=25  t=3.6s
+  seed  6  [FAIL]  epochs= 500  val_acc= 87.17%  params=25  t=3.5s
+  seed  7  [FAIL]  epochs= 500  val_acc= 91.59%  params=25  t=3.5s
+  seed  8  [FAIL]  epochs= 500  val_acc= 87.17%  params=25  t=3.5s
+  seed  9  [FAIL]  epochs= 500  val_acc= 87.17%  params=25  t=3.5s
+
+=== Poly (m=1) ===
+  seed  0  [OK  ]  epochs= 170  val_acc=100.00%  params=34  t=1.5s
+  seed  1  [OK  ]  epochs= 132  val_acc=100.00%  params=34  t=1.2s
+  seed  2  [OK  ]  epochs= 168  val_acc=100.00%  params=34  t=1.5s
+  seed  3  [OK  ]  epochs= 117  val_acc=100.00%  params=34  t=1.0s
+  seed  4  [OK  ]  epochs= 255  val_acc=100.00%  params=34  t=2.2s
+  seed  5  [OK  ]  epochs= 225  val_acc=100.00%  params=34  t=2.0s
+  seed  6  [OK  ]  epochs= 215  val_acc=100.00%  params=34  t=1.8s
+  seed  7  [OK  ]  epochs= 162  val_acc=100.00%  params=34  t=1.4s
+  seed  8  [OK  ]  epochs= 252  val_acc=100.00%  params=34  t=2.2s
+  seed  9  [OK  ]  epochs= 160  val_acc=100.00%  params=34  t=1.4s
+
+======================================================================
+  SUMMARY  (10 seeds each, m=1)
+======================================================================
+  Activation Success rate   Params   Mean epochs (success)  Mean final acc 
+  ReLU       1/10           25       159.0                  89.39         %
+  Poly       10/10           34       185.6                  100.00        %
+
+Saved /Users/Hao-Yuan/game_of_life_demo/poly_activation_verify/results/relu_vs_poly_convergence.png
+Done.
