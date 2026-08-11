@@ -198,10 +198,14 @@ def build_dataset(n_grids=400, seed=42, out_name="pilot", print_every=20):
 def build_step_tensors(npz_path):
     """
     Returns:
-      X:    (M, 3, H, W) float32 — [grid_with_prior_flips, chosen_mask, k_remaining]
-      mask: (M, H*W + 1) bool   — valid-class mask (neighborhood minus already-chosen,
-                                   STOP always valid)
-      y:    (M,) int64          — target class index in [0, H*W] (H*W == STOP class)
+      X:        (M, 3, H, W) float32 — [grid_with_prior_flips, chosen_mask, k_remaining]
+      mask:     (M, H*W + 1) bool   — valid-class mask (neighborhood minus already-chosen,
+                                       STOP always valid)
+      y:        (M,) int64          — target class index in [0, H*W] (H*W == STOP class)
+      grid_idx: (M,) int64          — which base grid (row in the .npz) each example came
+                                       from. Steps from the same base grid are highly
+                                       correlated (they share most of the board) and must
+                                       stay on the same side of any train/val split.
     """
     data = np.load(npz_path)
     grids, chosen, n_chosen = data["grids"], data["chosen"], data["n_chosen"]
@@ -210,7 +214,7 @@ def build_step_tensors(npz_path):
     H = W = grid_size
     STOP = H * W
 
-    X_list, mask_list, y_list = [], [], []
+    X_list, mask_list, y_list, grid_idx_list = [], [], [], []
     for i in range(len(grids)):
         init = grids[i]
         L = int(n_chosen[i])
@@ -239,6 +243,7 @@ def build_step_tensors(npz_path):
             X_list.append(x)
             mask_list.append(valid)
             y_list.append(target)
+            grid_idx_list.append(i)
 
             if s < L:
                 state = state.copy()
@@ -250,7 +255,73 @@ def build_step_tensors(npz_path):
     X = np.asarray(X_list, dtype=np.float32)
     mask = np.asarray(mask_list, dtype=bool)
     y = np.asarray(y_list, dtype=np.int64)
-    return X, mask, y
+    grid_idx = np.asarray(grid_idx_list, dtype=np.int64)
+    return X, mask, y, grid_idx
+
+
+# ── D4 (rotation/reflection) augmentation ─────────────────────────────────────
+#
+# GoL's toroidal dynamics are exactly equivariant under grid rotation and
+# reflection, so rotating/reflecting a (grid, chosen-flips) example and its
+# target cell in lockstep yields another perfectly valid training example —
+# free 8x supervision with no extra teacher-search compute. Apply this only
+# *within* a train or val split (never across), since a rotated copy of a
+# training example is still the same underlying configuration.
+
+def _d4_funcs():
+    """8 functions, each transforming a (..., H, W) array over its last two axes."""
+    return [
+        lambda a: a,
+        lambda a: np.rot90(a, 1, axes=(-2, -1)),
+        lambda a: np.rot90(a, 2, axes=(-2, -1)),
+        lambda a: np.rot90(a, 3, axes=(-2, -1)),
+        lambda a: np.flip(a, axis=-1),
+        lambda a: np.flip(np.rot90(a, 1, axes=(-2, -1)), axis=-1),
+        lambda a: np.flip(np.rot90(a, 2, axes=(-2, -1)), axis=-1),
+        lambda a: np.flip(np.rot90(a, 3, axes=(-2, -1)), axis=-1),
+    ]
+
+
+def _d4_forward_index_maps(H, W):
+    """
+    For each of the 8 D4 transforms, a flat-index map `fwd` such that a cell
+    at old flat index `f` ends up at flat index `fwd[f]` after the transform.
+    """
+    idx = np.arange(H * W).reshape(H, W)
+    maps = []
+    for f in _d4_funcs():
+        pos_map = f(idx)  # pos_map[r2,c2] = old flat index now sitting at (r2,c2)
+        forward = np.empty(H * W, dtype=np.int64)
+        forward[pos_map.reshape(-1)] = np.arange(H * W)
+        maps.append(forward)
+    return maps
+
+
+def augment_d4(X, mask, y, grid_size):
+    """Returns (X, mask, y) each 8x longer, one copy per D4 symmetry."""
+    H = W = grid_size
+    STOP = H * W
+    funcs = _d4_funcs()
+    fwd_maps = _d4_forward_index_maps(H, W)
+
+    X_out, mask_out, y_out = [], [], []
+    for f, fwd in zip(funcs, fwd_maps):
+        Xa = X.copy()
+        Xa[:, 0] = f(X[:, 0])   # grid channel (spatial)
+        Xa[:, 1] = f(X[:, 1])   # chosen-mask channel (spatial)
+        # channel 2 (k_remaining) is a constant broadcast — invariant.
+        X_out.append(Xa)
+
+        spatial_mask = mask[:, :H * W].reshape(-1, H, W)
+        spatial_mask_t = f(spatial_mask).reshape(-1, H * W)
+        mask_out.append(np.concatenate([spatial_mask_t, mask[:, H * W:]], axis=1))
+
+        y_safe = np.where(y == STOP, 0, y)
+        y_out.append(np.where(y == STOP, STOP, fwd[y_safe]))
+
+    return (np.concatenate(X_out, axis=0),
+            np.concatenate(mask_out, axis=0),
+            np.concatenate(y_out, axis=0))
 
 
 if __name__ == "__main__":
