@@ -3,4 +3,7 @@ __pycache__/
 nn/__pycache__/
 nn/data/
 nn/checkpoints/
+diedown_predictor/data/
+diedown_predictor/checkpoints/
+diedown_predictor/__pycache__/
 *.pyc
