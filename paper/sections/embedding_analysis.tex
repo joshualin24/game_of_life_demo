@@ -162,3 +162,92 @@ $\Delta$ vectors than translation does, consistent with the model having
 been explicitly trained to be robust to (though not embedding-invariant
 under) $D_4$ transformations, while translation invariance was never
 encouraged during training.
+
+\subsection{Sinusoidal vs.\ learned positional encoding: a direct equivariance test}
+\label{sec:sinusoidal-vs-learned}
+
+The translation sensitivity documented above is a specific, testable
+prediction of the architecture: a \emph{learned} absolute positional
+embedding assigns each of the 100 patch slots an independent, arbitrarily
+initialized vector with no relationship between neighboring slots, so there
+is no reason to expect $\text{pos\_embed}_i - \text{pos\_embed}_{i-1}$ to be
+small or consistent across $i$. A \emph{fixed sinusoidal} positional
+encoding, by contrast, has a closed-form algebraic property: by the
+angle-addition identities, shifting a 1-D sinusoidal position encoding by a
+fixed offset $\delta$ is equivalent to applying a single fixed linear
+(rotation) operator uniformly across all frequency pairs, independent of
+the base position. This gives sinusoidal encodings a genuine equivariant
+structure under translation that a learned embedding table does not have
+by construction.
+
+We test this directly using an earlier variant in this codebase,
+\texttt{CNNTransformerV2} (219K parameters), which is identical to the
+CNN-Transformer architecture (Section~\ref{sec:architecture}) except that
+Stage~2 uses spatial average-pooling for tokenization and a \emph{fixed}
+2D sinusoidal positional encoding (each patch $(i,j)$ receives
+$[\text{sinusoidal}(i) \,|\, \text{sinusoidal}(j)]$, no learnable position
+parameters) in place of the learned \texttt{pos\_embed} table. We repeat
+the translation-sensitivity measurement of
+Section~\ref{sec:embedding-analysis} on both models, using the same three
+base configurations (glider, and random grids at $d=0.35$ and $d=0.65$) and
+four translation offsets.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Config & Shift & V2 (sinusoidal) post-cos & V8 (learned) post-cos & $\Delta$ (V2$-$V8) \\
+\midrule
+Glider       & $+4$ cols & 0.9960 & 0.9924 & $+0.0036$ \\
+Random $d{=}0.35$ & $+1$ col  & 0.9989 & 0.7797 & $+0.2192$ \\
+Random $d{=}0.35$ & $+4$ cols & 0.9944 & 0.7633 & $+0.2311$ \\
+Random $d{=}0.35$ & $+4$ rows & 0.9951 & 0.7692 & $+0.2259$ \\
+Random $d{=}0.65$ & $+4$ cols & 0.9977 & 0.9050 & $+0.0927$ \\
+Random $d{=}0.65$ & $+4$ rows & 0.9979 & 0.9042 & $+0.0937$ \\
+\midrule
+\textbf{Mean (all 12 config$\times$shift pairs)} & & \textbf{0.9968} & \textbf{0.8901} & $+0.1067$ \\
+\bottomrule
+\end{tabular}
+\caption{Post-transformer embedding cosine similarity under translation,
+V2 (sinusoidal PE) vs.\ V8 (learned PE). Full sweep covers 3 configurations
+$\times$ 4 offsets ($+1$ col, $+4$ cols, $+4$ rows, $+4$ diagonal); selected
+rows shown here. Complete results in
+\texttt{nn/compare\_v2\_v8\_equivariance.py} output.}
+\label{tab:v2-v8-equivariance}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/v2_v8_equivariance.png}
+  \caption{Post-transformer cosine similarity under translation for all 12
+  (configuration, offset) pairs. V2 (sinusoidal PE, blue) stays close to
+  $1.0$ across every case; V8 (learned PE, red) drops substantially on
+  dense random grids, where every patch carries genuine content that must
+  survive the positional-embedding mismatch after translation.}
+  \label{fig:v2-v8-equivariance}
+\end{figure}
+
+The result (Table~\ref{tab:v2-v8-equivariance}, Figure~\ref{fig:v2-v8-equivariance})
+confirms the prediction cleanly: mean post-transformer cosine similarity
+under translation is $0.9968$ for V2 versus $0.8901$ for V8. The gap is
+small on the sparse glider (both models are near $0.99$, since most
+patches are empty on both sides of the transformation regardless of
+positional-encoding scheme) but large on dense random grids --- at
+$d=0.35$, V2 remains at $0.994$--$0.999$ while V8 drops to $0.76$--$0.78$.
+This is direct empirical evidence that a fixed sinusoidal positional
+encoding preserves embedding content under translation substantially
+better than a learned absolute positional embedding, consistent with the
+former's closed-form equivariant structure and the latter's lack of one.
+
+We note one confound: \texttt{CNNTransformerV2}'s CNN stage uses
+zero-padding rather than the circular padding used in
+\texttt{CNNTransformerV4} (Section~\ref{sec:architecture}), so this is not
+a perfectly isolated ablation of positional-encoding choice alone --- a
+fully controlled comparison would require training a circular-padded
+variant with sinusoidal PE. We consider this unlikely to explain the
+observed effect, since the predicted mechanism (angle-addition identities
+governing sinusoidal encodings) is specific to the positional encoding and
+the effect size tracks configuration density in exactly the way that
+mechanism predicts, but we flag it as a direction for a fully controlled
+follow-up.

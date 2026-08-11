@@ -300,6 +300,155 @@ python -m nn.train_cnn_transformer_v3
 
 Results: `nn/results/task11_cnn_transformer_v3_*.png`
 
+### Task 12: CNNTransformerV4 — circular (toroidal) padding
+
+`CNNTransformerV4` fixes a boundary bug in V3: the CNN stage used zero-padding, so the ~156 cells along the grid border saw incorrect neighbour counts every step (their true GoL neighbourhood wraps around the torus, but zero-padding treats the edge as a hard wall). `padding_mode='circular'` makes the convolution respect the toroidal topology exactly.
+
+**Training**: `nn/train_cnn_transformer_v4.py` — warmstart from V3, label smoothing ε=0.1, LR=1e-4, D4-only augmentation, 100 epochs. Best val_loss=0.22623, F1=0.970, prec=100%, rec=94.3%.
+
+```bash
+python -m nn.train_cnn_transformer_v4
+```
+
+Results: `nn/results/task12_cnn_transformer_v4_*.png`
+
+### Task 13: CNNTransformerV5 — density-diverse training
+
+Fixes V4's density bias (over-predicts births on sparse grids, over-predicts deaths on dense grids) by training on 8 densities × 200 trajectories + 13 named patterns × 60 placements + 1000 multi-pattern combos (93,600 pairs total).
+
+**Training**: `nn/train_cnn_transformer_v5.py` — warmstart V4, LR=1e-4, 100 epochs. Best val_loss=0.20125, prec=99.4%, rec=99.7%, but **born accuracy only 93.8%** — a symptom of teacher-forcing exposure bias that becomes the focus of Tasks 14–15.
+
+```bash
+python -m nn.train_cnn_transformer_v5
+```
+
+Results: `nn/results/task13_cnn_transformer_v5_*.png`
+
+### Task 14: CNNTransformerV6 — multi-step STE (failed)
+
+Attempts to fix autoregressive rollout collapse (V5 unrolled on its own predictions drifts to all-dead on sparse grids) by unrolling K=3 steps during training with a straight-through estimator (STE): hard binarized predictions forward, sigmoid gradient backward.
+
+**Result: diverges.** Best at epoch 5 (val=0.23421, prec=92.7%, born=99.5%), then precision collapses to ~20% by epoch 10 and oscillates chaotically through epoch 50. **Root cause**: STE gradients carry a systematic "predict more alive" bias — a missed birth at step *t* makes step *t+1*'s gradient push toward predicting more live cells, regardless of whether that's actually correct. Gradient clipping doesn't help because the problem is gradient *direction*, not magnitude.
+
+```bash
+python -m nn.train_cnn_transformer_v6
+```
+
+Results: `nn/results/task14_cnn_transformer_v6_*.png`
+
+### Task 15: CNNTransformerV7 — scheduled sampling ⭐
+
+Replaces STE with **scheduled sampling**: at each of K=3 unrolled steps, the next input is the model's own prediction with probability *p* (linearly increasing 0→1 over training) or the ground truth with probability 1−*p*. Gradients flow only through the current step's logits — no cascading bias.
+
+**Training**: `nn/train_cnn_transformer_v7.py` — warmstart V5, LR=1e-5, 50 epochs. **Best val_loss=0.20114**, F1=0.9985, prec=99.7%, rec=100%, **born=100%, surv=100%, died=99.7%** — zero precision collapse across all 50 epochs, and the sparse-grid rollout-collapse artifact from V5/V6 disappears entirely.
+
+```bash
+python -m nn.train_cnn_transformer_v7
+```
+
+Results: `nn/results/task15_cnn_transformer_v7_*.png`
+
+### Task 16: CNNTransformerV8 — high-density fine-tuning
+
+A targeted failure search on V7 (random grids, densities 0.02–0.80, plus named patterns) finds essentially all remaining errors concentrated at density=0.80 (~100 false positives/grid). V8 continues training from V7 for 30 epochs on a dataset upsampling density 0.65/0.80 trajectories 3×, while keeping the full range of lower densities.
+
+**Training**: `nn/train_cnn_transformer_v8.py` — warmstart V7, LR=5e-6, 30 epochs. Best val_loss=0.20064, prec=100%, rec=99.9%. False positives at d=0.80 drop from ~100/grid to ~4.6/grid (**21× improvement**).
+
+```bash
+python -m nn.train_cnn_transformer_v8
+```
+
+Results: `nn/results/task16_cnn_transformer_v8_*.png`, `nn/compare_v7_v8_failures.py` (side-by-side failure-case comparison)
+
+### Task 17: CNNTransformerV9 — 5× data scale-up (regressed)
+
+Tests whether scaling *all* training data 5× (≈546K samples, warmstart V8) improves further. Aggregate validation metrics look essentially unchanged (val_loss=0.20118, prec=99.7%, rec=99.6%), **but per-grid tail-case errors get an order of magnitude worse**: false positives at d=0.80 jump from V8's 2,296 (across 500 grids) to 22,190; false negatives at d=0.50 jump from 67 to 6,948.
+
+**Lesson**: once a model has saturated its representational capacity, more data of the kind it already sees plenty of doesn't help — and can hurt. Aggregate metrics alone completely missed this regression; it only showed up under a density-stratified failure audit.
+
+```bash
+python -m nn.train_cnn_transformer_v9
+```
+
+Results: `nn/results/task17_cnn_transformer_v9_*.png`, `nn/compare_v8_v10_errors.py`
+
+### Task 18: CNNTransformerV10 — 5.15× model scale-up ⭐
+
+Scales the *model* instead of the data: `d_model` 64→128, heads 4→8, layers 4→6 (1.5M params vs. V8's 291K). Trained from scratch (different embedding width can't warmstart from V8) with the same scheduled-sampling recipe and V8's dataset.
+
+**Result**: converges to 100% precision/recall/born/surv/died by epoch 10 of 100, val_loss=0.19852 (below every prior version's floor). Repeating V8/V9's exact failure-search protocol (500 grids × 5 densities), **V10 makes zero errors across all 2,500 evaluated grids**.
+
+```bash
+python -m nn.train_cnn_transformer_v10
+```
+
+Results: `nn/results/task18_cnn_transformer_v10_*.png`
+
+### Task 19: CNNTransformerV11 — polynomial activation (negative result)
+
+Motivated by Ahmed & Davis (2026), arXiv:2606.23587, which shows a learnable 2nd-degree polynomial activation lets a *tiny* CNN learn GoL where ReLU fails almost completely (see `poly_activation_verify/` below). V11 swaps the same polynomial activation into the CNN stage of V8's architecture (only +288 params over V8), trained from scratch with V10's scheduled-sampling recipe.
+
+**Result: diverges.** Promising at epoch 5 (F1=0.89, born=86.8%), then regresses sharply by epoch 10 (val=0.49) and diverges further by epoch 15 (val=1.05), with per-epoch time also ballooning ~5×. Training loss stayed flat throughout, meaning the instability is specific to the autoregressive/scheduled-sampling evaluation distribution, not general optimization failure — likely the unbounded quadratic term (`w2·x²`) compounding across the multi-step rollout, a failure mode structurally similar to V6's STE divergence. Not resolved within this project; candidate fixes (bounding the quadratic term, separate LR for poly coefficients, single-step verification before adding rollout) are noted in the paper.
+
+```bash
+python -m nn.train_cnn_transformer_v11
+```
+
+Results: `nn/train_log_cnn_transformer_v11.txt`
+
+### Version summary (Tasks 12–19)
+
+| Ver. | Key change | Best val loss | Prec. | Rec. | Born | Status |
+|---|---|---|---|---|---|---|
+| V4 | Circular padding fix | 0.22623 | 100% | 94.3% | 94.3% | Boundary bug fixed |
+| V5 | Density-diverse training | 0.20125 | 99.4% | 99.7% | 93.8% | Collapses under rollout |
+| V6 | +STE multi-step | 0.23421¹ | 92.7%¹ | — | 99.5%¹ | **Failed** — diverges |
+| V7 | STE → scheduled sampling | 0.20114 | 99.7% | 100% | 100% | Stable, strong |
+| V8 | +3× high-density upsample | 0.20064 | 100% | 99.9% | 99.9% | Best per-grid accuracy (291K) |
+| V9 | +5× all data | 0.20118 | 99.7% | 99.6% | 99.6% | **Regressed** per-grid errors |
+| V10 | 5.15× model size, from scratch | 0.19852 | 100% | 100% | 100% | **Zero errors**, 2,500/2,500 grids |
+| V11 | +Polynomial CNN activation | — | — | — | — | **Failed** — diverges |
+
+¹V6's best epoch (5) before divergence.
+
+### Embedding Analysis (`nn/embedding_analysis.py`)
+
+A reusable toolkit (`EmbeddingExtractor`, `Transforms`, `compare()`, plotting helpers) for studying what the patch embeddings of V8/V10 encode, extracted both **pre-transformer** (patch content + learnable positional embedding) and **post-transformer** (after self-attention mixes all 100 patches).
+
+- **`run_embedding_gallery.py`** — patch-norm heatmaps + pairwise cosine-similarity matrices for oscillators, gliders, and random configurations (`--model v8|v10|both`)
+- **`run_embedding_examples.py`** — embedding comparison under rotation/flip/translation/cell-level perturbation, one figure per (transform, config) pair
+- **`run_embedding_diff.py`** — Δ-norm heatmaps, cross-transformation similarity matrices, and PCA scatter plots of how embeddings move under each transform (`--model v8|v10|both`)
+- **`compare_v2_v8_equivariance.py`** — quantifies translation-sensitivity of V2's fixed 2D sinusoidal positional encoding vs. V8's learned positional embedding. **Finding**: mean post-transformer cosine similarity under translation is 0.997 (V2, sinusoidal) vs. 0.890 (V8, learned) — sinusoidal PE's angle-addition identity gives it a genuine equivariant structure under translation that a learned per-slot positional vector doesn't have. The gap is largest on dense random grids (0.99 vs. 0.75–0.78 at density 0.35) and nearly invisible on sparse patterns (where most patches are empty either way).
+
+**Key findings**: sparse configurations (gliders, oscillators) are nearly embedding-invariant under all transforms, since most of the 100 patches are empty and empty-patch embeddings collapse together regardless of position. Dense random grids are far more sensitive to rotation/reflection/translation (cosine similarity drops to ~0.75–0.92), because every patch carries genuine content and the *learned* absolute positional embedding is not translation- or rotation-equivariant — this is exactly why augmentation uses only the D4 group (rotation/reflection) and not translation.
+
+Results: `nn/results/gallery_*.png`, `nn/results/embdiff_*.png`, `nn/results/embed_v8_*.png`, `nn/results/compare_v2_v8_translation_equivariance.png`
+
+### Independent Verification: Polynomial Activations (`poly_activation_verify/`)
+
+A self-contained reproduction (no dependency on the rest of this repo) of Ahmed & Davis (2026), arXiv:2606.23587 — "It's Much Easier for Neural Networks to Learn Game of Life Dynamics with the Right Activation Function: Polynomial Kolmogorov-Arnold Networks." Builds their minimal `L(1,m=1)` CNN (one 3×3 circular conv, one 1×1 conv, one 1×1 conv+sigmoid) and trains two variants — identical except the activation function — on our own 40×40 toroidal grid, 10 random seeds each.
+
+| Activation | Parameters | Success rate (10 seeds) | Mean final accuracy |
+|---|---|---|---|
+| ReLU | 25 | 1/10 | 89.4% |
+| Polynomial (2nd-degree, learnable) | 34 | **10/10** | **100.0%** |
+
+Parameter counts (25/34) match the paper's reported minimal-network sizes exactly, confirming a faithful reproduction. ReLU converges to perfect accuracy on only 1 of 10 seeds; the polynomial activation converges on every seed, each run completing in 1–2 seconds on CPU.
+
+```bash
+python poly_activation_verify/train_compare.py
+```
+
+Results: `poly_activation_verify/results/relu_vs_poly_convergence.png`, `summary.json`
+
+### Research Paper (`paper/`)
+
+A LaTeX writeup (`paper/main.tex`, compiles with `latexmk -pdf main.tex`) documenting the full V5–V11 progression, the embedding analysis, and the polynomial-activation verification/negative-result pair, structured as: introduction, architecture, training dynamics (exposure bias → STE failure → scheduled sampling → data-vs-capacity), embedding analysis, activation-function inductive bias (reproduction + V11 negative result), and discussion.
+
+```bash
+cd paper && latexmk -pdf main.tex
+```
+
 ---
 
 ## Notes
