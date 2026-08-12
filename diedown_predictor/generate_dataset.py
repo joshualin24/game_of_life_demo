@@ -193,6 +193,29 @@ def build_dataset(n_grids=400, seed=42, out_name="pilot", print_every=20):
     return path
 
 
+def merge_datasets(paths: list[str], out_name: str) -> str:
+    """Concatenate multiple build_dataset() outputs (e.g. generated with
+    different seeds) into one .npz, reusing already-computed teacher-search
+    results instead of regenerating everything from scratch."""
+    loaded = [np.load(p) for p in paths]
+    for key in ("grid_size", "margin", "K", "T"):
+        vals = {int(d[key]) for d in loaded}
+        assert len(vals) == 1, f"mismatched {key} across datasets: {vals}"
+
+    merged = {
+        key: np.concatenate([d[key] for d in loaded], axis=0)
+        for key in ("grids", "chosen", "n_chosen", "scores", "candidates", "n_candidates")
+    }
+    for key in ("grid_size", "margin", "K", "T"):
+        merged[key] = loaded[0][key]
+
+    path = os.path.join(DATA_DIR, f"{out_name}.npz")
+    np.savez_compressed(path, **merged)
+    n = merged["grids"].shape[0]
+    print(f"Merged {len(paths)} datasets -> {n} base grids -> {path}")
+    return path
+
+
 # ── Expand cached sequences into per-decode-step training tensors ────────────
 
 def build_step_tensors(npz_path):
