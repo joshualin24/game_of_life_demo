@@ -34,6 +34,7 @@ GRID_SIZE = 40
 MARGIN = 3
 K = 3
 T = DEFAULT_T
+BEAM_WIDTH = 4
 # Dense/random-density base grids can have a candidate bounding box close to
 # the full board (~1600 cells); beam search there would dominate runtime.
 # Cap and uniformly subsample the candidate set so per-grid search cost stays
@@ -148,7 +149,7 @@ def stratified_sample(n_target, rng, grid_size=GRID_SIZE, dies_frac=0.15, fate_s
     return dies_grids + other_grids
 
 
-def build_dataset(n_grids=400, seed=42, out_name="pilot", print_every=20):
+def build_dataset(n_grids=400, seed=42, out_name="pilot", print_every=20, beam_width=BEAM_WIDTH):
     rng = np.random.default_rng(seed)
     grids = stratified_sample(n_grids, rng)
     N = len(grids)
@@ -166,7 +167,7 @@ def build_dataset(n_grids=400, seed=42, out_name="pilot", print_every=20):
         if len(candidates) > MAX_CANDIDATES:
             idx = rng.choice(len(candidates), MAX_CANDIDATES, replace=False)
             candidates = [candidates[j] for j in idx]
-        chosen, scores = greedy_search(g, candidates, K=K, T=T)
+        chosen, scores = greedy_search(g, candidates, K=K, T=T, beam_width=beam_width)
 
         grids_arr[i] = g
         n_chosen_arr[i] = len(chosen)
@@ -187,9 +188,9 @@ def build_dataset(n_grids=400, seed=42, out_name="pilot", print_every=20):
         path,
         grids=grids_arr, chosen=chosen_arr, n_chosen=n_chosen_arr, scores=scores_arr,
         candidates=candidates_arr, n_candidates=n_candidates_arr,
-        grid_size=GRID_SIZE, margin=MARGIN, K=K, T=T,
+        grid_size=GRID_SIZE, margin=MARGIN, K=K, T=T, beam_width=beam_width,
     )
-    print(f"Saved {N} base grids -> {path}")
+    print(f"Saved {N} base grids -> {path}  (beam_width={beam_width})")
     return path
 
 

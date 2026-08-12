@@ -130,7 +130,9 @@ def main():
 
     history = {"train_loss": [], "val_loss": [], "train_acc": [], "val_acc": []}
     best_val = float("inf")
+    best_val_acc = -1.0
     best_path = os.path.join(CKPT_DIR, f"{TASK}_best.pt")
+    best_acc_path = os.path.join(CKPT_DIR, f"{TASK}_best_acc.pt")
 
     t0 = time.time()
     for epoch in range(1, EPOCHS + 1):
@@ -147,16 +149,26 @@ def main():
             best_val = vl
             torch.save(model.state_dict(), best_path)
 
+        # Val loss and val accuracy don't always bottom out / peak at the
+        # same epoch (cross-entropy loss is sensitive to confidence on
+        # already-correct predictions, accuracy isn't) — track both so
+        # accuracy-best is available without having to rely on periodic
+        # snapshots landing near the right epoch.
+        if va > best_val_acc:
+            best_val_acc = va
+            torch.save(model.state_dict(), best_acc_path)
+
         if epoch % CKPT_EVERY == 0:
             torch.save(model.state_dict(), os.path.join(CKPT_DIR, f"{TASK}_ep{epoch:03d}.pt"))
 
         elapsed = time.time() - t0
         print(f"  epoch {epoch:>3}/{EPOCHS}  train_loss={tl:.4f} acc={ta:.3f}  "
-              f"val_loss={vl:.4f} acc={va:.3f}  best_val={best_val:.4f}  t={elapsed:.0f}s")
+              f"val_loss={vl:.4f} acc={va:.3f}  best_val={best_val:.4f}  best_val_acc={best_val_acc:.3f}  t={elapsed:.0f}s")
 
     final_path = os.path.join(CKPT_DIR, f"{TASK}_final.pt")
     torch.save(model.state_dict(), final_path)
-    print(f"[done] best_val={best_val:.4f} -> {best_path}  |  final -> {final_path}")
+    print(f"[done] best_val={best_val:.4f} -> {best_path}  |  "
+          f"best_val_acc={best_val_acc:.3f} -> {best_acc_path}  |  final -> {final_path}")
 
     hist_path = os.path.join(RESULTS_DIR, f"{TASK}_history.json")
     with open(hist_path, "w") as f:
