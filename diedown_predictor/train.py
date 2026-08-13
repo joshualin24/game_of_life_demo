@@ -29,8 +29,8 @@ from diedown_predictor.models import PointerPolicyNet
 
 # ── Hyperparameters ────────────────────────────────────────────────────────────
 
-TASK       = "diedown_v4"
-DATASET    = "full_beam8.npz"
+TASK       = "diedown_v5"
+DATASET    = "full_v3.npz"
 BASE_CH    = 32
 EPOCHS     = 30
 BATCH_SIZE = 128
