@@ -77,10 +77,11 @@ def apply_flips(init, cells):
     return g
 
 
-def evaluate(n_grids=50, seed=999, ckpt="best"):
+def evaluate(n_grids=200, seed=999, ckpt="best", task=None):
+    task = task or TASK
     model = PointerPolicyNet().to(DEVICE)
-    ckpt_path = os.path.join(CKPT_DIR, f"{TASK}_{ckpt}.pt")
-    model.load_state_dict(torch.load(ckpt_path, map_location=DEVICE))
+    ckpt_path = os.path.join(CKPT_DIR, f"{task}_{ckpt}.pt")
+    model.load_state_dict(torch.load(ckpt_path, map_location=DEVICE, weights_only=True))
     model.eval()
     print(f"[eval] loaded {ckpt_path}")
 
@@ -160,12 +161,14 @@ def make_comparison_gif(label, baseline_traj, teacher_traj, model_traj,
     return path
 
 
-def make_gifs(n=4, seed=7, gif_steps=60, ckpt="best"):
+def make_gifs(n=4, seed=7, gif_steps=60, ckpt="best", task=None):
+    task = task or TASK
     out_dir = os.path.join(RESULTS_DIR, "comparison_gifs")
     os.makedirs(out_dir, exist_ok=True)
 
     model = PointerPolicyNet().to(DEVICE)
-    model.load_state_dict(torch.load(os.path.join(CKPT_DIR, f"{TASK}_{ckpt}.pt"), map_location=DEVICE))
+    model.load_state_dict(torch.load(os.path.join(CKPT_DIR, f"{task}_{ckpt}.pt"),
+                                       map_location=DEVICE, weights_only=True))
     model.eval()
 
     rng = np.random.default_rng(seed)
