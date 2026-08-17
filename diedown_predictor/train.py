@@ -29,12 +29,14 @@ from diedown_predictor.models import PointerPolicyNet
 
 # ── Hyperparameters ────────────────────────────────────────────────────────────
 
-TASK       = "diedown_v5"
+TASK       = "diedown_v6"
 DATASET    = "full_v3.npz"
 BASE_CH    = 32
+DROPOUT    = 0.3
 EPOCHS     = 30
 BATCH_SIZE = 128
 LR         = 1e-3
+WEIGHT_DECAY = 0.05   # up from AdamW's 0.01 default — model overfits fast (see v3/v5)
 VAL_FRAC   = 0.15
 SEED       = 42
 CKPT_EVERY = 5
@@ -121,11 +123,11 @@ def main():
     print(f"[data] train={len(train_loader.dataset)}  val={len(val_loader.dataset)}"
           f"  (augment_d4={AUGMENT_D4})")
 
-    model = PointerPolicyNet(base_ch=BASE_CH).to(DEVICE)
+    model = PointerPolicyNet(base_ch=BASE_CH, dropout=DROPOUT).to(DEVICE)
     n_params = sum(p.numel() for p in model.parameters())
-    print(f"[model] PointerPolicyNet base_ch={BASE_CH}  params={n_params:,}")
+    print(f"[model] PointerPolicyNet base_ch={BASE_CH} dropout={DROPOUT}  params={n_params:,}")
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
 
     history = {"train_loss": [], "val_loss": [], "train_acc": [], "val_acc": []}

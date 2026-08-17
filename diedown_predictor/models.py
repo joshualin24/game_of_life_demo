@@ -69,13 +69,18 @@ class PointerPolicyNet(nn.Module):
              (set to -inf before the softmax/cross-entropy).
     """
 
-    def __init__(self, base_ch: int = 32):
+    def __init__(self, base_ch: int = 32, dropout: float = 0.3):
         super().__init__()
         c = base_ch
         self.enc1 = _EncoderBlock(3, c)
         self.enc2 = _EncoderBlock(c, 2 * c)
         self.enc3 = _EncoderBlock(2 * c, 4 * c)
         self.bottleneck = DoubleConv(4 * c, 8 * c)
+        # Spatial dropout on the bottleneck (the most compressed, most
+        # overfitting-prone representation, shared by both heads below) —
+        # same rationale as the Dropout FateClassifier/ChaosPredictor use in
+        # nn/models.py before their final classifier layers.
+        self.bottleneck_dropout = nn.Dropout2d(p=dropout * 0.67)
         self.dec3 = _DecoderBlock(8 * c, 4 * c, 4 * c)
         self.dec2 = _DecoderBlock(4 * c, 2 * c, 2 * c)
         self.dec1 = _DecoderBlock(2 * c, c, c)
@@ -86,6 +91,7 @@ class PointerPolicyNet(nn.Module):
             nn.Flatten(),
             nn.Linear(8 * c, 64),
             nn.ReLU(inplace=True),
+            nn.Dropout(p=dropout),
             nn.Linear(64, 1),
         )
 
@@ -93,7 +99,7 @@ class PointerPolicyNet(nn.Module):
         x1, s1 = self.enc1(x)
         x2, s2 = self.enc2(x1)
         x3, s3 = self.enc3(x2)
-        b = self.bottleneck(x3)
+        b = self.bottleneck_dropout(self.bottleneck(x3))
         d3 = self.dec3(b, s3)
         d2 = self.dec2(d3, s2)
         d1 = self.dec1(d2, s1)
