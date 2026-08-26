@@ -1,112 +1,105 @@
-\documentclass[11pt]{article}
+\documentclass{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{graphicx}
-\usepackage{amsmath,amssymb}
+\usepackage[dblblindworkshop]{neurips_2026}
+\workshoptitle{Representations for the Physical Sciences Workshop}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[bookmarks=false]{hyperref}
+\usepackage{url}
 \usepackage{booktabs}
-\usepackage{hyperref}
-\usepackage{caption}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{nicefrac}
 \usepackage{microtype}
-
-\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+\usepackage{graphicx}
+\usepackage{xcolor}
 
 \title{Learning Conway's Game of Life with CNN-Transformer Hybrids:\\
-\large A Project Summary}
-\author{Hao-Yuan}
-\date{\today}
+Architecture Scaling, Exposure Bias, and Activation Inductive Bias}
+
+\author{%
+  Anonymous Author(s) \\
+  Affiliation \\
+  Address \\
+  \texttt{email}
+}
 
 \begin{document}
+
 \maketitle
-\vspace{-1.5em}
 
 \begin{abstract}
-\noindent
-We summarize a project studying how CNN-Transformer hybrid models learn
-the one-step transition rule of Conway's Game of Life (GoL) on a
-$40\times40$ toroidal grid. Across ten model versions we identify and fix
-two distinct failure modes --- exposure bias under autoregressive rollout,
-and a data-scaling regression hidden from aggregate validation metrics ---
-and arrive at a $1.5$M-parameter model with zero errors on a 2{,}500-grid
-stress test. We independently verify a recent claim that polynomial
-activations have a strong inductive-bias advantage over ReLU for learning
-GoL from very few parameters, and we present an embedding-space experiment
-showing that sinusoidal positional encodings are empirically closer to
-translation-equivariant than learned ones. Full details, all code, and a
-20-page extended writeup are available in the project repository.
+We study how a CNN-Transformer hybrid learns the one-step transition rule
+of Conway's Game of Life (GoL) on a $40\times40$ toroidal grid. Starting
+from a model trained with pure teacher forcing, we show that
+autoregressive rollout suffers from exposure bias, that a
+straight-through-estimator (STE) multi-step scheme fails due to a
+systematic gradient bias, and that scheduled sampling resolves this
+cleanly. We further show that once a model saturates its capacity,
+scaling the training set five-fold \emph{regresses} tail-case accuracy in
+a way invisible to aggregate validation metrics, while scaling the model
+five-fold instead eliminates essentially all remaining errors. Motivated
+by recent work on activation-function inductive bias for cellular
+automata, we independently reproduce the finding that a learnable
+second-degree polynomial activation lets a 25--34 parameter CNN learn GoL
+reliably where ReLU fails, and report a negative result transferring this
+activation to our larger multi-step model. Finally, we show that
+sinusoidal positional encodings yield empirically more translation-
+equivariant patch embeddings than learned ones.
 \end{abstract}
 
-\section{Problem and Architecture}
+\section{Problem and architecture}
 
-Conway's Game of Life is a deterministic cellular automaton: each cell's
-next state depends only on its own state and the count of live cells among
-its 8 neighbors (B3/S23 rule). We treat one GoL step as a supervised
-image-to-image translation problem on a $40\times40$ periodic (toroidal)
-grid, and ask a neural network to predict the next grid state from the
-current one.
+GoL is a deterministic cellular automaton: each cell's next state depends
+only on its own state and its 8-neighbor live count (B3/S23). We treat one
+GoL step as image-to-image prediction on a periodic $40\times40$ grid. Our
+core architecture is a CNN-Transformer hybrid: two circular-padded
+convolutions extract local, translation-equivariant features respecting
+the torus topology; these are cut into non-overlapping $4\times4$ patches,
+linearly projected, combined with a \emph{learned} absolute positional
+embedding, passed through a Transformer encoder for global mixing, and
+projected back to per-cell logits. GoL is a natural stress test for
+learned representations: prior work shows plain feed-forward networks
+struggle to learn it reliably at all \citep{springer2021minimal}, and the
+Transformer stage \citep{vaswani2017attention} trades the CNN's clean
+equivariance guarantee for long-range context (Section~\ref{sec:embed}).
 
-Our core architecture (\emph{CNNTransformerV4}, used from Task~12 onward)
-is a CNN-Transformer hybrid: two circular-padded convolutional layers
-extract local features respecting the torus topology, which are then cut
-into non-overlapping $4\times4$ patches, linearly projected, combined with
-a \emph{learned} absolute positional embedding, passed through a
-Transformer encoder to mix long-range information, and finally projected
-back to per-cell logits. The convolutional stage guarantees
-translation-equivariant local feature extraction by construction (weight
-sharing plus circular padding); the Transformer stage adds global context
-that a purely convolutional model of small receptive field cannot, at the
-cost of the clean equivariance guarantee (Section~\ref{sec:embedding}).
-
-\section{Training Evolution: Two Failure Modes and Their Fixes}
+\section{Training evolution: two failure modes and their fixes}
 \label{sec:evolution}
 
-\paragraph{Exposure bias (V5 $\to$ V7).} A model trained with pure
-single-step teacher forcing (V5, val.\ loss $0.201$, precision/recall
-$>99\%$) looks excellent on held-out single steps, but collapses when run
-autoregressively: small errors compound because the model never sees its
-own (imperfect) outputs during training. We first tried a
-straight-through-estimator (STE) multi-step scheme (V6) to expose the
-model to its own rollout during training with a differentiable path; this
-\emph{diverges} after epoch~5 (val.\ loss rises from $0.234$ to $>1.0$),
-which we trace to a systematic gradient bias introduced by the STE's hard
-threshold. Replacing STE with \emph{scheduled sampling} (V7) --- gradually
-increasing the probability of feeding the model its own previous
-prediction instead of the ground truth --- fixes this cleanly: val.\ loss
-$0.201$, precision $99.7\%$, recall $100\%$, stable across training.
+\paragraph{Exposure bias.} A model trained with pure single-step teacher
+forcing (V5) scores $>99\%$ precision/recall on held-out single steps but
+collapses under autoregressive rollout, since it never sees its own
+(imperfect) outputs during training. A straight-through-estimator (STE)
+multi-step scheme intended to fix this instead \textbf{diverges} after
+epoch 5, which we trace to a systematic gradient bias from the STE's hard
+threshold. Replacing STE with \emph{scheduled sampling}
+\citep{bengio2015scheduled} --- gradually increasing the probability of
+feeding the model its own previous prediction --- fixes this cleanly and
+stably (V7).
 
-\paragraph{A hidden data-scaling regression (V8 $\to$ V10).} Upsampling
-high-density configurations $3\times$ (V8) improves per-grid accuracy
-further (100\% precision, 291K params). Naively scaling the \emph{training
-set} $5\times$ (V9) leaves aggregate validation metrics statistically
-unchanged (val.\ loss $0.201$, precision $99.7\%$) --- but a
-density-stratified failure search (500 random grids at each of five
-densities, same seed across models) reveals that V9's per-grid error count
-at density $0.80$ is nearly \emph{seven times worse} than V8's
-(22{,}190 vs.\ 3{,}358 summed false positives/negatives). This regression
-is invisible in aggregate metrics and only surfaces under targeted
-subgroup auditing. Instead of more data, we scale the \emph{model}: V10
-(128-dim, 6-layer Transformer, $1.5$M params, $5.15\times$ V8's size)
-trained from scratch achieves \textbf{zero errors} across all 2{,}500 test
-grids at every density (Figure~\ref{fig:v10}). The practical lesson: once a
-model saturates its capacity, more data can silently trade average-case
-performance for worse tail-case performance, and only per-subgroup
-error auditing (not aggregate validation loss) can detect it.
+\paragraph{A hidden data-scaling regression.} Upsampling high-density
+configurations $3\times$ (V8) improves per-grid accuracy further (291K
+params). Naively scaling the \emph{training set} $5\times$ (V9) leaves
+aggregate validation metrics statistically unchanged, but a density-
+stratified failure search (500 grids at each of five densities, fixed seed
+across models) reveals V9's error count at density 0.80 is nearly
+\textbf{seven times worse} than V8's (22{,}190 vs.\ 3{,}358 summed
+false positives/negatives) --- invisible in aggregate metrics alone.
+Instead of more data, we scale the \emph{model}: V10 (5.15$\times$ V8's
+size, $1.5$M params, trained from scratch) achieves \textbf{zero errors}
+across all 2{,}500 test grids at every density (Table~\ref{tab:summary},
+Figure~\ref{fig:v10}). The lesson: once capacity saturates, more data can
+silently trade average-case for tail-case performance, detectable only by
+per-subgroup error auditing, not validation loss.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.48\textwidth]{figures/v10_loss.png}
-\includegraphics[width=0.48\textwidth]{figures/v10_rollout_dense80.png}
-\caption{V10 training curve (left) and a 50-step autoregressive rollout at
-density $0.80$ (right), the hardest test condition. V10 makes zero errors
-across 2{,}500 held-out grids spanning five densities.}
-\label{fig:v10}
-\end{figure}
-
-\begin{table}[htbp]
+\begin{table}[t]
 \centering
 \small
-\begin{tabular}{lp{4.7cm}ccl}
+\begin{tabular}{lp{4.3cm}ccl}
 \toprule
-Ver.\ & Key change & Val.\ loss & Precision/Recall & Status \\
+Ver.\ & Key change & Val.\ loss & Prec./Rec.\ & Status \\
 \midrule
 V5 & Single-step teacher forcing & 0.201 & 99.4\% / 99.7\% & Collapses under rollout \\
 V6 & +STE multi-step & 0.234\textsuperscript{a} & 92.7\% / --- & \textbf{Diverges} \\
@@ -116,108 +109,99 @@ V9 & +5$\times$ all data & 0.201 & 99.7\% / 99.6\% & \textbf{Regressed} tail err
 V10 & 5.15$\times$ model size & 0.199 & 100\% / 100\% & \textbf{Zero errors}, 2{,}500/2{,}500 \\
 \bottomrule
 \end{tabular}
-\caption{Version summary (abbreviated; see extended writeup for the full
-V1--V11 table and per-density error breakdown).
-\textsuperscript{a}V6's best epoch before divergence.}
+\caption{version summary. \textsuperscript{a}V6's best epoch before divergence.}
 \label{tab:summary}
 \end{table}
 
-\section{Embedding Geometry: Sinusoidal vs.\ Learned Positional Encoding}
-\label{sec:embedding}
-
-A CNN's feature map is a \emph{physical} embedding: because convolution is
-translation-equivariant by construction, shifting the input shifts the
-feature map by exactly the same amount, with the same content vector at
-each location. A Transformer's patch embeddings, after a learned absolute
-positional embedding is added, have no such architectural guarantee ---
-each position slot is an independently learned vector with no structural
-relationship to its neighbors.
-
-We tested whether this shows up empirically by comparing two of our
-trained models that differ (among other things) in positional encoding:
-\emph{V2} uses a fixed 2D sinusoidal positional encoding (whose
-angle-addition identities give it a closed-form near-equivariant
-structure under translation), while \emph{V8} uses a learned absolute
-positional embedding. We measured cosine similarity between patch
-embeddings of a grid and of the same grid shifted by several offsets, for
-both models, across glider and random configurations
-(Figure~\ref{fig:v2v8}). V2's post-Transformer embeddings stay far more
-similar under translation (mean cosine similarity $0.997$) than V8's
-($0.890$), consistent with the theoretical prediction that sinusoidal
-encodings impose a more equivariant geometry on the representation space.
-(We note an acknowledged confound: V2 uses zero-padding in its
-convolutional stage versus V8's circular padding, so this is not a
-perfectly isolated ablation of positional encoding alone --- see the
-extended writeup for a proposed fully controlled follow-up.)
-
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/v2_v8_equivariance.png}
-\caption{Post-Transformer embedding cosine similarity under translation,
-sinusoidal PE (V2) vs.\ learned PE (V8). Higher means the embedding
-changed less under translation, i.e.\ more equivariant.}
-\label{fig:v2v8}
+\begin{minipage}{0.48\linewidth}
+  \includegraphics[width=\linewidth]{figures/v10_loss.png}
+\end{minipage}\hfill
+\begin{minipage}{0.48\linewidth}
+  \includegraphics[width=\linewidth]{figures/v10_rollout_dense80.png}
+\end{minipage}
+\caption{V10 training curve (left) and a 50-step autoregressive rollout at
+density 0.80 (right), the hardest test condition; V10 makes zero errors
+across 2{,}500 held-out grids.}
+\label{fig:v10}
 \end{figure}
 
-\section{Independent Verification: Polynomial Activations for GoL}
-\label{sec:verification}
+\section{Embedding geometry: sinusoidal vs.\ learned positional encoding}
+\label{sec:embed}
 
-Motivated by a recent paper (Ahmed \& Davis, 2026, arXiv:2606.23587)
-claiming that a learnable second-degree polynomial activation
-$\phi(x) = w_0 + w_1 x + w_2 x^2$ lets a minimal CNN learn GoL reliably
-where ReLU fails almost completely, we independently reproduced this claim
-from scratch rather than taking it on faith. We built two CNNs matching
-the paper's minimal $L(1,1)$ architecture (two $1{\times}1$ convolutions
-plus one $3{\times}3$ circular-padded convolution) that are
-\textbf{identical except for the activation function}, exactly matching
-the paper's reported parameter counts (ReLU: 25 params, polynomial: 34
-params). Trained single-step, teacher-forcing, on a small dataset (100
-train / 20 val.\ grids) over 10 random seeds each:
+A CNN feature map is a \emph{physical} embedding: convolution's
+translation-equivariance means shifting the input shifts the feature map
+identically. A Transformer's patch embeddings, after a learned absolute
+positional embedding, have no such guarantee --- each position slot is an
+independently learned vector unrelated to its neighbors. We tested this
+empirically on two trained models differing in positional encoding: one
+using a fixed 2D sinusoidal encoding (V2, whose angle-addition identities
+give closed-form near-equivariant structure) and one using a learned
+absolute positional embedding (V8). Measuring cosine similarity between
+patch embeddings of a grid and of translated copies of it, V2's post-
+Transformer embeddings stay far more similar under translation (mean
+cosine similarity $0.997$) than V8's ($0.890$), consistent with the
+theoretical prediction (Figure~\ref{fig:v2v8-verify}, left). We note an
+acknowledged confound: V2 uses zero-padding versus V8's circular padding,
+so this is not a fully isolated ablation of positional encoding alone.
 
-\begin{itemize}
-\item \textbf{ReLU}: $1/10$ seeds converge to perfect validation accuracy; mean final accuracy $89.4\%$.
-\item \textbf{Polynomial}: $10/10$ seeds converge; mean final accuracy $100.0\%$.
-\end{itemize}
+\section{Independent verification: polynomial activations for GoL}
 
-This confirms the paper's central claim on our own toroidal GoL setup
-(Figure~\ref{fig:polyverify}). We then attempted to transfer this
-activation into our larger multi-step CNN-Transformer model (V11, same
-size as V8) by replacing GELU with polynomial activations in the CNN
-stage. This \textbf{failed}: training diverged sharply after epoch~5 under
-the scheduled-sampling regime, likely because the unbounded $w_2 x^2$ term
-compounds through the autoregressive feedback loop in a way it cannot in
-the paper's single-step setting. We report this as a negative result;
-candidate fixes (a bounded/saturating polynomial variant, a separate
-learning rate for polynomial coefficients, verifying single-step stability
-before adding rollout) were identified but not yet pursued.
+Motivated by a recent claim that a learnable second-degree polynomial
+activation $\phi(x) = w_0 + w_1 x + w_2 x^2$ lets a minimal CNN learn GoL
+reliably where ReLU fails almost completely \citep{ahmed2026polynomial},
+we independently reproduced this rather than taking it on faith. We built
+two CNNs matching the paper's minimal architecture (two $1{\times}1$
+convolutions plus one $3{\times}3$ circular-padded convolution),
+\textbf{identical except for the activation function}, matching the
+paper's reported parameter counts exactly (ReLU: 25 params, polynomial:
+34 params). Trained single-step, teacher-forcing, over 10 random seeds:
+ReLU converges to perfect validation accuracy in only $1/10$ seeds (mean
+final accuracy $89.4\%$), while the polynomial activation converges in
+$10/10$ seeds ($100.0\%$ mean accuracy), confirming the claim on our own
+toroidal GoL setup (Figure~\ref{fig:v2v8-verify}, right). We then
+attempted to transfer this activation into our larger multi-step model
+(same size as V8) by replacing GELU with polynomial activations in the
+CNN stage; this \textbf{failed}, diverging sharply after epoch 5 under
+scheduled sampling, likely because the unbounded $w_2 x^2$ term compounds
+through the autoregressive feedback loop in a way it cannot in a
+single-step setting. Candidate fixes (a bounded/saturating variant, a
+separate learning rate for polynomial coefficients) were identified but
+not yet pursued.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
-\includegraphics[width=0.75\textwidth]{figures/relu_vs_poly_convergence.png}
-\caption{Validation accuracy over training, 10 seeds per activation,
-minimal 25/34-parameter CNN on $40\times40$ toroidal GoL. Polynomial
-activation converges reliably; ReLU converges in only 1 of 10 seeds.}
-\label{fig:polyverify}
+\begin{minipage}{0.48\linewidth}
+  \includegraphics[width=\linewidth]{figures/v2_v8_equivariance.png}
+\end{minipage}\hfill
+\begin{minipage}{0.48\linewidth}
+  \includegraphics[width=\linewidth]{figures/relu_vs_poly_convergence.png}
+\end{minipage}
+\caption{Left: post-Transformer embedding cosine similarity under
+translation, sinusoidal PE (V2) vs.\ learned PE (V8); higher means less
+change under translation, i.e.\ more equivariant. Right: validation
+accuracy over training, 10 seeds per activation, on a minimal 25/34-
+parameter CNN; polynomial activation converges reliably where ReLU does
+not.}
+\label{fig:v2v8-verify}
 \end{figure}
 
 \section{Conclusion}
 
-Three practical lessons emerge from this project. First, autoregressive
-exposure bias in sequence/rollout models is best fixed with scheduled
-sampling rather than a hard differentiable relaxation (STE), which can
-introduce its own destabilizing gradient bias. Second, aggregate
-validation metrics can hide severe, density-specific regressions; per-
-subgroup error auditing is necessary once a model is scaled with more
-data. Third, an activation function's inductive-bias advantage
-demonstrated at minimal scale and single-step training does not
-automatically transfer to a larger, multi-step, autoregressively-trained
-model --- the interaction between an activation's stability properties
-and the training regime matters as much as the activation itself.
+Three practical lessons emerge. First, autoregressive exposure bias is
+best fixed with scheduled sampling rather than a hard differentiable
+relaxation (STE), which can introduce its own destabilizing gradient
+bias. Second, aggregate validation metrics can hide severe, density-
+specific regressions; per-subgroup error auditing is necessary once a
+model is scaled with more data rather than more capacity. Third, an
+activation function's inductive-bias advantage demonstrated at minimal
+scale and single-step training does not automatically transfer to a
+larger, multi-step, autoregressively-trained model --- the interaction
+between an activation's stability properties and the training regime
+matters as much as the activation itself.
 
-Full code, all intermediate model checkpoints, the complete V1--V11
-version history, additional embedding-space visualizations (rotation,
-reflection, cell-perturbation transforms), and a fully detailed 20-page
-writeup are available in the project repository
-(\texttt{game\_of\_life\_demo/}).
+\bibliographystyle{plainnat}
+\bibliography{references}
 
 \end{document}

@@ -1,0 +1,2519 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en"> 
+
+<head>
+    <style>html { scroll-padding-top: 70px; /* height of sticky header plus extra */ }</style>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/static/virtual/js/virtual.js"></script>
+    <meta name="google-site-verification" content="0jwPnVXIAk4FvFdT37dwMmd-kjHF86e5DKwvqlStUW0">
+
+
+    
+    <link rel="stylesheet" href="/static/core/css/core.css" type="text/css">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css" type="text/css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/static/core/css/custom.css" type="text/css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script nonce="CfWnobRMShUN1sMJWu1OyA==">
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['\\[', '\\]']],
+            processEscapes: true,
+          },
+          options: {
+            ignoreHtmlClass: 'no-mathjax',
+          }
+        };
+    </script>
+
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+            nonce="CfWnobRMShUN1sMJWu1OyA==" >
+    </script>
+
+    <!--This script keeps local links inside the web app rather than opening them
+in Safari, and has nothing to do with editing or Aloha.-->
+
+<script nonce="CfWnobRMShUN1sMJWu1OyA==">
+    (function (document, navigator, standalone) {
+
+        if ((standalone in navigator) && navigator[standalone]) {
+            var curnode, location = document.location, stop = /^(a|html)$/i;
+            document.addEventListener('click', function (e) {
+                curnode = e.target;
+                while (!(stop).test(curnode.nodeName)) {
+                    curnode = curnode.parentNode;
+                }
+
+                if (
+                    'href' in curnode && // is a link
+                    (chref = curnode.href).replace(location.href, '').indexOf('#') && // is not an anchor
+                    (!(/^[a-z\+\.\-]+:/i).test(chref) ||                       // either does not have a proper scheme (relative links)
+                        chref.indexOf(location.protocol + '//' + location.host) === 0) // or is in the same protocol and domain
+                ) {
+                    e.preventDefault();
+                    location.href = curnode.href;
+                }
+            }, false);
+        }
+    })(document, window.navigator, 'standalone');
+</script>
+
+
+<style>
+
+    @media screen and (min-width: 767px) {
+        .blurb {
+            min-height: 260px;
+        }
+    }
+</style>
+    
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
+</script>
+
+<script nonce="CfWnobRMShUN1sMJWu1OyA==">
+    if (typeof jQuery === 'undefined') {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = "/static/core/js/jquery-3.6.1.min.js";
+        document.head.appendChild(script);
+    }
+</script>
+
+    
+    <script nonce="CfWnobRMShUN1sMJWu1OyA==">
+        var $ = jQuery;
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+    <script src="/static/core/js/ajax-csrf-snippet.js"></script>
+    
+    <link rel="stylesheet" href="/static/fontawesomefree/css/all.min.css">
+    <script src="/static/fontawesomefree/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+
+    <style nonce="CfWnobRMShUN1sMJWu1OyA==">
+        body {
+            font-family: Exo;}
+    </style>
+
+
+
+
+
+
+
+
+        
+
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js" integrity="sha512-lEb9Vp/rkl9g2E/LdHIMFTqz21+LA79f84gqP75fbimHqVTu6483JG1AwJlWLLQ8ezTehty78fObKupq3HSHPQ==" crossorigin="anonymous"></script>
+    <script src="/static/core/js/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="/static/core/js/ajax-csrf-snippet.js" ></script>
+    <script src="/static/virtual/js/virtual.js"></script>
+    
+
+    
+
+    
+    <link rel="canonical" href="https://neurips.cc/Conferences/2026/MainTrackHandbook">
+
+    <title>Main Track Handbook 2026</title>
+</head>
+
+<body>
+<!-- <h1><a href="#" onclick="alert('CSP Test');">CSP Test</a></h1> -->
+
+
+
+
+<div class="noprint">
+    
+        
+            <!--Navbar start-->
+<header>
+    <a href="#child-menu" class="off-screen">Skip to yearly menu bar</a>
+    <a href="#main" class="off-screen">Skip to main content</a>
+    <div id="id_navbar" class="navbar navbar-expand-sm navbar-dark" aria-label="Main Navigation"
+         style="background-color:#212529">
+        <h2 class="off-screen">Main Navigation</h2>
+        <div class="container-fluid">
+            <div><a class="navbar-brand" href="/" aria-label="Home">
+
+                <img src="/static/core/img/neurips-navbar-logo.svg" alt="conference_logo" height="40"></a></div>
+
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarToggler1"
+                    aria-expanded="false" aria-label="Toggle main navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarToggler1">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            NeurIPS
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/FAQ">
+                    <span >
+                        Help/FAQ
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Help/Contact">
+                    <span >
+                        Contact NeurIPS
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Profile/create">
+                    <span >
+                        Create Profile
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2023/EthicsGuidelines">
+                    <span >
+                        Code of Ethics
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/CodeOfConduct">
+                    <span >
+                        Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/JournalToConference">
+                    <span >
+                        Journal To Conference Track
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/DiversityInclusion">
+                    <span >
+                        Diversity &amp; Inclusion
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://proceedings.neurips.cc/">
+                    <span >
+                        Proceedings
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/FutureMeetings">
+                    <span >
+                        Future Meetings
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2025/Press">
+                    <span >
+                        Press
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Exhibitors/exhibitorinfo">
+                    <span >
+                        Exhibitor Information
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/PrivacyPolicy">
+                    <span >
+                        Privacy Policy
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Downloads">
+                    <span >
+                        Downloads
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/MyStuff">
+                    <span >
+                        My Stuff
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+                    
+                </ul>
+
+                
+                <form class="d-flex mx-2" aria-label="Search" role="search" action="/search">
+                    <div class="input-group" role="search" style="outline-color:green;">
+                        <input type="text" class="form-control" placeholder="Search" name="q"
+                               value=""
+                               aria-label="Search" aria-describedby="btnGroupAddon"
+                                id="navbar-search">
+                        <div class="input-group-text btn-primary" id="btnGroupAddon">
+                            <button style="border: none; background-color: transparent; padding: 0;" type="submit" aria-label="execute search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+
+                
+                    <a href="/accounts/login?nextp=/careers/ " class="navbar-brand"><span
+                            class="fa-solid fa-right-to-bracket"></span> Login</a>
+                
+
+            </div>
+        </div>
+    </div>
+</header>
+<!--Navbar end-->
+        
+    
+</div><!--noprint div-->
+
+<!--This holds the whole page including the navbar-->
+<main id="main">
+    
+        
+            <div class="container-fluid">
+                
+<!--Navbar start-->
+
+
+
+
+<div class="container-fluid">
+
+    <div class="dropdown" id="child-menu">
+        <nav class="align-middle navbar navbar-expand-md mx-4 border border-3 border-top-0 rounded-bottom"
+             style="min-height: 57px; background-color: #F6f6f6;">
+            <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggler1182"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarToggler1182">
+                    <ul class="navbar-nav me-auto mb-lg-0">
+                        
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle border-3  btn btn-primary text-white p-1" style= "background-color: #070bff; font-size: 1.2 em;"
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Select Year: (2026)
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2026">2026
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2025">2025
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2024">2024
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2023">2023
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2022">2022
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2021">2021
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2020">2020
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2019">2019
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2018">2018
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2017">2017
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2016">2016
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2015">2015
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2014">2014
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2013">2013
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2012">2012
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2011">2011
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2010">2010
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2009">2009
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2008">2008
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2007">2007
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2006">2006
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/PastConferences">Earlier Conferences
+                </a>
+                
+            </li>
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/Dates">
+                    <span >
+                        Dates
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Submit
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForPapers">
+                    <span >
+                        Call for Papers
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/MainTrackHandbook">
+                    <span style="font-size: .8em;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;Main Track Handbook
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/ReviewerGuidelines">
+                    <span style="font-size: .8em;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;Reviewing Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForEvaluationsDatasets">
+                    <span >
+                        Call for Evaluations & Datasets
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/EvaluationsDatasetsFAQ">
+                    <span style="font-size: .8em;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;Evaluations and Datasets FAQ
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/EvaluationsDatasetsReviewerGuidelines">
+                    <span style="font-size: .8em;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;Reviewing Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForPositionPapers">
+                    <span >
+                        Call for Position Papers
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForReproducibility">
+                    <span >
+                        Call for Reproducibility
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForTutorials">
+                    <span >
+                        Call for Tutorials
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForCompetitions">
+                    <span >
+                        Call For Competitions
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CompetitionReviewerGuidelines">
+                    <span style="font-size: .8em;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;Competition Track Reviewing Guidelines
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForWorkshops">
+                    <span >
+                        Call for Workshops
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForAffinityEvents">
+                    <span >
+                        Call For Affinity Events
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallforEducationalResources">
+                    <span >
+                        Call for Educational Resources
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForCreativeAI">
+                    <span >
+                        Call For Creative AI
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallforSocials">
+                    <span >
+                        Call for Social Events
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/JournalToConference">
+                    <span >
+                        Call for Journal Papers
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/CallForExpo">
+                    <span >
+                        Call for Expo
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/ai-reviewing-experiment">
+                    <span >
+                        AI Reviewing Experiment
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Attend
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/Hotels">
+                    <span >
+                        Hotels
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/Visa">
+                    <span >
+                        Visa Information
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Organizers
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/Committees">
+                    <span >
+                        Organizing Committee
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/Board">
+                    <span >
+                        NeurIPS Board
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/About">
+                    <span >
+                        NeurIPS Foundation
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Exhibitors
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/Sponsors">
+                    <span >
+                        2026 Exhibitors
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/sponsors/sponsorportal">
+                    <span >
+                        Portal
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!--Navbar end-->
+
+            </div>
+            <br><br>
+        
+    
+    
+        
+        <div class="container">
+    
+    
+
+    
+    <div class="container">
+        
+            <!--JUst above the HTML in document-snippet.html-->
+            <div> <div>
+<h1><span><span><span><span><span><span>NeurIPS Main Track Handbook </span></span></span></span></span></span></h1>
+
+<h1><span><span><span><span><span><span>(Authors, Reviewers, ACs, and SACs)</span></span></span></span></span></span></h1>
+
+<p>V2026.3</p>
+
+<p> </p>
+
+<h2><span><span><span><span><span><span>Everyone</span></span></span></span></span></span></h2>
+
+<p> </p>
+
+<h3><span><span><span><span><span><span>OpenReview Setup</span></span></span></span></span></span></h3>
+
+<p>All authors, reviewers, ACs, and SACs will need an active OpenReview profile by the abstract submission deadline.<span><span><span><span><span><span> Your OpenReview profile can be edited by logging in and clicking on your name in </span></span></span></span></span></span><a href="https://openreview.net/"><span><span><span><span><span><u><span>https://openreview.net/</span></u></span></span></span></span></span></a><span><span><span><span><span><span>. This takes you to a URL </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>"https://openreview.net/profile?id=~[Firstname]_[Lastname][n]" </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>where the last part is your profile name, e.g., ~Po-Yi_Lu1. The OpenReview profiles must be up to date, with all publications by the authors, and their current affiliations. The easiest way to import publications is through DBLP but it is not required, </span></span></span></span></span></span><a href="https://openreview.net/faq"><span><span><span><span><span><u><span>see OpenReview FAQ</span></u></span></span></span></span></span></a><span><span><span><span><span><span>. Because profiles are used to inform conflicts of interest, a profile that has not been appropriately updated risks desk rejection (for authors) and sanctions (for reviewers). </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Please be aware that OpenReview has a moderation policy for newly created profiles: New profiles created without an institutional email will go through a moderation process that can take up to two weeks. New profiles created with an institutional email will be activated automatically. If you have any questions about the use of OpenReview, please refer to its FAQ: </span></span></span></span></span></span><a href="https://openreview.net/faq"><span><span><span><span><span><u><span>https://openreview.net/faq</span></u></span></span></span></span></span></a></p>
+
+<p><span><span><span><span><span><span>All emails are sent from noreply@openreview.net. Please make sure that your preferred contact email in OpenReview is up to date and that your email servers or spam filters are not rejecting email from OpenReview. For general questions related to OpenReview, please visit </span></span></span></span></span></span><a href="https://openreview.net/faq"><span><span><span><span><span><u><span>https://openreview.net/faq</span></u></span></span></span></span></span></a><span><span><span><span><span><span>.  For technical issues, please contact the OpenReview support team at info@openreview.net directly.</span></span></span></span></span></span></p>
+
+<p><span><span><span><strong><span><span>Additional FAQs:</span></span></strong></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: I don't have a DBLP page or previous publications, how can I complete my OpenReview profile? </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: It is okay to leave the DBLP and papers empty in this case, but please make sure to add all of your email addresses and add your affiliations under "Education &amp; Career History".</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: I have publications but no DBLP page. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: You can import your papers directly into Openreview.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: I have publications but not related to the NeurIPS topic areas. Do I need to upload them? </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: No.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Institutional Eligibility</span></span></span></span></span></span></h3>
+
+<p>See the <a href="/Conferences/2026/StateDeptGuidelines">U.S. State Department Guidelines</a> .</p>
+
+<h3><span><span><span><span><span><span>Conflicts of Interest</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>All authors, reviewers, ACs, SACs, and PCs must declare their conflicts of interest in OpenReview. </span></span></span></span></span></span><span><span><span><span><span><span>You will be asked to declare two types of conflicts---domain conflicts and personal conflicts. Both types are declared by filling out appropriate sections of your OpenReview profile, as described below.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Domain conflicts (entered in Education &amp; Career History). When you enter a domain conflict, none of your submissions will be visible to reviewers, area chairs, or senior area chairs who have also entered this domain conflict. Only the last three years of your and their Education &amp; Career History will be used. This part of your profile is public. Note: All affiliations including e.g. 20% consulting, sabbaticals, etc. should be included.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Conflicts with individual authors and program committee members (entered in Advisors &amp; Other Relations). The following constitutes a personal conflict:</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><span><span>Family or close personal relationship</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Ph.D. advisee/advisor relationship</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>All co-authors on original research articles in the last three years. Perspective pieces do not count. </span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>In some cases, you may have a personal conflict that is not covered by the definition above, but would nonetheless significantly compromise the fairness of the review process. You may choose to mark such a conflict as hidden from your OpenReview profile by changing its visibility from "everyone" to "NeurIPS 2026 Program Chairs". If program chairs have any reason to doubt the validity of such a conflict, they may ask the Ethics and Grievances committee to confidentially inquire into its nature.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Please note that OpenReview profiles are persistent across conferences, but other conferences may have a different conflict resolution policy. Any attempt to impact reviewer assignment via false declaration of conflicts may result in rejection without review.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Anti-collusion</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Unfortunately, in past years there have been a small number of reviewers who engage in deceptive bidding practices. NeurIPS does not tolerate any collusion whereby authors secretly cooperate with reviewers, ACs or SACs to obtain favorable reviews. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>If collusion is identified, the authors and reviewers involved will be notified, and be able to respond to the accusation. While their answers will be carefully taken into consideration, given the short time window to act, the PCs will deliberate and their decision will be final.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Identifying collusion can happen at any point during the review process, including but not limited to the bidding process and the rebuttal period.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>The penalty for collusion is immediate removal from the reviewing system, rejection of all papers under consideration, sharing of identities with sister conferences, informing the colluding parties home institutions, and/or sanctions to future NeurIPS.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Confidentiality of Submissions </span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Reviewers, ACs, SACs, and PCs must keep everything relating to the review process confidential. Do not share, discuss, or disclose any information related to submissions with anyone, including any unsanctioned LLMs. You may not use ideas, code, or results from submissions in your own work unless and until they become publicly available and the author has granted the appropriate permission or license covering your intended use. Code submitted for review may not be distributed to anyone, including any unsanctioned LLMs, and may not be used for any purpose other than the review process. If a reviewer, AC, or SAC needs additional support via an external reviewer, they should be formally invited through OpenReview.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, reviewer, AC, and SAC assignments are made to ensure that there are no conflicts of interest. Reviewers, ACs, and SACs should not discuss any of their assigned papers with other reviewers, ACs, or SACs that are not assigned to the same submission. It is also a violation for reviewers, ACs, and SACs to ask other reviewers, ACs, and SACs for information about their own submissions as authors.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>NeurIPS Code of Ethics</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>The Code of Ethics aims to guide the NeurIPS community towards higher standards of ethical conduct as it pertains to elements of research ethics and the broader societal and environmental impact of research submitted to NeurIPS. It outlines conference expectations about the ethical practices that must be adopted by the submitting authors, members of the program and organizing committees. The Code of Ethics complements the </span></span></span></span></span></span><a href="https://neurips.cc/public/CodeOfConduct"><span><span><span><span><span><u><span>NeurIPS Code of Conduct</span></u></span></span></span></span></span></a><span><span><span><span><span><span>, which focuses on professional conduct and research integrity issues, including plagiarism, fraud and reproducibility concerns. The points described below also inform the NeurIPS Submission Checklist, which outlines more concrete communication requirements. </span></span></span></span></span></span></p>
+
+<h3>Academic Integrity</h3>
+
+<p>See the <a href="/public/guides/AcademicIntegrity">NeurIPS Academic Intregrity policy</a></p>
+
+<h3><span><span><span><span><span><span>Potential Harms Caused by the Research Process </span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Research involving human subjects or participants:</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><em><span>Fair Wages:</span></em></span></span></span></span><span><span><span><span><span><span> all human research subjects or participants must receive appropriate compensation. If you make use of crowdsourcing or contract work for a particular task as part of your research project,  you must respect the minimum hourly rate in the region where the work is carried out.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Research involving human participants: </span></em></span></span></span></span><span><span><span><span><span><span>if the research presented involves direct interactions between the researchers and human participants or between a technical system and human participants, authors are required to follow existing protocols in their institutions (e.g. human subject research accreditation, IRB) and go through the relevant process. In cases when no formal process exists, they can undergo an equivalent informal process (e.g. via their peers or an internal ethics review).</span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>Data-related concerns: The points listed below apply to all datasets used for submissions, both for publicly available data and internal datasets.</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><em><span>Privacy:</span></em></span></span></span></span><span><span><span><span><span><span> Datasets should minimize the exposure of any personally identifiable information, unless informed consent from those individuals is provided to do so. </span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Consent: </span></em></span></span></span></span><span><span><span><span><span><span>Any paper that chooses to create a dataset with real data of real people should ask for the explicit consent of participants, or explain why they were unable to do so.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Deprecated datasets:</span></em></span></span></span></span><span><span><span><span><span><span> Authors should take care to confirm with dataset creators that a dataset is still available for use. Datasets taken down by the original author (i.e., deemed obsolete, or otherwise discontinued), should no longer be used, unless it is for the purposes of audit or critical assessment. For some indication of known depreciated datasets, please refer to the NeurIPS </span></span></span></span></span></span><a href="https://neurips.cc/public/deprecated-datasets"><span><span><span><span><span><u><span>list</span></u></span></span></span></span></span></a><span><span><span><span><span><span> of deprecated datasets.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Copyright and Fair Use: </span></em></span></span></span></span><span><span><span><span><span><span>While the norms of fair use and copyright in machine learning research are still evolving, authors must respect the terms of datasets that have defined licenses (e.g. CC 4.0, MIT, etc). </span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Representative evaluation practice: </span></em></span></span></span></span><span><span><span><span><span><span> When collecting new datasets or making decisions about which datasets to use, authors should assess and communicate the degree to which their datasets are representative of their intended population. Claims of diverse or universal representation should be substantiated by concrete evidence or examples. </span></span></span></span></span></span></li>
+</ul>
+
+<h3><span><span><span><span><span><span>Societal Impact and Potential Harmful Consequences</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Authors should transparently communicate the known or anticipated consequences of research: for instance via the paper checklist or a separate section in a submission.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>The following specific areas are of particular concern:</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><em><span>Safety:</span></em></span></span></span></span><span><span><span><span><span><span> Contributors should consider whether there are foreseeable situations in which their technology can be used to harm, injure or kill people through its direct application, side effects, or potential misuse. We do not accept research whose primary goal is to increase the lethality of weapons systems.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Security: </span></em></span></span></span></span><span><span><span><span><span><span>Researchers should consider whether there is a risk that applications could open security vulnerabilities or cause serious accidents when deployed in real world environments. If this is the case, they should take concrete steps to recommend or implement ways to protect against such security risks.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Discrimination:</span></em></span></span></span></span><span><span><span><span><span><span> Researchers should consider whether the technology they developed can be used to discriminate, exclude, or otherwise negatively impact people, including impacts on the provision of services such as healthcare, education or access to credit.  </span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Surveillance:</span></em></span></span></span></span><span><span><span><span><span><span> Researchers should consult on local laws or legislation before collecting or analyzing any bulk surveillance data. Surveillance should not be used to predict gender, race, sexuality, or other protected characteristics, or be used in any way to endanger individual well-being. </span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Deception &amp; Harassment: </span></em></span></span></span></span><span><span><span><span><span><span>Researchers should communicate about whether their approach could be used to facilitate deceptive interactions that would cause harm such as theft, fraud, or harassment, and whether it could be used to impersonate public figures and influence political processes, or as a tool to promote hate speech or abuse.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Environment: </span></em></span></span></span></span><span><span><span><span><span><span>Researchers should consider whether their research is going to negatively impact the environment by, e.g., promoting fossil fuel extraction, increasing societal consumption or producing substantial amounts of greenhouse gasses.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Human Rights:</span></em></span></span></span></span><span><span><span><span><span><span> We prohibit circulation of any research work that builds upon or facilitates illegal activity, and we strongly discourage any work that could be used to deny people rights to privacy, speech, health, liberty, security, legal personhood, or freedom of conscience or religion.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Bias and fairness: </span></em></span></span></span></span><span><span><span><span><span><span> Contributors should consider any suspected biases or limitations to the scope of performance of models or the contents of datasets and inspect these to ascertain whether they encode, contain or exacerbate bias against people of a certain gender, race, sexuality, or other protected characteristics.</span></span></span></span></span></span></li>
+</ul>
+
+<h3><span><span><span><span><span><span>Impact Mitigation Measures </span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>We propose some reflection and actions taken to mitigate potential harmful consequences from the research project. </span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><em><span>Data and model documentation:</span></em></span></span></span></span><span><span><span><span><span><span> Researchers should communicate the details of the dataset or the model as part of their submissions via structured templates.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Data and model licenses:</span></em></span></span></span></span><span><span><span><span><span><span> If releasing data or models, authors should also provide licenses for them. These should include the intended use and limitations of these artifacts, in order to prevent misuse or inappropriate use.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Secure and privacy-preserving data storage &amp; distribution</span></em></span></span></span></span><span><span><span><span><span><span>: Authors should leverage privacy protocols, encryption and anonymization to reduce the risk of data leakage or theft. Stronger measures should be employed for more sensitive data (e.g., biometric or medical data). </span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Responsible release and publication strategy: </span></em></span></span></span></span><span><span><span><span><span><span>Models that have a high risk for misuse or dual-use should be released with necessary safeguards to allow for controlled use of the model, e.g. by requiring that users adhere to a code of conduct to access the model. Authors of papers exposing a security vulnerability in a system should follow the responsible disclosure procedures of the system owners.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Allowing access to research artifacts:</span></em></span></span></span></span><span><span><span><span><span><span> When releasing research artifacts, it is important to make accessible the information required to understand these artifacts (e.g. the code, execution environment versions, weights, and hyperparameters of systems) to enable external scrutiny and auditing.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Disclose essential elements for reproducibility:</span></em></span></span></span></span><span><span><span><span><span><span> Any work submitted to NeurIPS should be accompanied by the information sufficient for the reproduction of results described. This can include descriptions of the code, the actual code, data, model weights, and/or a description of the computational resources needed to train the proposed model or validate the results.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><em><span>Ensure legal compliance:</span></em></span></span></span></span><span><span><span><span><span><span> Ensure adequate awareness of regional legal requirements. This can be done, for instance, by consulting with law school clinics specializing in intellectual property and technology issues. Additional information is required from authors where legal compliance could not be met due to human rights violations (e.g. freedom of expression, the right to work and education, bodily autonomy, etc.). </span></span></span></span></span></span></li>
+</ul>
+
+<h3><span><span><span><span><span><span>Violations</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Violations to the Code of Ethics should be reported to </span></span></span></span></span></span><span><span><span><span><span><span>hotline@neurips.cc</span></span></span></span></span></span><span><span><span><span><span><span>. NeurIPS reserves the right to reject the presentation of scientific works that violate the Code of Ethics. Notice that conference contributors are also obliged to adhere to additional ethical codes or review requirements arising from other stakeholders such as funders and research institutions. NeurIPS reserves the right to investigate at any time whether the Code of Ethics was adhered to, including after paper acceptance, publication, or the conference. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>The penalty for violations may include immediate removal from the reviewing system, revoking the paper’s publication status, sharing of identities with sister conferences, informing the colluding parties home institutions, and/or sanctions to future NeurIPS.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Further reading</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span><span> </span></span></span></span></span></span></span><span><span><span><span><span><span>UNDERSTANDING LICENSES</span></span></span></span></span></span></p>
+
+<ul>
+	<li><a href="https://arxiv.org/abs/1903.12262"><span><span><span><span><span><u><span>Towards Standardization of Data Licenses: The Montreal Data License</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://choosealicense.com/"><span><span><span><span><span><u><span>Choose an open source license</span></u></span></span></span></span></span></a><span><span><span><span><span><span> </span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>MODEL AND DATA DOCUMENTATION TEMPLATES</span></span></span></span></span></span></p>
+
+<ul>
+	<li><a href="https://arxiv.org/abs/1810.03993"><span><span><span><span><span><u><span>Model Cards for Model Reporting</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://arxiv.org/abs/1803.09010"><span><span><span><span><span><u><span>Datasheets for Datasets</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/factsheets-model-inventory.html"><span><span><span><span><span><u><span>Using AI Factsheets for AI Governance</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://partnershiponai.org/about-ml-resources-library/"><span><span><span><span><span><u><span>ML Lifecycle Documentation Practices</span></u></span></span></span></span></span></a></li>
+</ul>
+
+<p><span><span><span><span><span><span>SOCIETAL IMPACT</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><span><span>Safety: </span></span></span></span></span></span><a href="https://cset.georgetown.edu/publication/key-concepts-in-ai-safety-an-overview/"><span><span><span><span><span><u><span>Key Concepts in AI Safety: An Overview</span></u></span></span></span></span></span></a></li>
+	<li><span><span><span><span><span><span>Security: </span></span></span></span></span></span><a href="https://ieeexplore.ieee.org/document/8406613"><span><span><span><span><span><u><span>SoK: Security and Privacy in Machine Learning</span></u></span></span></span></span></span></a></li>
+	<li><span><span><span><span><span><span>Discrimination:  </span></span></span></span></span></span><a href="https://fra.europa.eu/sites/default/files/fra_uploads/fra-2022-bias-in-algorithms_en.pdf"><span><span><span><span><span><u><span>Bias in algorithms – Artificial intelligence and discrimination</span></u></span></span></span></span></span></a><span><span><span><span><span><span>; </span></span></span></span></span></span><a href="https://ico.org.uk/for-organisations/guide-to-data-protection/key-dp-themes/guidance-on-ai-and-data-protection/how-do-we-ensure-fairness-in-ai/what-about-fairness-bias-and-discrimination/"><span><span><span><span><span><u><span>What about fairness, bias and discrimination?</span></u></span></span></span></span></span></a></li>
+	<li><span><span><span><span><span><span>Surveillance: </span></span></span></span></span></span><a href="https://www.aclu.org/other/human-right-privacy-digital-age"><span><span><span><span><span><u><span>The Human Right to Privacy in the Digital Age</span></u></span></span></span></span></span></a></li>
+	<li><span><span><span><span><span><span>Deception &amp; Harassment: </span></span></span></span></span></span><a href="https://arxiv.org/abs/2301.04246"><span><span><span><span><span><u><span>Generative Language Models and Automated Influence Operations: Emerging Threats and Potential Mitigations</span></u></span></span></span></span></span></a><span><span><span><span><span><span> </span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Environment: </span></span></span></span></span></span><a href="https://arxiv.org/abs/1910.09700"><span><span><span><span><span><u><span>Quantifying the Carbon Emissions of Machine Learning</span></u></span></span></span></span></span></a><span><span><span><span><span><span> &amp; </span></span></span></span></span></span><a href="https://www.nature.com/articles/s41558-022-01377-7"><span><span><span><span><span><u><span>Aligning AI with Climate Change Mitigation</span></u></span></span></span></span></span></a></li>
+	<li><span><span><span><span><span><span>Human Rights: </span></span></span></span></span></span><a href="https://www.hrw.org/topic/technology-and-rights"><span><span><span><span><span><u><span>Technology and Rights | Human Rights Watch</span></u></span></span></span></span></span></a><span><span><span><span><span><span> </span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Bias and fairness:  </span></span></span></span></span></span><a href="https://fairmlbook.org/"><span><span><span><span><span><u><span>Fairness and machine learning</span></u></span></span></span></span></span></a><span><span><span><span><span><span> </span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Dual use problem:  </span></span></span></span></span></span><a href="https://www.nature.com/articles/s42256-022-00465-9"><span><span><span><span><span><u><span>Dual use of artificial-intelligence-powered drug discovery </span></u></span></span></span></span></span></a></li>
+	<li><span><span><span><span><span><span>Data Enrichment: </span></span></span></span></span></span><a href="https://partnershiponai.org/responsible-sourcing-library/"><span><span><span><span><span><u><span>Responsible Sourcing for Data Enrichment</span></u></span></span></span></span></span></a></li>
+	<li><span><span><span><span><span><span>Synthetic Media: </span></span></span></span></span></span><a href="https://syntheticmedia.partnershiponai.org/#read_the_framework"><span><span><span><span><span><u><span>PAI’s Responsible Practices for Synthetic Media</span></u></span></span></span></span></span></a></li>
+</ul>
+
+<p><span><span><span><span><span><span><span> </span></span></span></span></span></span></span><span><span><span><span><span><span>RELATED ENDEAVORS</span></span></span></span></span></span></p>
+
+<ul>
+	<li><a href="https://www.acm.org/code-of-ethics"><span><span><span><span><span><u><span>ACM Code of Ethics</span></u></span></span></span></span></span></a><span><span><span><span><span><span> </span></span></span></span></span></span></li>
+	<li><a href="https://2021.aclweb.org/ethics/Ethics-FAQ/"><span><span><span><span><span><u><span>ACL Ethics FAQ</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://iclr.cc/public/CodeOfEthics"><span><span><span><span><span><u><span>ICLR Code of Ethics</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://oir.nih.gov/sourcebook/ethical-conduct/responsible-conduct-research-training"><span><span><span><span><span><u><span>Responsible Conduct of Research Training</span></u></span></span></span></span></span></a><span><span><span><span><span><span> </span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>RELATED RESEARCH COMMUNITIES</span></span></span></span></span></span></p>
+
+<ul>
+	<li><a href="https://satml.org/"><span><span><span><span><span><u><span>IEEE SaTML 2023</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://facctconference.org/"><span><span><span><span><span><u><span>ACM FAccT</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://www.aies-conference.com/2023/"><span><span><span><span><span><u><span>Aies Conference</span></u></span></span></span></span></span></a></li>
+	<li><a href="https://responsiblecomputing.org/forc-2022/"><span><span><span><span><span><u><span>FORC 2022</span></u></span></span></span></span></span></a><span><span><span><span><span><span> </span></span></span></span></span></span></li>
+	<li><a href="https://eaamo.org/"><span><span><span><span><span><u><span>Eaamo</span></u></span></span></span></span></span></a></li>
+</ul>
+
+<h3><span><span><span><span><span><span>Experiments</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>As in past years, the program chairs will be measuring the quality and effectiveness of the review process via randomized controlled experiments. All experiments are independently reviewed and approved by an Institutional Review Board (IRB). Information about each year’s experiment(s) will be shared via blog posts and, as relevant, through consent forms at paper submission/acceptance to participate as reviewers, ACs, and SACs. These will vary from year to year.</span></span></span></span></span></span></p>
+
+<h2><strong><span><span><span><span><span><span>Authors</span></span></span></span></span></span></strong></h2>
+
+<h3><span><span><span><span><span><span>Paper Formatting Instructions</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>All submissions must be in PDF format, and in a single PDF file include, in this suggested order</span></span></span></span></span></span></p>
+
+<ol>
+	<li><span><span><span><span><span><span>The submitted paper content</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Paper references</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Appendices containing any other supporting textual information e.g. proofs, experimental details (code and data will be submitted in a separate file).</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>The NeurIPS paper checklist</span></span></span></span></span></span></li>
+</ol>
+
+<p><span><span><span><span><span><span>The main text of a submitted paper is limited to nine content pages, including all figures and tables. Additional pages containing references, optional technical appendices and mandatory paper checklist do not count as content pages. If your submission is accepted, you will be allowed an additional content page for the camera-ready version. The maximum file size is 50MB. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>You must format your submission using the LaTeX style file for that year. This includes a "preprint" option for non-anonymous preprints posted online. This is the </span></span></span></span></span></span><span><span><span><strong><span><span>only</span></span></strong></span></span></span><span><span><span><span><span><span> template we will accept (note: Microsoft Word template has been discontinued). You can use any version of LaTeX, as long as your PDF obeys the page limit. Submissions that violate the NeurIPS style (e.g., by decreasing margins or font sizes) or page limits may be desk rejected. Papers may also be rejected without consideration of their merits if they fail to meet the submission requirements.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Double-blind Reviewing: For Authors</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>All submissions must be anonymized and may not contain any identifying information that may violate the double-blind reviewing policy. This policy applies to any supplementary or linked material as well, including code. If you are including links to any external material, it is your responsibility to guarantee anonymous browsing. Please do not include acknowledgments at submission time. If you need to cite one of your own papers, you should do so with adequate anonymization to preserve double-blind reviewing. For instance, write "In the previous work of Smith et al. [1]…" rather than "In our previous work [1]...". If you need to cite one of your own papers that is in submission to NeurIPS and not available as a non-anonymous preprint, then include a copy of the cited anonymized submission in the supplementary material and write "Anonymous et al. [1] concurrently show...". Papers violating this policy will be desk rejected.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Paper Submission</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Papers should be uploaded as a single PDF by the submission deadline. </span></span></span></span></span></span>All author names must be entered into the submission form by the abstract submission deadline. After this, no changes can be made, except to the author order.<span><span><span><span><span><span> If/when your paper is accepted, but we will not allow additions nor removal of authors. Please note that you can withdraw your submission at any point in the reviewing process.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Contribution type</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Authors should choose a contribution type from the following options:</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><strong><span><span>General: </span></span></strong></span></span></span><span><span><span><span><span><span>Please choose this type if none of the other types seem quite right. We expect that most papers will fall into this type.</span></span></span></span></span></span></li>
+	<li><span><span><span><strong><span><span>Theory:</span></span></strong></span></span></span><span><span><span><span><span><span> The main contribution is via analyses and proofs.</span></span></span></span></span></span></li>
+	<li><span><span><span><strong><span><span>Use-Inspired</span></span></strong></span></span></span><span><span><span><span><span><span>: The main contribution is via the impact of novel methods, tasks, and/or metrics associated with a real-world use case.</span></span></span></span></span></span></li>
+	<li><span><span><span><strong><span><span>Concept &amp; Feasibility: </span></span></strong></span></span></span><span><span><span><span><span><span>The main contribution is a high-risk, high-reward idea with preliminary results. The bar for these submissions is expected to be high. </span></span></span></span></span></span></li>
+	<li><span><span><span><strong><span><span>Negative Results: </span></span></strong></span></span></span><span><span><span><span><span><span>The main contribution is in understanding a negative result. The bar for these submissions is expected to be high.</span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>Reviewers will be asked to review the paper in the context of the specified contribution type and will be provided with supplementary guidelines indicating how reviewing criteria should be interpreted in light of the contribution type.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Code and Data Submission</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Supplementary material, such as data or source code, may also be submitted separately in a single ZIP file of up to 100MB. The material should be created by the authors that directly supports the submission content, and, as with the main submission, be anonymized. We encourage authors to upload their code specifically as part of their supplementary material in order to help reviewers assess the quality of the work. Policy below; see these </span></span></span></span></span></span><a href="https://github.com/paperswithcode/releasing-research-code"><span><span><span><span><span><u><span>guidelines and templates</span></u></span></span></span></span></span></a><span><span><span><span><span><span> for further details.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Reviewers will be asked to keep any submitted code and data in strict confidentiality and use it only for reviewing purposes. For accepted papers, you should provide de-anonymized links for reproducibility by the wider scientific community. </span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Code Guidelines</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Your code submission should include training and evaluation code, specification of dependencies, etc. See</span></span></span></span></span></span><a href="https://github.com/paperswithcode/releasing-research-code"><span><span><span><span><span><u><span> https://github.com/paperswithcode/releasing-research-code</span></u></span></span></span></span></span></a><span><span><span><span><span><span> for more detailed guidelines.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Your code submission ideally should be self-contained and executable. If this is not the case, you must explain why. Possible reasons might include:</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><span><span>Specialized hardware is required to run the experiment (e.g., specialized accelerators or robotic platforms).</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>The code depends on non-open-sourced or non-free libraries, which do not include the algorithm that is claimed as the scientific contribution of the paper (e.g., paid-for mathematical programming solvers, commercial simulators, MATLAB).</span></span></span></span></span></span></li>
+</ul>
+
+<h3><span><span><span><span><span><span>Data Guidelines</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>If you are submitting a new dataset, respond to the relevant questions in the NeurIPS paper checklist (included in the template). You are also encouraged to conform to the following best practices:</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><span><span>Link to the dataset from the paper (anonymized for reviewing, de-anonymized for camera ready).</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Place the dataset in a repository that ensures long-term preservation of the data.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>The dataset should have a persistent identifier such as Digital Object Identifier or Compact Identifier.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>The dataset should adhere to Schema.org or DCAT metadata standards.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>The license and/or any data access restrictions should be described in the paper.</span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>If it is impossible to conform to the above suggestions, then you should include a justification.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Paper Checklist</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>In order to improve the rigor and transparency of research submitted to and published at NeurIPS, authors are required to complete the paper checklist included in the paper template. The paper checklist is intended to help authors reflect on a wide variety of issues relating to responsible machine learning research, including reproducibility, transparency, research ethics, and societal impact.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Please note that you are not required to include a section titled "broader impacts" in your paper. However, you should still consider any potential negative societal impacts of your work. You may include a discussion of these potential negative societal impacts anywhere in the paper (in the intro, in the conclusion, as a stand-alone section, in the supplemental material if appropriate, etc.), but this discussion may not exceed the page limit. See this</span></span></span></span></span></span><a href="https://neuripsconf.medium.com/introducing-the-neurips-2021-paper-checklist-3220d6df500b"><span><span><span><span><span><u><span> blog post</span></u></span></span></span></span></span></a><span><span><span><span><span><span> for more motivation for the checklist.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Author Use of Agents and Large Language Models (LLMs) </span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>We expect authors to document their methodology clearly for upholding scientific rigorousness and transparency standards. The use of agents and/or LLMs in implementing the method should be described in the experimental setup section (or equivalent) if it is an important, original, or non-standard component of the approach e.g. if the paper is about using an LLM as a search heuristic. The use of spell checkers and grammar suggestions, aid for editing purposes, and basic code assistance does not need to be documented. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Further, authors are responsible for the entire content of the paper, including all text, figures, and references. Therefore, while authors are welcome to use any tool they wish for preparing and writing the paper, they must ensure that all content is correct and original. For example, high-level instructions could potentially result in hallucinations when generating plots, risking scientific integrity. There have been many cases of hallucinated citations in literature review, which violates the NeurIPS Code of Conduct. It is the author’s responsibility to verify the tools are used in a scientifically responsible manner. Relatedly, as you are the one taking responsibility for the work, agents and LLMs cannot be authors.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, we note that attempts at prompt injections as well as other attempts to manipulate reviewing is strictly prohibited.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Preprints</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>The existence of non-anonymous preprints (on arXiv or other online repositories, personal websites, social media) will not result in rejection. If you choose to use the NeurIPS style for the preprint version, you must use the "preprint" option rather than the "final" option. The public versions of the submission should not say "Under review at NeurIPS" or similar. Reviewers will be instructed not to actively look for such preprints, but encountering them will not constitute a conflict of interest. Authors may submit anonymized work to NeurIPS that is already available as a preprint (e.g., on arXiv) without citing it.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Note: While having a nonanonymized preprint alone is not a violation of the double-blind reviewing policy, aggressive advertising of papers under submission may be deemed a violation. The spirit of these rules is to allow authors both the date-stamp of a public preprint and making work available to the scientific community in a timely manner while also protecting the integrity of the double blind review process. </span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Dual Submissions</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>The reviewing process will treat any other archival submission by an overlapping set of authors as prior work (dual submissions to nonarchival workshops are permitted). If publishing one would render the other too incremental, both may be rejected. This includes “thin slicing” by submitting two or more very similar papers to NeurIPS in hopes one will be accepted, as well as dual submissions of the same paper to both the main and E&amp;D track. In addition, we explicitly prohibit submitting work to NeurIPS and then later submitting the same work to another archival venue while it is still under review at NeurIPS. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Note that this applies for the entire duration of the reviewing process. Failure to comply with the dual submission policy is grounds for desk rejection during any point of the reviewing and program building process. </span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Contemporaneous Work</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>For the purpose of the reviewing process, papers that appeared online after March 1st, 2026 will generally be considered "contemporaneous" in the sense that the submission will not be rejected on the basis of the comparison to contemporaneous work. Authors are still expected to cite and discuss contemporaneous work and perform empirical comparisons to the degree feasible. Any paper that influenced the submission is considered prior work and must be cited and discussed as such. Submissions that are very similar to contemporaneous work will undergo additional scrutiny to prevent cases of plagiarism and missing credit to prior work. We do not distinguish arxiv papers and other published (conference &amp; journal) papers, and the Contemporaneous-Work rule applies in the same way. More nuanced judgements, including how to determine the date of publication, will be made by the area chair handling the submission.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Ethics Review</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Reviewers and ACs may flag submissions for potential violations to the NeurIPS Code of Ethics (above). Flagged submissions will be sent to an ethics review committee for comments. Comments from ethics reviewers will be considered by the primary reviewers and AC as part of their deliberation. They will also be visible to authors, who will have an opportunity to respond. Ethics reviewers do not have the authority to reject papers, but in extreme cases papers may be rejected by the program chairs on ethical grounds, regardless of scientific quality or contribution.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Plagiarism</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>NeurIPS does not tolerate any plagiarism. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>If plagiarism is identified, the authors involved will be notified, and be able to respond to the accusation. While their answers will be carefully taken into consideration, given the short time window to act, the PCs will deliberate and their decision will be final.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Identifying plagiarism can happen at any point while the paper is under consideration for publication at NeurIPS.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>The penalty for plagiarism is immediate removal from the reviewing system, rejection of all papers under consideration, sharing of identities with sister conferences, informing the author’s home institutions, and/or sanctions to future NeurIPS.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Responsible Reviewing Policy for Reviewer-Authors</span></span></span></span></span></span></h3>
+
+<p><span><span><span><strong><span><span>Authors who are also reviewers will not see the reviews of their own submission(s) unless they have completed all assigned reviews.</span></span></strong></span></span></span><span><span><span><span><span><span> If reviews are late, the reviewers (and their co-authors) will lose access to the reviews of their own papers until completion of their professional reviews (maximally until two days before the end of the authors rebuttal period).</span></span></span></span></span></span><br>
+<br>
+<span><span><span><span><span><span>Soon after submission, co-authors of each paper will be collectively notified about which co-authors are also reviewers, so that everyone is aware that their submission falls under this policy. Reviewers will receive several reminders before the reviewing deadline. Those who are also authors and fail to submit their reviews will be specifically alerted. That is, in the worst case, the negligent reviewers and their co‑authors will lose access to reviews on their own papers until the last two days of the rebuttal period.</span></span></span></span></span></span></p>
+
+<p><span><span><span><strong><span><span>Desk Rejection Sanction</span></span></strong></span></span></span><span><span><span><span><span><span>: We will reserve the option of desk rejection at the meta‑review stage as a last‑resort sanction against grossly negligent reviewer‑authors. ACs and SACs will flag any low-quality review, such as placeholders, regardless of whether it’s submitted on time or late. The reviewer will be notified and required to address the issues. Similarly, reviewers will be expected to engage with the authors’ response. If significant problems persist and are verified by the PC chairs and E&amp;D track chairs, the reviewer’s own submitted papers may face desk rejection during the meta-review stage.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Responsible ACing Policy for AC-authors</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>We kindly ask all ACs to think about AC’ing as a partnership with NeurIPS that will improve outcomes for the whole community. As part ot this partnership: </span></span></span></span></span></span></p>
+
+<p><span><span><span><strong><span><span>Authors who are also ACs will not see the reviews and meta-reviews of their own submissions unless they have completed all assigned meta reviews. </span></span></strong></span></span></span><span><span><span><span><span><span>If meta-reviews are late, the ACs (and their co-authors) will lose access to the reviews and meta-reviews of their own papers until completion of their professional meta-reviews (maximally until two days before the end of the authors rebuttal period).</span></span></span></span></span></span></p>
+
+<p><span><span><span><strong><span><span>Desk Rejection Sanction. </span></span></strong></span></span></span><span><span><span><span><span><span> We will reserve desk rejection at the post meta‑review stage as a last‑resort sanction against grossly negligent AC‑authors (ACs who have not engaged with their reviewers and have submitted poor quality meta-reviews). If significant problems persist and are verified by the PC chairs and E&amp;D track chairs, the AC’s own submitted papers may face desk rejection during the post meta-review stage.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Note: Sometimes decisions are easy: all reviewers are excited about a paper and you see no red flags; all reviewers agree the paper is not ready for certain reasons. This is not to say that a meta-review always needs to be long. However it does need to be thoughtful, especially in cases of reviewer disagreement and/or reviewers not engaging with an author’s response.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>With these two new safeguards, we expect that a significant portion of papers will receive a more thoughtful review process. </span></span></span></span></span></span><span><span><span><strong><span><span>Both the main track and the E&amp;D track will adopt these measures.</span></span></strong></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Author Responses</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Authors will have the opportunity to view reviews and respond accordingly during the author response period. During this time, authors may not submit revisions of their paper or supplemental material, but may post their responses as a discussion in OpenReview. The response/discussion period will have three phases: </span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><span><span>Authors view reviews, meta-reviews and create an initial response. The ACs and reviewers will not have access to the author’s responses until the end of this period.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Author, reviewer, AC discussion. The ACs and reviewers will have access to authors’ initial response and be able to ask questions to which the authors may additionally respond. The reviewers and AC will also be able to message each other during this period.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Reviewer, AC discussion. At this point, the authors will not be able to see continued discussion. </span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>OpenReview Mechanics for Responding: Using the “Rebuttal” buttons, authors should respond to each review. Make sure that the “readers” of the message are those you intend to read it. The per-review rebuttal limit is 10,000 characters. You may use plain text with markdown formatting supported by OpenReview, but you cannot upload any additional files. These responses can include new results, however your original submission will serve as the basis for the reviewers’ (and ACs’) acceptance recommendations. The rebuttals should serve only to clarify the reviewers’ and ACs’ questions during the discussion period. This is to reduce the burden on authors to have to revise their paper in a rush during the short rebuttal period.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Author responses may not contain any identifying information that may violate the double-blind reviewing policy. Do not use links in any part of the response. The only exception is if the reviewers asked for code, in which case you can send an anonymized link to the AC in an Official Comment (make sure all linked files are anonymized).</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, the program chairs reserve the right to solicit additional reviews after the initial author response period. These reviews will become visible to the authors as they are added to OpenReview, and authors will have a chance to respond to them.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Publication of Accepted Submissions</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>After acceptance, camera-ready papers will be due in advance of the conference. To edit the Camera Ready file and information, go to the OpenReview page for the paper, and select Edit (top right corner) and then “Camera Ready Version”. All 10 pages of the paper, references, text appendices and the paper checklist should be combined and uploaded as a single PDF. Please refer to the current year’s style file for instructions for submitting the checklist. We strongly encourage accompanying code and data to be submitted with accepted papers when appropriate, as per the code and data submission guidelines above. Authors will be allowed to make minor changes for a short period of time after the conference.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>The Camera Ready file can make edits to the title, keywords and the abstract, as long as they do not substantially differ from the original submission. You can reorder the author lists freely, but we will not allow additions nor removal of authors. It is expected that you update the main paper in response to the reviewer comments and discussion. Authors of accepted papers will also be asked to upload a paragraph-length lay summary of the paper (aimed at the general public, without jargon).</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Public Posting of Reviews and Discussions.</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Reviews, meta-reviews, and any discussion with the authors will be made public for accepted papers (but reviewer, area chair, and senior area chair identities will remain anonymous). Authors of rejected papers will have two weeks after the notification date to opt in to make their deanonymized rejected papers public in OpenReview. These papers are not counted as NeurIPS publications and will be shown as rejected in OpenReview.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Funding Transparency Statement</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Your Camera Ready paper must include a funding statement and competing interests disclosures. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>1. Funding (financial activities supporting the submitted work): </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>In order to pursue the work that you submitted to NeurIPS, did any of the authors receive third-party funding or third-party support during the last 36 months prior to this submission? This question refers to any aspect of the submitted work, including but not limited to personnel; data collection, processing, labeling, or evaluation; computing hardware; cloud computing services; or programming support. Examples could be grants by a government agency, or stipends or donations by a commercial sponsor, a private foundation or a charity. Please list all such funding sources.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><em><span>Example: Funding in direct support of this work: NSF grant XXX, GPUs donated by YYY, scholarship by Company ZZZ. </span></em></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>2. Competing Interests (financial activities outside the submitted work): </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Did any of the authors have financial relationships with entities that could potentially be perceived to influence what you wrote in the submitted work, during the last 36 months prior to this submission? You should disclose financial relationships with any entity that could be considered broadly relevant to the work, even if the funding was not used to support the submitted work, and regardless of the amount of compensation. Examples could be engagements with commercial companies or startups (sabbaticals, employments, stipends), honoraria, or donations of hardware or cloud computing services. If you have explicitly listed an organization as your primary affiliation, it is not necessary to include it in the declaration. Please list all sources of revenue paid or promised to be paid.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><em><span>Example: Additional revenues related to this work: Sabbatical at Company Y; Part time employment with Company Z; Honorarium for lectures by Charity X; Honorarium as Member of the Advisory Board of Startup C; Travel support by Foundation A; hardware donations by Company B.</span></em></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Author Registration and Presentation Requirements</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>The value of NeurIPS comes from engaging with a community of researchers. At least one author of each accepted paper must register for the main conference. A ‘Virtual Only Pass’ is not sufficient. Each accepted poster must be presented either at the main NeurIPS conference site or a satellite site, if satellite sites exist. If serious extenuating circumstances prevent authors from attending, then you may find someone who can present your paper in your place.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Whether or not an author can attend, at least one author of each accepted paper must register for the main conference. A ‘Virtual Only Pass’ is not sufficient. If that author is a student they only need a student registration. Finally, only one registration is needed even if the author has multiple accepted papers.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>We reserve the right to revoke accepted publication status </span></span></span></span></span></span><span><span><span><span><span><span><span>if no authors registered and presented the paper in the conference in person in our official locations. For no-shows at orals, we also reserve the right to downgrade them to poster status and/or revoke their accepted status entirely.</span></span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Posters</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>See above re accessibility for papers and apply to your poster. Specific information about poster specifications will depend on the venue and will be posted here.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Talks</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>For accessibility, we </span></span></span></span></span></span><span><span><span><span><span><span>advise</span></span></span></span></span></span><span><span><span><span><span><span> all talk presenters to</span></span></span></span></span></span><span><span><span><span><span><span> use the following guides for making accessible talks: </span></span></span></span></span></span><a href="https://www.w3.org/WAI/teach-advocate/accessible-presentations/"><span><span><span><span><span><u><span>W3C Guide</span></u></span></span></span></span></span></a><span><span><span><span><span><span>, the </span></span></span></span></span></span><a href="https://dl.acm.org/doi/10.1145/3085564"><span><span><span><span><span><u><span>ACM guide</span></u></span></span></span></span></span></a><span><span><span><span><span><span>, and the </span></span></span></span></span></span><a href="https://github.com/hcorona/diversity-inclusion/blob/master/accesible-presentations.md"><span><span><span><span><span><u><span>RECSYS guide</span></u></span></span></span></span></span></a><span><span><span><span><span><span>. Key points include: </span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><span><span>Create slides with minimal text, use large fonts, use bold for emphasis, and avoid special text effects (e.g., shadows).</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Choose high-contrast colors; dark text on a cream background works best.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Avoid flashing text or graphics.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Choose color palettes that provide better color accessibility for color-blind viewers (see </span></span></span></span></span></span><a href="https://medium.com/theuxblog/how-to-design-for-color-blindness-a6f083b08e12"><span><span><span><span><span><u><span>Usabilla</span></u></span></span></span></span></span></a><span><span><span><span><span><span> for details) and do not rely on color to convey a message.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Use examples that are understandable to a diverse, multicultural audience.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Avoid text, examples or imagery that are of a sexual, racial, or otherwise offensive nature. Given that the boundary is often unclear, it's best to only use material you are </span></span></span></span></span></span><span><span><span><strong><span><span>completely confident</span></span></strong></span></span></span><span><span><span><span><span><span> is appropriate.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>When speaking, do not assume that all audience members can see the slides: go through everything important when speaking.</span></span></span></span></span></span></li>
+</ul>
+
+<h3><span><span><span><span><span><span>Financial Aid</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Each paper may designate up to one (1) NeurIPS.cc account email address of a corresponding student author who confirms that they would need the support to attend the conference, and agrees to volunteer if they get selected. To be considered for financial aid, the student will also need to fill out the Financial Aid application when it becomes available.</span></span></span></span></span></span></p>
+
+<h2><strong><span><span><span><span><span><span>Reviewers</span></span></span></span></span></span></strong></h2>
+
+<p><span><span><span><span><span><span>We know that serving as a reviewer for NeurIPS is time consuming, and the community depends on your timely, high quality reviews to uphold the scientific quality of NeurIPS. </span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Flow of Tasks and Expectations</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Your assignments and tasks will appear at the reviewer console in OpenReview: </span></span></span></span></span></span><a href="https://openreview.net/group?id=NeurIPS.cc/2025/Conference/Reviewers"><span><span><span><span><span><u><span>https://openreview.net/group?id=NeurIPS.cc/2026/Conference/Reviewers</span></u></span></span></span></span></span></a></p>
+
+<h4><span><span><span><span><span><span>Preparation</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Read and agree to abide by the </span></span></span></span></span></span><a href="https://neurips.cc/public/CodeOfConduct"><span><span><span><span><span><u><span>NeurIPS code of conduct</span></u></span></span></span></span></span></a><span><span><span><span><span><span>. Read the policies pertaining to everyone (e.g. around conflicts of interest, setting up an OpenReview profile) and authors (e.g. dual submission policy, double blind reviewing) in the handbook. Read about the 2026 experiment to better understand how reviewers use LLMs and how that impacts reviews.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Bid on papers</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Your bids are an important input to the paper matching process. Please be cognizant of our anti-collusion policies (above).</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Check paper assignments</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>As soon as you are notified of papers to review, you are expected to log in to OpenReview to check for conflicts and to check that papers fall within your area of expertise. </span></span></span></span></span></span><span><span><span><span><span><span>If you don’t feel qualified to review a paper that was assigned to you, please communicate this to your AC right away. These assignments may change during the first week, as some reviewers and ACs request re-assignments. Please watch for notification email from Openreview.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Write thoughtful reviews</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Be fair and precise. Your review should focus on scientific content and clarity. Do not let personal feelings affect your review, and please make your review as informative and substantiated as possible. Superficial, uninformed reviews without evidence are worse than no review as they may contribute noise to the review process. For example, if you argue about the lack of novelty, please provide appropriate references and point to existing mechanisms within – vague statements are unfairly difficult for authors to address.A good review is useful to all parties involved: authors, other reviewers and AC/SACs. Try to keep your feedback constructive when possible. Finally, please ensure to thoroughly comment on technical aspects of work rather than focusing only on paper organisation or its grammar. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Feel free to use the </span></span></span></span></span></span><a href="https://neurips.cc/public/guides/PaperChecklist"><span><span><span><span><span><u><span>NeurIPS paper checklist </span></u></span></span></span></span></span></a><span><span><span><span><span><span>included in each paper as a tool when preparing your review. Remember that answering “no” to some questions is typically not grounds for rejection. In general, authors should be rewarded rather than punished for being up front about the limitations of their work and any potential negative societal impact. You are encouraged to think through whether any critical points are missing and provide these as feedback for the authors.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, be thoughtful. The paper you are reviewing may have been written by a first year graduate student who is submitting to a conference for the first time and you don't want to crush their spirits. In general, avoid wording that may be perceived as rude or offensive. Relatedly, when writing your review, please keep in mind that after decisions have been made, reviews and meta-reviews of accepted papers as well as your discussion with the authors will be made public (but reviewer and SAC/AC identities will remain anonymous); authors of rejected papers will have the option to make this information public for their rejected papers as well.</span></span></span></span></span></span></p>
+
+<p><span><span><span><strong><span><span>Additional FAQs:</span></span></strong></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: What about minor formatting violations? </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A:  Do not worry about minor violations of the required format e.g., papers that exceed the page limit by a few lines or have an incorrect order of the checklist, references, and supplementary materials, but report any major violations to your AC.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: What if I’ve seen similar work in a NeurIPS/ICML workshop?</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: We allow work that has been submitted to non-archival workshops to be submitted to NeurIPS. To maintain anonymity, do not mention the workshop paper in your review.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: Can I recommend ‘accept’ or ‘reject’ all the papers in my stack?</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: Yes. Please accept and reject papers based on their own merits. You do not have to match the conference acceptance rate.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: Do I have to read the supplementary material?</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: You are not required to read it, but you are welcome to.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: Can I read the previous reviews of a paper if it is a resubmission?</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: You should not actively seek out previous reviews because it could violate anonymity in our double-blind review process, but if you have read them previously, that is okay.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: What should I do if I have already reviewed this paper at another venue?</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: Do not assume that the paper hasn’t changed. Read the paper carefully, and make sure you write a high quality review.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Q: Can I invite a sub-reviewer to help with my reviews?</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>A: No, involving sub-reviewers -- that is, asking someone to review for you e.g. to train a more junior student, reviewing their review, and then submitting it as your review -- is not allowed. Conflicts of interest cannot be properly checked unless reviewers are officially in the system, and sub-reviewers would not be able to participate in the discussion, which is a critical phase of the review process.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Read author responses and discuss papers</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>At the start of the discussion period, please carefully read all other reviews, the meta-review, and the author responses to all reviews for the papers assigned to you.</span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><span><span>As you read each author’s response, please keep an open mind. The authors may address some points you raised in your review during the discussion period. Make an effort to update your understanding of the paper when new information is presented, and revise your review to reflect this. If the author’s response didn’t change your opinion about the paper, please acknowledge that you have read and considered it.  </span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>To minimize the chance of misunderstandings during the reviewing process, we will allow for a rolling discussion with the authors once the initial author responses are released.  If you need to communicate with the authors, you can make a comment visible to them on the paper’s page.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Participating in discussions is a critical part of your role as a reviewer.  The discussion period is especially important for borderline papers and papers for which the reviewers’ assessments differ, and we hope that you take discussions seriously.  If your evaluation of the paper has changed, please revise your review and explain the change.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>When discussing a paper, remember that different people have different backgrounds and different points of view. Reviewer consensus is valuable—only rarely are unanimous assessments overruled—but it is not mandatory.</span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>After the discussion period, ACs will make initial accept/reject decisions with SACs before the Author Notification. Your workload during this period should be light, but if ACs come back to you with additional questions, please respond promptly.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Contact for Questions and Concerns</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>The Area Chair (AC) assigned to a paper should be your first point of contact for that paper. ACs are the principal contact for reviewers during the whole reviewing process. ACs are responsible for recommending reviewers for submissions, ensuring that all submissions receive quality reviews, facilitating discussions among reviewers, writing meta-reviews, evaluating the quality of reviews, and making decision recommendations. In addition to questions about reviewing, you should also contact your AC if you suspect notice any unethical or suspect behavior e.g. plagiarism, papers that are not anonymized (note: if someone pressures you to provide a positive or negative review, please escalate that to the <a href="mailto:scientific-integrity-chairs@neurips.cc">scientific integrity chairs</a> right away). Your AC is also your first point of contact if you have an emergency and are delayed in reviews.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, if you have ethics-related concerns regarding the content of the paper, you may flag the submission for additional review by ethics reviewers. The comments from the ethics reviewers will be visible to all reviewers, the AC, and the authors. You may use their comments to inform your deliberations.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>You can contact the AC by leaving a comment in OpenReview with the AC as a reader. (SACs – whose job it is to oversee the work of ACs – and PCs – who oversee the entire process – will also be listed as readers, but will not be notified.) If you encounter a situation that you are unable to resolve with your AC, please contact the </span></span></span></span></span></span><a href="https://neurips.cc/Help/Contact?select=Program"><span><span><span><span><span><u><span>program chairs</span></u></span></span></span></span></span></a><span><span><span><span><span><span>. Please refrain from writing to the program chairs at their own email addresses. </span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Executing Code &amp; Clicking on Links</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Please remember that just like any other untrusted code, any submitted code may contain security vulnerabilities. If you are planning to run any submitted code, please make sure you are doing this in a secure environment because this code is not vetted by our submission system. We recommend running source code (1) inside a Docker container, or (2) a Virtual Machine image (using VirtualBox or VMWare), or (3) on a network-isolated cloud instance. You may wish to also be cautious about accessing other web links provided from the paper, as these may contain vulnerabilities or may log visitor IP addresses.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Double-blind Reviewing: For Reviewers</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Please do not attempt to find out the identities of the authors for any of your assigned submissions (e.g., by searching on arXiv).  This would constitute an active violation of the double-blind reviewing policy.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Reviewer Use of Agents and Large Language Models</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Our reviewing policy reflects (a) the importance of protecting the confidentiality of submissions, which are made by authors in trust that their work will not be leaked beyond the circle of reviewers, ACs, SACs, and PCs responsible for its review and (b) that we are still very much in the early stages of identifying where agents and LLMs are useful in improving the quality and efficiency of reviewing and where they have the opposite effect.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>This year, we are planning an experiment (though the details may change) in which every reviewer will have some papers for which they may use LLM support that we will provide via OpenReview and some papers for which they are </span></span></span></span></span></span><span><span><span><span><em><span>not</span></em></span></span></span></span><span><span><span><span><span><span> allowed to use </span></span></span></span></span></span><span><span><span><span><em><span>any </span></em></span></span></span></span><span><span><span><span><span><span>LLM. Reviewers must not use LLMs except for papers where this is specifically allowed, and must only use the sanctioned LLM in such cases rather than other LLMs. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, we note that while the explicit use of prompt injections to sway reviewing is strictly prohibited to authors, there is a gray zone in which authors may adjust their text such that it provides favorable outputs if given to an LLM to review. Reviewers authorized to use the sanctioned LLM should be aware that authors may have optimized their text in this way, not only for the quality of that review, but also so that authors are not penalized who wrote their papers for people and not for machines.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Review Form</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>Below is a description of the questions you will be asked on the review form for each paper and some guidelines on what to consider when answering these questions. Feel free to use the </span></span></span></span></span></span><a href="https://neurips.cc/public/guides/PaperChecklist"><span><span><span><span><span><u><span>NeurIPS paper checklist</span></u></span></span></span></span></span></a><span><span><span><span><span><span> included in each paper as a tool when preparing your review. Remember that answering “no” to some questions is typically not grounds for rejection. When writing your review, please keep in mind that after decisions have been made, reviews and meta-reviews of accepted papers and opted-in rejected papers will be made public. </span></span></span></span></span></span><span><span><span><strong><span><span>This year, authors will be asked to denote the type of contribution made in their paper,</span></span></strong></span></span></span><span><span><span><span><span><span> including General, Theory, Use-Inspired, Concept &amp; Feasibility, and Negative Results. </span></span></span></span></span></span><span><span><span><strong><span><span>Please refer to our <a href="https://neurips.cc/Conferences/2026/ReviewerGuidelines">Guidelines for Contribution Types</a> for specific ways you should interpret the four core criteria -- Quality, Clarity, Significance, and Originality -- based on the contribution type. </span></span></strong></span></span></span></p>
+
+<ol>
+	<li><span><span><span><span><span><span>Summary: Briefly summarize the paper and its contributions. This is not the place to critique the paper; the authors should generally agree with a well-written summary. This is also not the place to paste the abstract—please provide the summary in your own understanding after reading.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>This year, submissions to the Main Track fall into different Contribution Types and the Reviewing Guidelines differ based on the Contribution Type. Please select the Contribution Type for this submission to confirm that you have read the Reviewing Guidelines for this Contribution Type (https://neurips.cc/Conferences/2026/ReviewerGuidelines).</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Strengths and Weaknesses: Please give your review of the paper. A good review is more than simply bullet points - it is a narrative presenting your understanding of the paper, highlighting issues, and addressing the four dimensions of Quality, Clarity, Significance, and Originality. Important: this year, what constitutes Quality, Clarity, Significance, and Originality should be interpreted differently depending on the Contribution Type - see the NeurIPS 2026 Reviewer Guidelines (https://neurips.cc/Conferences/2026/ReviewerGuidelines). You can incorporate Markdown and LaTeX into your review. See https://openreview.net/faq.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Quality: Based on what you discussed in your review above, please assign the paper a numerical rating on the following scale with respect to Quality. Note that the definition of Quality differs based on Contribution Type - see https://neurips.cc/Conferences/2026/ReviewerGuidelines.</span></span></span></span></span></span>
+	<ol>
+		<li><span><span><span><span><span><span>4 excellent</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>3 good</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>2 fair</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>1 poor</span></span></span></span></span></span></li>
+	</ol>
+	</li>
+	<li><span><span><span><span><span><span>Clarity: Based on what you discussed in your review above, please assign the paper a numerical rating on the following scale with respect to Clarity. Note that the definition of Clarity differs based on Contribution Type - see https://neurips.cc/Conferences/2026/ReviewerGuidelines.</span></span></span></span></span></span>
+	<ol>
+		<li><span><span><span><span><span><span>4 excellent</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>3 good</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>2 fair</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>1 poor</span></span></span></span></span></span></li>
+	</ol>
+	</li>
+	<li><span><span><span><span><span><span>Significance: Based on what you discussed in your review above, please assign the paper a numerical rating on the following scale with respect to Significance. Note that the definition of Significance differs based on Contribution Type - see https://neurips.cc/Conferences/2026/ReviewerGuidelines.</span></span></span></span></span></span>
+	<ol>
+		<li><span><span><span><span><span><span>4 excellent</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>3 good</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>2 fair</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>1 poor</span></span></span></span></span></span></li>
+	</ol>
+	</li>
+	<li><span><span><span><span><span><span>Originality: Based on what you discussed in your review above, please assign the paper a numerical rating with respect to Originality. Note that the definition of Originality differs based on Contribution Type - see https://neurips.cc/Conferences/2026/ReviewerGuidelines.</span></span></span></span></span></span>
+	<ol>
+		<li><span><span><span><span><span><span>4 excellent</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>3 good</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>2 fair</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>1 poor</span></span></span></span></span></span></li>
+	</ol>
+	</li>
+	<li><span><span><span><span><span><span>Questions: Please describe any questions and suggestions for the authors (ideally 3-5), which should focus on key points that are actionable with clear guidance. Think of the things where a response from the author can change your opinion, clarify a confusion or address a limitation. You are strongly encouraged to state the clear criteria under which your evaluation score could increase or decrease. This can be very important for a productive rebuttal and discussion phase with the authors. If you suggest new experiments, please explain what kind of question they would help to answer (e.g., ablation study with X would shed some light on question Y), and be aware that authors may not have large computational infrastructure to run significant experiments in a short time period.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Limitations: Have the authors adequately addressed the limitations and implications of their work? If so, simply leave “yes”; if not, please include constructive suggestions for improvement. In general, authors should be rewarded rather than punished for being upfront about the limitations of their work and any potential negative societal impact. You are encouraged to think through whether any critical points are missing and provide these as feedback for the authors.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Overall: Please provide an "overall score" for this submission. Choices:</span></span></span></span></span></span>
+	<ol>
+		<li><span><span><span><span><span><span>6: Strong Accept:  Technically flawless paper with groundbreaking impact on one or more areas of AI, with exceptionally strong evaluation, reproducibility, and resources, and no unaddressed ethical considerations.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>5: Accept: Technically solid paper, with high potential value on at least one sub-area of AI or moderate-to-high impact on more than one area of AI, with good-to-excellent evaluation, resources, reproducibility, and no unaddressed ethical considerations.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>4: Borderline accept: Technically solid paper where reasons to accept outweigh reasons to reject, e.g., limited evaluation. Please use sparingly.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>3: Borderline reject:  Technically solid paper where reasons to reject, e.g., limited evaluation, outweigh reasons to accept, e.g., good evaluation. Please use sparingly.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>2: Reject: For instance, a paper with technical flaws, weak evaluation, inadequate reproducibility and incompletely addressed ethical considerations.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>1: Strong Reject: For instance, a paper with well-known results or unaddressed ethical considerations.</span></span></span></span></span></span></li>
+	</ol>
+	</li>
+	<li><span><span><span><span><span><span>Confidence:  Please provide a "confidence score" for your assessment of this submission to indicate how confident you are in your evaluation. </span></span></span></span></span></span>
+	<ol>
+		<li><span><span><span><span><span><span>5: You are absolutely certain about your assessment. You are very familiar with the related work and checked the math/other details carefully.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>4: You are confident in your assessment, but not absolutely certain. It is unlikely, but not impossible, that you did not understand some parts of the submission or that you are unfamiliar with some pieces of related work.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>3: You are fairly confident in your assessment. It is possible that you did not understand some parts of the submission or that you are unfamiliar with some pieces of related work. Math/other details were not carefully checked.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>2: You are willing to defend your assessment, but it is quite likely that you did not understand the central parts of the submission or that you are unfamiliar with some pieces of related work. Math/other details were not carefully checked.</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>1: Your assessment is an educated guess. The submission is not in your area or the submission was difficult to understand. Math/other details were not carefully checked.</span></span></span></span></span></span></li>
+	</ol>
+	</li>
+	<li><span><span><span><span><span><span>Ethical concerns:* If there are significant ethics concerns that require review by an ethics expert, please flag the paper with all major concerns for an ethics review; if not, only select the first checkbox. For guidance on when this is appropriate, please review the NeurIPS ethics guidelines (https://neurips.cc/public/EthicsGuidelines). Note: Please do not both lower your score prior to ethics review and flag for major concern: seeking an ethics review means the paper has potential ethical concerns that would constitute rejection if they are substantiated.</span></span></span></span></span></span>
+	<ol>
+		<li><span><span><span><span><span><span>​​​​​​NO or VERY MINOR ethics concerns only</span></span></span></span></span></span></li>
+		<li>CLEAR MAJOR CONCERN: Check this box if there is a clear, major concern for which you do not need further clarifications. Detail the concern in the Strengths and Weaknesses section. Use another option below if you would benefit from a consultation with an expert.</li>
+		<li><span><span><span><span><span><span>Major Concern: Improper research involving human subjects</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>Major Concern: Data privacy, copyright, and consent</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>Major Concern: Data quality and representativeness</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>Major Concern: Safety and security</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>Major Concern: Discrimination, bias, and unfairness</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>Major Concern: Deception and harassment</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>Major Concern: Environmental impact</span></span></span></span></span></span></li>
+		<li><span><span><span><span><span><span>Major Concern: Human rights (including surveillance)</span></span></span></span></span></span></li>
+	</ol>
+	</li>
+	<li>Paper Formatting Concerns: If you notice any major issues in this paper with respect to violation of formatting, anonymity, etc., please list them below. Note that your overall reviewing score should not be decreased as a result of any perceived violations - instead, please simply report them here. Please follow the NeurIPS 2026 Paper Formatting Instructions for guidance (https://neurips.cc/Conferences/2026/CallForPapers).</li>
+	<li><span><span><span><span><span><span>Code of conduct acknowledgement. While performing my duties as a reviewer (including writing reviews and participating in discussions), I have and will continue to abide by the NeurIPS code of conduct (</span></span></span></span></span></span><a href="https://neurips.cc/public/CodeOfConduct"><span><span><span><span><span><u><span>NeurIPS Code Of Conduct</span></u></span></span></span></span></span></a><span><span><span><span><span><span>), including the policies for LLM use.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>Responsible reviewing acknowledgement: I acknowledge I have read the information about the "responsible reviewing initiatives" and will abide by that. </span></span></span></span></span></span><a href="https://blog.neurips.cc/2025/05/02/responsible-reviewing-initiative-for-neurips-2025/"><span><span><span><span><span><u><span>https://blog.neurips.cc/2026/05/02/responsible-reviewing-initiative-for-neurips-2026/</span></u></span></span></span></span></span></a></li>
+</ol>
+
+<p>*Note regarding ethical concerns: Supporting ethical research is a shared communal responsibility. The ethics reviewers are meant to be a resource if you have questions you are unsure about: For example, you see a potentially serious privacy issue but are not sure and would like to consult a privacy ethics expert. If you see a clear ethics concern in the paper, then there is no need to request an ethics review; rather, you should flag the concern to your AC. Examples in this latter category could include a paper on increasing the lethality of autonomous weapons (clearly violates the Code of Ethics) or a paper that fails to discuss dual-use implications for their method (you must apply discretion to determine whether you ask the authors to revise for a camera-ready or reject with encouragement to submit to another conference -- just as you would for other kinds of potentially-addressable imperfections). </p>
+
+<h2><strong><span><span><span><span><span><span>Area Chairs</span></span></span></span></span></span></strong></h2>
+
+<p><span><span><span><span><span><span>Your work is essential for creating the program. </span></span></span></span></span></span><span><span><span><span><span><span>Please respect deadlines and respond to emails as promptly as possible. It is okay to be unavailable for part of the review process (e.g., on vacation for a few days), but if you will be unavailable for more than that—especially during important windows (e.g., discussion, decision-making)—you must let your SAC know as soon as you can.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, please be kind and professional. It is important to acknowledge that personal situations may lead to late or unfinished work among reviewers. In the event that a reviewer is unable to complete their work on time, we encourage you to be considerate of the personal circumstances; you might have to pick up the slack in some cases. In all communications, exhibit empathy and understanding.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Contact for Questions and Concerns</span></span></span></span></span></span></h3>
+
+<p><span><span><span><span><span><span>If you encounter a situation that you are unable to resolve on your own, please first contact your SAC via OpenReview (set comment to have readers SACs and PCs). For concerns regarding scientific integrity, please contact the <a href="mailto:scientific-integrity-chairs@neurips.cc">scientific integrity chairs</a>.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Flow of Tasks and Expectations</span></span></span></span></span></span></h3>
+
+<h4><span><span><span><span><span><span>Preparation</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Read and agree to abide by the </span></span></span></span></span></span><a href="https://neurips.cc/public/CodeOfConduct"><span><span><span><span><span><u><span>NeurIPS code of conduct</span></u></span></span></span></span></span></a><span><span><span><span><span><span>. Read the policies pertaining to everyone (e.g. around conflicts of interest, setting up an OpenReview profile), authors (e.g. dual submission policy, double blind reviewing), and reviewers in the handbook. Read about the 2026 experiment to better understand how reviewers use LLMs and how that impacts reviews.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Bid on papers</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Your bids are an important input to the paper matching process. Please be aware of our anti-collusion policies above.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Check paper assignments</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>As soon as you are notified of your assigned papers, log in to OpenReview to check for conflicts; report any conflicts as soon as possible to your SAC. These assignments may change during the first week, as some reviewers and ACs request re-assignments. Please watch for notification email from Openreview.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Ensure all papers have quality reviews; emergency reviewing </span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>You might have to send multiple reminder emails, but please be courteous. If a reviewer is unable to deliver a review, please find a replacement reviewer (instructions to be updated later). As reviews come in, read them carefully.  If a review is substandard, you should ask the reviewer to improve their review. Please remember to be polite and provide concrete guidance. If a reviewer cannot complete their review, then please first work on finding an emergency reviewer and then wait on guidance regarding Phase II reviewing.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, make sure that any questionable papers are flagged for ethics review. These papers will be assigned ethics reviewers, who will effectively join the paper's assigned program committee.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Write initial meta-review as guidance to authors</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Your initial meta-review is due </span></span></span></span></span></span><span><span><span><span><em><span>before</span></em></span></span></span></span><span><span><span><span><span><span> the</span></span></span></span></span></span><span><span><span><span><em><span> </span></em></span></span></span></span><span><span><span><span><span><span>author response period begins. In this meta-review, you should outline what you believe is most relevant for the authors to address in order to </span></span></span></span></span></span><span><span><span><span><em><span>change whether the paper is accepted.</span></em></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Begin by carefully reviewing the reviews. </span></span></span></span></span></span><span><span><span><span><span><span>Don't focus too much on the scores. Instead, look carefully at the comments. Judge the quality of the review rather than taking note of the reviewer's confidence score; the latter may be more a measure of personality. We also expect you to be familiar with all the papers that are assigned to you and to be able to argue about their technical content and contributions. Your responsibility is to make good decisions, not just facilitate reviewer discussions.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Once you have read the reviews and considered the paper yourself, determine what, if anything, might change your view on whether the paper should be accepted. We expect that your meta-reviews will roughly fall into three categories: </span></span></span></span></span></span></p>
+
+<ul>
+	<li><span><span><span><span><span><span>[Heading toward rejection] State that the reviewers have serious reservations related to [list of specific items] that seem to preclude a path toward publication at NeurIPS. Note that the authors should absolutely rebut if the reservations have been made in error, but if the reservations are correct, then the concerns are too large to be dealt with in the rebuttal process and the authors are encouraged to submit the revised work elsewhere.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>[Papers that need clarification] List the key questions that the authors would have to respond to successfully in order for the paper to be strongly considered for publication. When making this list, be thoughtful in identifying the core issues so that the authors know where to focus (e.g. an incorrect proof that obviates the main theorem; a critical baseline that is missing) and where not to focus (e.g. unreasonable requests for additional experiments). Keep in mind that if the authors successfully respond to all of your prioritized questions, you should be ready to accept the paper. Your thought now on what would be needed to sway you will pay off with a much more targeted discussion and easier decision-making phase at the end.</span></span></span></span></span></span></li>
+	<li><span><span><span><span><span><span>[Papers you plan to definitely accept; relatively few] All the reviewers seem positive, and you are too. Tell the authors that overall the reviewers were pleased with the work and you would like minor clarifications (if any). </span></span></span></span></span></span></li>
+</ul>
+
+<p><span><span><span><span><span><span>As you do this, try to counter biases you perceive in the reviews. Unfashionable subjects should be treated fairly but often aren't, to the advantage of the papers on more mainstream approaches. To help the NeurIPS community move faster out of local minima, it is important to encourage risk and recognize that new approaches can't initially yield state-of-the-art competitive results, nor do all papers require extensive computational experiments. This year, reviewers will be provided with brief guidance on how to interpret the standard reviewing criteria differently according to different types of paper contributions (General, Theory, Use-Inspired, etc.); you should read this guidance and consider whether reviewers are fairly adapting their consideration of a paper to the contribution type.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Discuss with reviewers and authors</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>As soon as the author response is entered in the system, immediately initiate and lead a discussion via OpenReview for each submission, and make sure the reviewers engage in the discussion phase. Monitor and moderate the discussion to ensure that it is respectful of everyone’s opinion. Read the submissions and reviews in your stack to steer the discussion towards the most critical aspects that need discussion.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Make sure your reviewers read and respond to all author responses. Keep them focused on the key aspects that you already identified. To minimize the chance of misunderstandings during the reviewing process, you can also initiate a rolling discussion with the authors after the initial author responses are released. You can restrict visibility of your comment to any set of readers (authors, reviewers, senior area chair, or program chairs) as appropriate.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Writing final meta-reviews </span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>This is the final phase of the discussion period, during which you will revise your initial meta-reviews and make decisions. In your meta-review, explicitly indicate that you have read the authors’ response and describe whether you and the reviewers thought it successfully addressed the issues brought up in your initial meta-review. If you rely on information not contained in the written reviews—for example, from correspondence with a reviewer after the rebuttal period—you must inform the authors that you have done so and clearly specify what additional information was considered.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Your meta-review should clearly explain your decision (accept, reject, or borderline). If you are inclined to overrule a unanimous set of referee opinions, your justification should be as thorough as a full review, and you should consider soliciting an auxiliary review. Please try to take a decisive stand on borderline papers—many decisions will involve submissions where there is neither strong enthusiasm nor major flaws identified, and these cases require your judgment. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>Finally, go through your final decisions with your SAC, so that decisions can be calibrated consistently across ACs.</span></span></span></span></span></span></p>
+
+<p> </p>
+
+<h2><strong><span><span><span><span><span><span>Senior Area Chairs</span></span></span></span></span></span></strong></h2>
+
+<p><span><span><span><span><span><span>As an SAC, your role is to oversee the work of a small group of ACs and ensure that the reviewing process runs smoothly. You serve as the first point of contact for ACs who need assistance or guidance, and you are responsible for helping them follow up with late reviewers, calibrate decisions across ACs, and navigate more complex cases. </span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>During the final decision-making phase, you will discuss all proposed decisions with the Program Chairs (PCs). In general, you should proactively check in with your ACs about their decision process. This year, ACs are, as far as possible, being assigned papers within a single subject area to support calibration, and SACs will similarly be grouped, as far as possible, with ACs who share a subject area. You are encouraged to use this structure to promote thoughtful, high-quality, and well-calibrated reviewing within the subfield you oversee.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>As an SAC, you are expected to be responsive, proactive, and kind. Respect deadlines and respond to emails promptly. If you anticipate being unavailable for more than a few days—particularly during critical periods such as decision-making—inform the Program Chairs as early as possible. Take responsibility for ensuring that the review process proceeds smoothly by checking that your ACs are responsive, assisting them in securing emergency reviewers when needed, and confirming that discussions are active on their assigned papers. At the same time, recognize that personal circumstances may affect reviewers or ACs. When delays or incomplete work arise, approach the situation with empathy and flexibility; you may need to step in, arrange backup support, or adjust plans accordingly. In all communications, demonstrate understanding and professionalism.</span></span></span></span></span></span></p>
+
+<h3><span><span><span><span><span><span>Flow of Tasks and Expectations</span></span></span></span></span></span></h3>
+
+<h4><span><span><span><span><span><span>Preparation &amp; AC assignment</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Read and agree to abide by the </span></span></span></span></span></span><a href="https://neurips.cc/public/CodeOfConduct"><span><span><span><span><span><u><span>NeurIPS code of conduct</span></u></span></span></span></span></span></a><span><span><span><span><span><span>. Read the policies in this handbook. Read about the 2026 experiment on LLMs and reviewing guidelines. You will be assigned ~10 ACs to work with. When you receive your assignment, look it over carefully and email the PCs if you have any concerns.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Oversee ACs and Ensure They Are On-Task</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>The AC workflow is described above in this handbook. Ensure that ACs have made sure that there are sufficient reviews, have written their initial meta-reviews, and are engaging with both authors and reviewers in a timely and professional manner. If an AC is unresponsive, you may have to step in for them.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>SACs discuss papers with ACs and make initial accept/reject decisions</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Help calibrate decisions by working closely with your ACs, scheduling meetings with them individually and/or in groups. You may also choose to suggest ACs meet with each other in pairs to have initial discussions first, but if you do, please carefully check for conflicts of interest. Pay particular attention to borderline papers, papers that have both positive and negative reviews, and cases where an AC’s recommendation differs from the reviewers’ recommendations.</span></span></span></span></span></span></p>
+
+<p><span><span><span><span><span><span>If you believe an AC needs additional guidance, read all reviews for the papers assigned to them and ensure that the reviews are respectful and acknowledge the authors’ responses. Read all meta-reviews to confirm that they clearly explain the decision to the authors. Meta-reviews should augment the individual reviews and describe how the reviews, author responses, and discussion informed the final decision. Dismissing or ignoring a review is not acceptable unless there is a well-justified reason.</span></span></span></span></span></span></p>
+
+<h4><span><span><span><span><span><span>Meet with program chairs to finalize decisions</span></span></span></span></span></span></h4>
+
+<p><span><span><span><span><span><span>Be prepared to discuss the more complex cases above and update meta-reviews to accurately reflect the final decisions.</span></span></span></span></span></span></p>
+
+<h2><span><span><span><span><span><span>Contact for Questions and Concerns</span></span></span></span></span></span></h2>
+
+<ul>
+	<li><span><span><span><span><span><span><span><span><span><span><span><span>If you encounter a situation that you are unable to resolve on your own, please contact the <a href="mailto:program-chairs@neurips.cc">program chairs</a></span></span></span></span></span></span></span></span></span></span></span></span><span><span><span><span><span><span><span><span><span><span><span><span> or the <a href="mailto:scientific-integrity-chairs@neurips.cc">scientific integrity chairs</a>, as appropriate. </span></span></span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+
+<p> </p>
+</div>
+</div>
+        
+    </div>
+
+
+
+    
+        </div>
+    
+
+</main>
+<!--END BLOCK CONTENT-->
+
+
+<!--Footer for the edit button-->
+
+
+<script nonce="CfWnobRMShUN1sMJWu1OyA==">
+
+    $(function () {
+        if ($(".editable").length == 0) {
+            $("#editFooter").hide();
+        }
+
+        // Event bindings for edit buttons
+        $('.startEditBtn').on('click', function() {
+            start_edit();
+        });
+        
+        $('.stopEditBtn').on('click', function() {
+            stop_edit();
+        });
+        $('#id_accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.workshopstatus').on('change', function() {
+            changeStatus(this);
+        });
+        $('.action-select').on('change', function() {
+            actionChanged(this);
+        });
+        $('.extra').on('change', function() {
+            extraChanged(this);
+        });
+        $('.filter_workshop').on('change', function() {
+            this.form.submit();
+        });
+        $('.volunteer-status, .recommendation-letter-status').on('change', function() {
+            setStatus(this);
+        });
+        $('.status-form-show').on('change', function() {
+            this.form.submit();
+        });
+        $('.download-form-download').on('change', function() {
+            this.form.submit();
+        });
+        $('.presentation-type-form-presentation-type').on('change', function() {
+            this.form.submit();
+        });
+        $('.export-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.import-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.vol-email-form-to, .vol-email-form-template').on('change', function() {
+            this.form.submit();
+        });
+        $('.organizer-alert').on('click', function() {
+            getUserCreateForm(this.href);
+        });
+    })
+</script>
+
+<script src="/static/core/js/fastclick.min.js" ></script>
+
+<!--We don't know if there are editable tags on the page until after the django template engine has rendered the page. So,
+test in javascript for "editable" tags and if present, load the ckeditor engine dynamically. -->
+
+<script nonce="CfWnobRMShUN1sMJWu1OyA==">
+    if (document.getElementsByClassName('editable').length > 0) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "/static/core/ckeditor/4.18/ckeditor.js";    // use this for linked script
+      script.onload = function () {
+        console.log("ckeditor loaded");
+        // Initial setup when each editor is ready
+        CKEDITOR.on("instanceReady", function (e) {
+          updateToggleDocName(e.editor);
+        });
+
+        // React to any editor entering/leaving read-only
+        CKEDITOR.on("readOnly", function (e) {
+          updateToggleDocName(e.editor);
+        });
+      };
+        document.body.appendChild(script);
+    }
+
+    function updateToggleDocName(editor) {
+      var id = editor && editor.name;
+      if (!id || id.indexOf("id_") !== 0) return;
+
+      var doc_name_element = document.getElementById("document_name_" + id.slice(3));
+      console.log(doc_name_element);
+      if (!doc_name_element) return;
+
+      doc_name_element.style.display = editor.readOnly ? "none" : "block";
+    }
+
+</script>
+
+
+<script nonce="CfWnobRMShUN1sMJWu1OyA==">
+    function fetchContent() {
+        $(".editable").each(function (index) {
+            var myself = this;
+            var docvID = this.getAttribute('id').replace("id_", "");
+            var blurbtext = this.getAttribute("blurbtext");
+            $.ajax({
+                url: "/Admin/RetrieveDocumentVersion",
+                type: "POST",
+                data: {
+                    docvID: docvID,
+                    blurbtext: blurbtext,
+                    csrfmiddlewaretoken: csrftoken,
+                },
+                success: function (data, textStatus, jqXHR) {
+                    myself.setAttribute("contenteditable", "true");
+                    myself.innerHTML = data;
+                    CKEDITOR.inline(myself.id);
+                },
+            });
+        })
+    }
+
+    $("#nopageedit").hide();
+
+    function start_edit() {
+
+        $(".editable").addClass("warning-ring");
+
+        //At the beginning of an edit, we need to replace the content of the
+        //editable div with it's databased content in order to preserve the
+        //template tags. We want the tag, not the rendered tag.
+
+        /* You must remove any countdown.js timers on the page before replacing the page with it's
+        document version otherwise, Javascript will throw an exception.  */
+
+
+        $("[class$='-countdown']").parent().remove();
+        fetchContent();
+        $(".editable").attr("onblur", "ckeditorsave(this)");
+        window.status.bold();
+        window.status = "Click outside the editable area to save. Changes are LIVE!! Refresh page to discard changes.";
+        $("#editpage").hide();
+        $("#noeditpage").show();
+    }
+
+
+    function stop_edit() {
+        ckeditorsave();
+        $("#noeditpage").hide();
+        $("#editpage").show();
+        window.location.reload();
+    }
+
+    function ckeditorsave(event) {
+        for (var name in CKEDITOR.instances) {
+            if (CKEDITOR.instances[name].checkDirty()) {
+                editor = CKEDITOR.instances[name];
+                saveEditable(editor);
+            }
+        }
+    }
+
+    function saveEditable(editor) {
+        var content = editor.getData();
+        var contentId = editor.name;
+        var pageId = window.location.pathname;
+        var originalContent = "N/A";
+        var documentversion = editor.container.getAttribute("id").replace("id_", "");
+        var blurbtext = editor.container.getAttribute("blurbtext");
+        if (contentId.match(/-aloha$/gi)) {
+            contentId = contentId.replace(/-aloha/gi, '');
+        }  /*I'm not sure what this does but it seems like it would matter*/
+        var request = jQuery.ajax({
+            url: "/Admin/SaveDocument",
+            type: "POST",
+            async: false,
+            data: {
+                content: content,
+                originalContent: originalContent,
+                contentId: contentId,
+                pageId: pageId,
+                documentversion: documentversion,
+                blurbtext: blurbtext,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                if (data['message']) {
+                    alert(data['message']);
+                }
+            },
+            error: function (xqXHR, textStatus) {
+                window.status = textStatus;
+                debugger;
+            }
+
+        });
+
+    };
+
+
+</script>
+
+<script nonce="CfWnobRMShUN1sMJWu1OyA==">
+    jQuery(document).ajaxSend(function (event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+</script>
+
+
+
+
+
+<div id="successful-page-load" class='hidden'>Successful Page Load</div>
+
+
+
+
+
+    
+        <link href="/static/conf_gdpr/css/conf_gdpr.css" rel="stylesheet">
+        <div id="cookie-bar" style="z-index: 8">
+            <table class="gdpr-statement">
+                <col>
+                <col style="width:120px">
+                <tr>
+                    <td style="padding:5px">
+                        NeurIPS uses cookies for essential functions only. We do not sell your personal
+                        information.
+                        <a href="/public/PrivacyPolicy">Our Privacy Policy &raquo;&nbsp;</a>
+                    </td>
+                    <td>
+                        <button float-end class="btn btn-light btn-sm btn btn-outline-dark" id="accept_cookies_button" >Accept</button>
+                           
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <script nonce="CfWnobRMShUN1sMJWu1OyA==">
+            function accept_cookies() {
+
+                $.ajax({
+                    method: "POST",
+                    url: "/conf_gdpr/accept",
+                    data: {
+                        csrfmiddlewaretoken: csrftoken,
+                    },
+                }).done(function (data) {
+                    console.log(data);
+                    $("#cookie-bar").fadeOut();
+                }).fail(function (jqXHR, textStatus) {
+                    alert(textStatus);
+                });
+            }
+            $("#accept_cookies_button").on("click", () => {
+                accept_cookies();
+            });
+        </script>
+
+    
+
+
+
+
+
+
+
+<br>
+<div class="noprint">
+    <footer id="bootstrap-footer" class="text-center text-lg-start bg-light text-muted noprint">
+
+        <div class="text-center p-1 border-top border-dark">
+        </div>
+        <!-- Section: Links  -->
+        <section class="pt-1">
+            <div class="container text-center text-md-start mt-3">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-3">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <img src="/static/core/img/NeurIPS-logo.svg" alt="NeurIPS logo" height='30'>
+                        </h6>
+                        <p>
+                            The NeurIPS Logo above may be used on presentations. Right-click and choose
+                            download. It is a vector graphic and may be used at any scale.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Grid column -->
+                    <div class="col-md-5 col-lg-4 col-xl-3 mx-auto mb-4" style="max-width: 300px;">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4 text-center">
+                            Useful links
+                        </h6>
+                        <div>
+             <ul>
+	<li><a href="/Conferences/2025/Press">Press</a></li>
+	<li><a href="https://proceedings.neurips.cc/">Proceedings</a></li>
+</ul>
+            </div>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        
+                            <p>
+                                <i class="fas fa-home me-3"></i> 1269 Law St, San Diego CA 92109
+                            </p>
+                        
+                        <p>
+                            <i class="fas fa-envelope me-3"></i> <a href="/Help/Contact">Email</a>
+                        </p>
+                        
+                        
+
+
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            <div>
+             <p><a href="https://proceedings.neurips.cc">NeurIPS Proceedings</a></p>
+
+            </div>
+        </div>
+        <!-- Copyright -->
+    </footer>
+</div>
+<!-- Footer -->
+
+
+<!-- Footer -->
+
+</body>
+</html>
