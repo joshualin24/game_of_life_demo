@@ -50,6 +50,7 @@ equivariant patch embeddings than learned ones.
 \end{abstract}
 
 \section{Problem and architecture}
+\label{sec:arch}
 
 GoL is a deterministic cellular automaton: each cell's next state depends
 only on its own state and its 8-neighbor live count (B3/S23). We treat one
@@ -108,10 +109,16 @@ per-subgroup error auditing, not validation loss.
 \begin{table}[t]
 \centering
 \small
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{lp{4.3cm}ccl}
 \toprule
 Ver.\ & Key change & Val.\ loss & Prec./Rec.\ & Status \\
 \midrule
+V1 & Baseline: avg-pool tokens, learned PE, zero-pad & ---\textsuperscript{b} & --- & Edge artifacts; rollout freezes to a blob \\
+V2 & Learned PE $\to$ fixed sinusoidal PE & ---\textsuperscript{b} & --- & Unstable training; no rollout improvement \\
+V3 & Avg-pool $\to$ flatten+linear tokenization & 0.021 & --- & \textbf{Fixes} avg-pool bottleneck; first realistic rollouts \\
+V4 & Zero-padding $\to$ circular padding & 0.226 & 100\% / 94.3\% & Fixes boundary bug; base arch.\ for V5+ \\
+\addlinespace
 V5 & Single-step teacher forcing & 0.201 & 99.4\% / 99.7\% & Collapses under rollout \\
 V6 & +STE multi-step & 0.234\textsuperscript{a} & 92.7\% / --- & \textbf{Diverges} \\
 V7 & STE $\to$ scheduled sampling & 0.201 & 99.7\% / 100\% & Stable \\
@@ -119,8 +126,14 @@ V8 & +3$\times$ high-density upsample & 0.201 & 100\% / 99.9\% & Best per-grid (
 V9 & +5$\times$ all data & 0.201 & 99.7\% / 99.6\% & \textbf{Regressed} tail errors \\
 V10 & 5.15$\times$ model size & 0.199 & 100\% / 100\% & \textbf{Zero errors}, 2{,}500/2{,}500 \\
 \bottomrule
-\end{tabular}
-\caption{version summary. \textsuperscript{a}V6's best epoch before divergence.}
+\end{tabular}%
+}
+\caption{Version summary, spanning the V1--V4 architecture search
+(Section~\ref{sec:arch}) and the V5--V10 training-regime
+search (Section~\ref{sec:evolution}). \textsuperscript{a}V6's best epoch
+before divergence. \textsuperscript{b}V1/V2 reported only aggregate val
+accuracy (89.4\% and 84\% respectively), not loss or a precision/recall
+split.}
 \label{tab:summary}
 \end{table}
 
