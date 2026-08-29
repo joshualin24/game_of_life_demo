@@ -115,15 +115,14 @@ V10 & 5.15$\times$ model size & 0.199 & 100\% / 100\% & \textbf{Zero errors}, 2{
 
 \begin{figure}[t]
 \centering
-\begin{minipage}{0.48\linewidth}
-  \includegraphics[width=\linewidth]{figures/v10_loss.png}
-\end{minipage}\hfill
-\begin{minipage}{0.48\linewidth}
-  \includegraphics[width=\linewidth]{figures/v10_rollout_dense80.png}
-\end{minipage}
-\caption{V10 training curve (left) and a 50-step autoregressive rollout at
-density 0.80 (right), the hardest test condition; V10 makes zero errors
-across 2{,}500 held-out grids.}
+\includegraphics[width=0.85\linewidth]{figures/v10_loss.png}\\[0.5em]
+\includegraphics[width=\linewidth]{figures/v10_rollout_acorn.png}
+\caption{Top: V10 training curve. Bottom: a 30-step autoregressive
+rollout of the \emph{acorn} methuselah --- a 7-cell seed that grows into
+a large, long-lived chaotic pattern --- true trajectory (top row) vs.\
+V10's autoregressive prediction (bottom row); V10 tracks the true
+trajectory exactly at every shown step, and makes zero errors across
+2{,}500 held-out grids overall.}
 \label{fig:v10}
 \end{figure}
 
