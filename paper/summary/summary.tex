@@ -46,9 +46,10 @@ second-degree polynomial activation lets a 25--34 parameter CNN learn GoL
 reliably where ReLU fails, and report a negative result transferring this
 activation to our larger multi-step model. Finally, we measure how much
 patch embeddings change under rotation, reflection, and translation for
-two models of different capacity (V8, V10), finding that the larger
-model's embeddings are consistently less invariant to all three
-transform types.
+two models of different capacity (V8, V10), finding that both are nearly
+invariant on a sparse glider but that our larger model is roughly twice
+as sensitive as the smaller one on dense random grids, across every
+transform tested.
 \end{abstract}
 
 \section{Problem and architecture}
@@ -160,25 +161,33 @@ positional embedding, have no such guarantee --- each position slot is an
 independently learned vector unrelated to its neighbors, and nothing in
 the architecture guarantees invariance under rotation or reflection
 either. We measure this directly for two stable, well-converged models of
-different capacity, V8 (291K params) and V10 (1.5M params): for three
-base configurations (glider, and two random grids at densities $0.35$ and
-$0.65$) we apply rotation ($90^\circ/180^\circ/270^\circ$), reflection
-(horizontal/vertical), and translation (1--4 cells), and measure mean
-post-Transformer cosine similarity between each grid's embedding and its
-transformed counterpart's. Higher similarity means the embedding changed
-less under the transform.
+different capacity, V8 (291K params) and V10 (1.5M params), on two base
+patterns --- a sparse glider and a dense random grid (density $0.5$) ---
+under nine individual transforms each: translation by 4 cells in each of
+the four cardinal directions, rotation by $90^\circ/180^\circ/270^\circ$,
+and horizontal/vertical reflection. For each of the 18 (pattern, transform)
+cases we measure post-Transformer cosine similarity between the original
+grid's embedding and the transformed grid's embedding; higher similarity
+means the embedding changed less under that specific transform.
 
-V8 shows similarity around $0.88$--$0.89$ for all three transform types;
-V10 shows similarity around $0.67$--$0.69$ for all three --- consistently
-lower across rotation, reflection, \emph{and} translation alike
-(Figure~\ref{fig:pe-verify}, top). Model capacity, not transform type,
-is the dominant factor here: the gap between V8 and V10 is roughly
-constant ($\approx 0.2$) across all three transforms, while the gap
-between transform types within either model is small ($<0.01$ for V8,
-$<0.02$ for V10). This is consistent with V10 having learned more
-content-sensitive, less redundant embeddings overall as a side effect of
-reaching much higher task accuracy (Section~\ref{sec:evolution}), rather
-than the larger model specifically losing geometric structure.
+Breaking this down by individual case (four translation directions,
+three rotation angles, two reflection axes) and by pattern type reveals
+that pattern sparsity, not transform type, is what actually matters
+(Figure~\ref{fig:pe-verify}, top). For the sparse \emph{glider}, both
+models are close to fully invariant to every transform ($0.97$--$0.99$
+similarity, V8 and V10 alike) --- unsurprising, since a glider occupies
+only 3 of 100 patches and most patches are unchanged background under
+any of these transforms. For the dense \emph{random} grid, the two
+models diverge sharply: V8 stays around $0.79$--$0.81$ across all nine
+cases, while V10 drops to $0.42$--$0.47$ --- roughly half. As in
+Section~\ref{sec:evolution}, sparse and dense configurations behave
+completely differently, and an evaluation limited to sparse patterns
+(where both models look equally equivariant) would have entirely missed
+V10's much larger sensitivity on dense grids. This is consistent with
+V10 having learned more content-sensitive, less redundant embeddings
+overall as a side effect of reaching much higher task accuracy
+(Section~\ref{sec:evolution}), rather than the larger model specifically
+losing geometric structure.
 
 \section{Independent verification: polynomial activations for GoL}
 
@@ -206,13 +215,15 @@ not yet pursued.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.85\linewidth]{figures/v8_v10_transform_equivariance.png}\\[0.5em]
+\includegraphics[width=\linewidth]{figures/v8_v10_transform_equivariance_detailed.png}\\[0.5em]
 \includegraphics[width=0.75\linewidth]{figures/relu_vs_poly_convergence.png}
-\caption{Top: post-Transformer embedding cosine similarity under
-rotation, reflection, and translation, for V8 vs.\ V10; higher means the
-embedding changed less under the transform. Bottom: validation accuracy
-over training, 10 seeds per activation, on a minimal 25/34-parameter
-CNN; polynomial activation converges reliably where ReLU does not.}
+\caption{Top: post-Transformer embedding cosine similarity for each of
+9 individual transforms (4 translation directions, 3 rotations, 2
+reflections), separately for a sparse glider and a dense random grid,
+V8 vs.\ V10; higher means the embedding changed less under that
+transform. Bottom: validation accuracy over training, 10 seeds per
+activation, on a minimal 25/34-parameter CNN; polynomial activation
+converges reliably where ReLU does not.}
 \label{fig:pe-verify}
 \end{figure}
 
