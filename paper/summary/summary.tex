@@ -64,6 +64,17 @@ learned representations: prior work shows plain feed-forward networks
 struggle to learn it reliably at all \citep{springer2021minimal}, and the
 Transformer stage \citep{vaswani2017attention} trades the CNN's clean
 equivariance guarantee for long-range context (Section~\ref{sec:embed}).
+This V4 design is itself the fourth step of an earlier architecture
+search, each step fixing one identified issue: V1 (avg-pooled tokens,
+learned positional embedding, zero-padding) $\to$ V2 (swaps in a
+\emph{fixed sinusoidal} positional embedding to remove a right-edge
+rollout artifact) $\to$ V3 (swaps avg-pooling for a lossless
+flatten-and-project tokenization, reverting to a learned embedding)
+$\to$ V4 (swaps zero-padding for circular padding, fixing incorrect
+boundary neighbor counts). V5 onward (Section~\ref{sec:evolution}) all
+train this same V4 architecture under different regimes and sizes; V2
+reappears in Section~\ref{sec:embed} as the point of comparison for
+positional-embedding geometry.
 
 \section{Training evolution: two failure modes and their fixes}
 \label{sec:evolution}
@@ -141,9 +152,15 @@ absolute positional embedding (V8). Measuring cosine similarity between
 patch embeddings of a grid and of translated copies of it, V2's post-
 Transformer embeddings stay far more similar under translation (mean
 cosine similarity $0.997$) than V8's ($0.890$), consistent with the
-theoretical prediction (Figure~\ref{fig:v2v8-verify}, top). We note an
-acknowledged confound: V2 uses zero-padding versus V8's circular padding,
-so this is not a fully isolated ablation of positional encoding alone.
+theoretical prediction (Figure~\ref{fig:v2v8-verify}, top). We note this
+is not a fully isolated ablation of positional encoding alone: V2 and V8
+sit three architectural changes apart in the V1--V4 progression
+(Section~\ref{sec:evolution}), and besides the positional embedding
+itself, V2 uses avg-pooled tokenization and zero-padding versus V8's
+flatten-and-project tokenization and circular padding. Either confound
+could independently affect translation-sensitivity; disentangling them
+would require a matched ablation that varies only the positional
+embedding on an otherwise-fixed V4 backbone, which we have not yet run.
 
 \section{Independent verification: polynomial activations for GoL}
 
