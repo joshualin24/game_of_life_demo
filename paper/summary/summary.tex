@@ -141,7 +141,7 @@ absolute positional embedding (V8). Measuring cosine similarity between
 patch embeddings of a grid and of translated copies of it, V2's post-
 Transformer embeddings stay far more similar under translation (mean
 cosine similarity $0.997$) than V8's ($0.890$), consistent with the
-theoretical prediction (Figure~\ref{fig:v2v8-verify}, left). We note an
+theoretical prediction (Figure~\ref{fig:v2v8-verify}, top). We note an
 acknowledged confound: V2 uses zero-padding versus V8's circular padding,
 so this is not a fully isolated ablation of positional encoding alone.
 
@@ -159,7 +159,7 @@ paper's reported parameter counts exactly (ReLU: 25 params, polynomial:
 ReLU converges to perfect validation accuracy in only $1/10$ seeds (mean
 final accuracy $89.4\%$), while the polynomial activation converges in
 $10/10$ seeds ($100.0\%$ mean accuracy), confirming the claim on our own
-toroidal GoL setup (Figure~\ref{fig:v2v8-verify}, right). We then
+toroidal GoL setup (Figure~\ref{fig:v2v8-verify}, bottom). We then
 attempted to transfer this activation into our larger multi-step model
 (same size as V8) by replacing GELU with polynomial activations in the
 CNN stage; this \textbf{failed}, diverging sharply after epoch 5 under
@@ -171,15 +171,11 @@ not yet pursued.
 
 \begin{figure}[t]
 \centering
-\begin{minipage}{0.48\linewidth}
-  \includegraphics[width=\linewidth]{figures/v2_v8_equivariance.png}
-\end{minipage}\hfill
-\begin{minipage}{0.48\linewidth}
-  \includegraphics[width=\linewidth]{figures/relu_vs_poly_convergence.png}
-\end{minipage}
-\caption{Left: post-Transformer embedding cosine similarity under
+\includegraphics[width=0.85\linewidth]{figures/v2_v8_equivariance.png}\\[0.5em]
+\includegraphics[width=0.75\linewidth]{figures/relu_vs_poly_convergence.png}
+\caption{Top: post-Transformer embedding cosine similarity under
 translation, sinusoidal PE (V2) vs.\ learned PE (V8); higher means less
-change under translation, i.e.\ more equivariant. Right: validation
+change under translation, i.e.\ more equivariant. Bottom: validation
 accuracy over training, 10 seeds per activation, on a minimal 25/34-
 parameter CNN; polynomial activation converges reliably where ReLU does
 not.}
