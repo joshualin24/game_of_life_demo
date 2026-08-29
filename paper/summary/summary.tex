@@ -189,6 +189,16 @@ overall as a side effect of reaching much higher task accuracy
 (Section~\ref{sec:evolution}), rather than the larger model specifically
 losing geometric structure.
 
+This measurement also suggests a concrete direction for future work:
+since GoL's transition rule is itself translation- and rotation-invariant,
+a model whose representations shared that invariance would have less to
+learn from data alone. Building on the diagnostic here, one could train
+with an explicit consistency loss between a grid's embedding and its
+transformed counterpart's, or design the positional encoding and
+attention mechanism to be equivariant by construction, and use the same
+per-case measurement to check whether the resulting model both matches
+this invariance and retains V10's dense-grid accuracy.
+
 \section{Independent verification: polynomial activations for GoL}
 
 Motivated by a recent claim that a learnable second-degree polynomial
