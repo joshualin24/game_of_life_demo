@@ -1,32 +1,14 @@
 """
-Characterize translation-sensitivity of the learned positional embedding in
-our stable, well-trained CNN-Transformer models (V8, V10) -- WITHOUT using V2
-as a comparison point.
+Compare V8 and V10 (both stable, well-converged CNNTransformerV4 models,
+differing only in size/training regime) on how much their post-Transformer
+patch embeddings change under geometric transforms: rotation, reflection,
+and translation.
 
-Background: an earlier version of this analysis compared V8 (learned PE)
-against V2 (fixed sinusoidal PE) to test whether sinusoidal encodings are
-more translation-equivariant. That comparison was dropped: V2's "best"
-checkpoint is from epoch 1 of an unstable run that never improved afterward
-(see README Task 10), and a follow-up discriminability check
-(check_v2_v8_discriminability.py) showed V2 could barely distinguish two
-different random grids of different density (cosine sim 0.958) -- almost as
-similar as it rated the SAME grid before/after translation (0.997). That
-means V2's apparent "equivariance" advantage, on exactly the configurations
-where it was largest (dense/random grids), is largely explained by V2 being
-undertrained and undiscriminative, not by sinusoidal PE's structure.
-
-This script instead asks a narrower, defensible question using only stable
-models: how much does a learned positional embedding actually change patch
-embeddings under translation, relative to the embedding's OWN baseline
-sensitivity to unrelated content? For each model we report:
-  - translation similarity : cosine sim between a grid's embedding and a
-                              translated copy's embedding (same content, shifted)
-  - content baseline       : cosine sim between embeddings of DIFFERENT,
-                              untranslated grids (glider / random_d35 / random_d65)
-A model with a real (partial) equivariance signal should show translation
-similarity clearly above its own content baseline, without the content
-baseline itself being suspiciously close to 1.0 (which would indicate
-collapse rather than discrimination).
+For each of three base configurations (glider, random grid at density 0.35,
+random grid at density 0.65) we apply each transform, extract post-Transformer
+patch embeddings for the original and transformed grid, and measure mean
+per-patch cosine similarity. Higher similarity = the embedding changed less
+under the transform, i.e. is closer to invariant/equivariant under it.
 """
 
 import os, sys
@@ -56,66 +38,82 @@ GRIDS = {
     "random_d35": make_random(0.35),
     "random_d65": make_random(0.65),
 }
-SHIFTS = [(0, 1, "right1"), (0, 4, "right4"), (4, 0, "down4"), (4, 4, "diag4")]
+
+TRANSFORM_GROUPS = {
+    "Rotation\n(90/180/270deg)": [
+        ("rot90",  lambda g: Transforms.rotate(g, k=1)),
+        ("rot180", lambda g: Transforms.rotate(g, k=2)),
+        ("rot270", lambda g: Transforms.rotate(g, k=3)),
+    ],
+    "Reflection\n(H/V)": [
+        ("flip_h", Transforms.flip_h),
+        ("flip_v", Transforms.flip_v),
+    ],
+    "Translation\n(1-4 cells)": [
+        ("right1", lambda g: Transforms.translate(g, dr=0, dc=1)),
+        ("right4", lambda g: Transforms.translate(g, dr=0, dc=4)),
+        ("down4",  lambda g: Transforms.translate(g, dr=4, dc=0)),
+        ("diag4",  lambda g: Transforms.translate(g, dr=4, dc=4)),
+    ],
+}
 
 
-def translation_similarity(extractor):
+def group_similarity(extractor, group_transforms):
     vals = []
-    for name, grid in GRIDS.items():
+    for cfg_name, grid in GRIDS.items():
         _, post1 = extractor(grid)
-        for dr, dc, _ in SHIFTS:
-            grid_tf = Transforms.translate(grid, dr=dr, dc=dc)
+        for _, fn in group_transforms:
+            grid_tf = fn(grid)
             _, post2 = extractor(grid_tf)
             vals.append(compare(post1, post2)["mean_cos"])
-    return float(np.mean(vals))
-
-
-def content_baseline(extractor):
-    names = list(GRIDS.keys())
-    embs = {n: extractor(g)[1] for n, g in GRIDS.items()}
-    vals = []
-    for i, a in enumerate(names):
-        for b in names[i + 1:]:
-            vals.append(compare(embs[a], embs[b])["mean_cos"])
-    return float(np.mean(vals))
+    return float(np.mean(vals)), float(np.std(vals))
 
 
 def main():
     print("Loading V8 and V10 ...")
-    models = {"V8": load_v8(), "V10": load_v10()}
+    extractors = {"V8": EmbeddingExtractor(load_v8()), "V10": EmbeddingExtractor(load_v10())}
 
-    results = {}
-    for name, model in models.items():
-        ext = EmbeddingExtractor(model)
-        trans = translation_similarity(ext)
-        base = content_baseline(ext)
-        results[name] = dict(translation=trans, baseline=base, gap=trans - base)
-        print(f"  {name}: translation-sim={trans:.4f}  content-baseline={base:.4f}  gap={trans-base:+.4f}")
+    results = {name: {} for name in extractors}
+    print(f"\n{'='*80}")
+    print("  Post-Transformer embedding cosine similarity under transform (V8 vs V10)")
+    print(f"{'='*80}")
+    header = f"  {'Transform group':<26} {'V8 mean':>10} {'V8 std':>8}   {'V10 mean':>10} {'V10 std':>8}"
+    print(header)
+    print("  " + "-"*76)
+    for group_name, transforms in TRANSFORM_GROUPS.items():
+        row = group_name.replace('\n', ' ')
+        for model_name, ext in extractors.items():
+            mean, std = group_similarity(ext, transforms)
+            results[model_name][group_name] = (mean, std)
+        m8, s8 = results["V8"][group_name]
+        m10, s10 = results["V10"][group_name]
+        print(f"  {row:<26} {m8:>10.4f} {s8:>8.4f}   {m10:>10.4f} {s10:>8.4f}")
 
-    # ── Bar chart ───────────────────────────────────────────────────────────
-    names = list(results.keys())
-    trans_vals = [results[n]["translation"] for n in names]
-    base_vals  = [results[n]["baseline"] for n in names]
-    x = np.arange(len(names))
+    # ── Grouped bar chart ───────────────────────────────────────────────────
+    group_names = list(TRANSFORM_GROUPS.keys())
+    v8_vals  = [results["V8"][g][0] for g in group_names]
+    v10_vals = [results["V10"][g][0] for g in group_names]
+    v8_err   = [results["V8"][g][1] for g in group_names]
+    v10_err  = [results["V10"][g][1] for g in group_names]
+
+    x = np.arange(len(group_names))
     width = 0.35
 
-    fig, ax = plt.subplots(figsize=(6, 4.5))
-    ax.bar(x - width/2, trans_vals, width, label="Translation similarity\n(same grid, shifted)", color="#4C72B0")
-    ax.bar(x + width/2, base_vals,  width, label="Content baseline\n(different, untranslated grids)", color="#DD8452")
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.bar(x - width/2, v8_vals, width, yerr=v8_err, capsize=3, label="V8 (291K params)", color="#4C72B0")
+    ax.bar(x + width/2, v10_vals, width, yerr=v10_err, capsize=3, label="V10 (1.5M params)", color="#C44E52")
     ax.set_xticks(x)
-    ax.set_xticklabels(names)
-    ax.set_ylabel("Post-transformer cosine similarity")
-    ax.set_ylim(0.6, 1.02)
+    ax.set_xticklabels(group_names)
+    ax.set_ylabel("Post-transformer cosine similarity\n(original vs. transformed)")
+    ax.set_ylim(0.0, 1.05)
     ax.axhline(1.0, color="gray", linestyle="--", linewidth=0.8, alpha=0.6)
-    ax.legend(fontsize=8, loc="lower right")
-    ax.set_title("Learned positional embedding: translation similarity\nvs. its own content-discrimination baseline",
-                 fontweight="bold", fontsize=10)
+    ax.legend()
+    ax.set_title("Embedding sensitivity to geometric transforms: V8 vs. V10\n"
+                 "Higher = embedding changed less under the transform (more invariant)",
+                 fontweight="bold")
     ax.grid(axis="y", alpha=0.3)
-    for i, n in enumerate(names):
-        ax.annotate(f"gap={results[n]['gap']:+.3f}", xy=(i, max(trans_vals[i], base_vals[i]) + 0.02),
-                    ha="center", fontsize=8)
     fig.tight_layout()
-    out_path = os.path.join(RESULTS_DIR, "pe_equivariance_v8_v10.png")
+    out_path = os.path.join(RESULTS_DIR, "v8_v10_transform_equivariance.png")
     fig.savefig(out_path, dpi=150)
     plt.close(fig)
     print(f"\nSaved {out_path}")

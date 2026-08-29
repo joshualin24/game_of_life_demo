@@ -44,12 +44,11 @@ by recent work on activation-function inductive bias for cellular
 automata, we independently reproduce the finding that a learnable
 second-degree polynomial activation lets a 25--34 parameter CNN learn GoL
 reliably where ReLU fails, and report a negative result transferring this
-activation to our larger multi-step model. Finally, we characterize the
-learned positional embedding of our stable models: patch embeddings
-change measurably under translation, well short of the CNN stage's exact
-equivariance, but the change is clearly separable from the models' own
-baseline sensitivity to unrelated content --- and this separation grows,
-rather than shrinks, in our largest model.
+activation to our larger multi-step model. Finally, we measure how much
+patch embeddings change under rotation, reflection, and translation for
+two models of different capacity (V8, V10), finding that the larger
+model's embeddings are consistently less invariant to all three
+transform types.
 \end{abstract}
 
 \section{Problem and architecture}
@@ -76,11 +75,7 @@ rollout artifact) $\to$ V3 (swaps avg-pooling for a lossless
 flatten-and-project tokenization, reverting to a learned embedding)
 $\to$ V4 (swaps zero-padding for circular padding, fixing incorrect
 boundary neighbor counts). V5 onward (Section~\ref{sec:evolution}) all
-train this same V4 architecture under different regimes and sizes. V2's
-checkpoint never stabilized (Table~\ref{tab:summary}), so it is not used
-for any further analysis; Section~\ref{sec:embed} instead characterizes
-the learned positional embedding using only the stable, well-converged
-V8 and V10 models.
+train this same V4 architecture under different regimes and sizes.
 
 \section{Training evolution: two failure modes and their fixes}
 \label{sec:evolution}
@@ -155,47 +150,35 @@ trajectory exactly at every shown step, and makes zero errors across
 \label{fig:v10}
 \end{figure}
 
-\section{Embedding geometry: how equivariant is a learned positional embedding?}
+\section{Embedding geometry: does model capacity affect equivariance?}
 \label{sec:embed}
 
 A CNN feature map is a \emph{physical} embedding: convolution's
 translation-equivariance means shifting the input shifts the feature map
 identically. A Transformer's patch embeddings, after a learned absolute
 positional embedding, have no such guarantee --- each position slot is an
-independently learned vector unrelated to its neighbors. An earlier version
-of this analysis tried to test this by comparing V8 against V2, a
-fixed-sinusoidal-PE variant whose angle-addition identities give
-closed-form near-equivariant structure. We dropped that comparison: V2's
-checkpoint is from epoch 1 of a run that never stabilized afterward
-(Table~\ref{tab:summary}), and a follow-up check showed V2 could barely
-distinguish two \emph{different} random grids of different density (cosine
-similarity $0.958$) --- almost as similar as it rated the \emph{same} grid
-before and after translation ($0.997$). An apparent equivariance advantage
-that shows up most strongly on exactly the inputs a model cannot tell
-apart is evidence of an undertrained, undiscriminative embedding, not of
-sinusoidal positional structure, so we do not report it as a finding.
+independently learned vector unrelated to its neighbors, and nothing in
+the architecture guarantees invariance under rotation or reflection
+either. We measure this directly for two stable, well-converged models of
+different capacity, V8 (291K params) and V10 (1.5M params): for three
+base configurations (glider, and two random grids at densities $0.35$ and
+$0.65$) we apply rotation ($90^\circ/180^\circ/270^\circ$), reflection
+(horizontal/vertical), and translation (1--4 cells), and measure mean
+post-Transformer cosine similarity between each grid's embedding and its
+transformed counterpart's. Higher similarity means the embedding changed
+less under the transform.
 
-Instead we ask a narrower, defensible question using only stable models:
-how much does V8's (and V10's) learned positional embedding change under
-translation, relative to each model's \emph{own} baseline sensitivity to
-unrelated content? For three configurations (glider, and two random grids
-at densities $0.35$ and $0.65$) we measure post-Transformer cosine
-similarity between (i) a grid's embedding and a translated copy's
-embedding (``translation similarity''), and (ii) embeddings of the
-different, untranslated configurations against each other (``content
-baseline''). A real, non-trivial equivariance signal should show (i)
-clearly above (ii), without (ii) itself being suspiciously close to $1.0$
-(collapse). V8 shows translation similarity $0.890$ against a content
-baseline of $0.803$ (gap $+0.087$); V10 shows translation similarity
-$0.690$ against a content baseline of $0.494$ (gap $+0.197$)
-(Figure~\ref{fig:pe-verify}, top). Both models are well short of exact
-equivariance (similarity $1.0$), but both show a translation-specific
-signal clearly separated from their own content-discrimination baseline
---- and that separation is over twice as large in V10, our larger, more
-capable model, even though V10 is also more discriminative overall (its
-lower content baseline). Scaling model capacity did not erode this
-partial equivariance signal; if anything it grew alongside the model's
-general discriminative power.
+V8 shows similarity around $0.88$--$0.89$ for all three transform types;
+V10 shows similarity around $0.67$--$0.69$ for all three --- consistently
+lower across rotation, reflection, \emph{and} translation alike
+(Figure~\ref{fig:pe-verify}, top). Model capacity, not transform type,
+is the dominant factor here: the gap between V8 and V10 is roughly
+constant ($\approx 0.2$) across all three transforms, while the gap
+between transform types within either model is small ($<0.01$ for V8,
+$<0.02$ for V10). This is consistent with V10 having learned more
+content-sensitive, less redundant embeddings overall as a side effect of
+reaching much higher task accuracy (Section~\ref{sec:evolution}), rather
+than the larger model specifically losing geometric structure.
 
 \section{Independent verification: polynomial activations for GoL}
 
@@ -223,15 +206,13 @@ not yet pursued.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.6\linewidth]{figures/pe_equivariance_v8_v10.png}\\[0.5em]
+\includegraphics[width=0.85\linewidth]{figures/v8_v10_transform_equivariance.png}\\[0.5em]
 \includegraphics[width=0.75\linewidth]{figures/relu_vs_poly_convergence.png}
-\caption{Top: for each stable model (V8, V10), post-Transformer cosine
-similarity under translation (``translation similarity'') vs.\ between
-different untranslated configurations (``content baseline''); the gap
-between the two bars is the model's translation-specific signal, net of
-its own baseline sensitivity to content. Bottom: validation accuracy over
-training, 10 seeds per activation, on a minimal 25/34-parameter CNN;
-polynomial activation converges reliably where ReLU does not.}
+\caption{Top: post-Transformer embedding cosine similarity under
+rotation, reflection, and translation, for V8 vs.\ V10; higher means the
+embedding changed less under the transform. Bottom: validation accuracy
+over training, 10 seeds per activation, on a minimal 25/34-parameter
+CNN; polynomial activation converges reliably where ReLU does not.}
 \label{fig:pe-verify}
 \end{figure}
 
