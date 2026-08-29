@@ -44,9 +44,12 @@ by recent work on activation-function inductive bias for cellular
 automata, we independently reproduce the finding that a learnable
 second-degree polynomial activation lets a 25--34 parameter CNN learn GoL
 reliably where ReLU fails, and report a negative result transferring this
-activation to our larger multi-step model. Finally, we show that
-sinusoidal positional encodings yield empirically more translation-
-equivariant patch embeddings than learned ones.
+activation to our larger multi-step model. Finally, we characterize the
+learned positional embedding of our stable models: patch embeddings
+change measurably under translation, well short of the CNN stage's exact
+equivariance, but the change is clearly separable from the models' own
+baseline sensitivity to unrelated content --- and this separation grows,
+rather than shrinks, in our largest model.
 \end{abstract}
 
 \section{Problem and architecture}
@@ -73,9 +76,11 @@ rollout artifact) $\to$ V3 (swaps avg-pooling for a lossless
 flatten-and-project tokenization, reverting to a learned embedding)
 $\to$ V4 (swaps zero-padding for circular padding, fixing incorrect
 boundary neighbor counts). V5 onward (Section~\ref{sec:evolution}) all
-train this same V4 architecture under different regimes and sizes; V2
-reappears in Section~\ref{sec:embed} as the point of comparison for
-positional-embedding geometry.
+train this same V4 architecture under different regimes and sizes. V2's
+checkpoint never stabilized (Table~\ref{tab:summary}), so it is not used
+for any further analysis; Section~\ref{sec:embed} instead characterizes
+the learned positional embedding using only the stable, well-converged
+V8 and V10 models.
 
 \section{Training evolution: two failure modes and their fixes}
 \label{sec:evolution}
@@ -150,30 +155,47 @@ trajectory exactly at every shown step, and makes zero errors across
 \label{fig:v10}
 \end{figure}
 
-\section{Embedding geometry: sinusoidal vs.\ learned positional encoding}
+\section{Embedding geometry: how equivariant is a learned positional embedding?}
 \label{sec:embed}
 
 A CNN feature map is a \emph{physical} embedding: convolution's
 translation-equivariance means shifting the input shifts the feature map
 identically. A Transformer's patch embeddings, after a learned absolute
 positional embedding, have no such guarantee --- each position slot is an
-independently learned vector unrelated to its neighbors. We tested this
-empirically on two trained models differing in positional encoding: one
-using a fixed 2D sinusoidal encoding (V2, whose angle-addition identities
-give closed-form near-equivariant structure) and one using a learned
-absolute positional embedding (V8). Measuring cosine similarity between
-patch embeddings of a grid and of translated copies of it, V2's post-
-Transformer embeddings stay far more similar under translation (mean
-cosine similarity $0.997$) than V8's ($0.890$), consistent with the
-theoretical prediction (Figure~\ref{fig:v2v8-verify}, top). We note this
-is not a fully isolated ablation of positional encoding alone: V2 and V8
-sit three architectural changes apart in the V1--V4 progression
-(Section~\ref{sec:evolution}), and besides the positional embedding
-itself, V2 uses avg-pooled tokenization and zero-padding versus V8's
-flatten-and-project tokenization and circular padding. Either confound
-could independently affect translation-sensitivity; disentangling them
-would require a matched ablation that varies only the positional
-embedding on an otherwise-fixed V4 backbone, which we have not yet run.
+independently learned vector unrelated to its neighbors. An earlier version
+of this analysis tried to test this by comparing V8 against V2, a
+fixed-sinusoidal-PE variant whose angle-addition identities give
+closed-form near-equivariant structure. We dropped that comparison: V2's
+checkpoint is from epoch 1 of a run that never stabilized afterward
+(Table~\ref{tab:summary}), and a follow-up check showed V2 could barely
+distinguish two \emph{different} random grids of different density (cosine
+similarity $0.958$) --- almost as similar as it rated the \emph{same} grid
+before and after translation ($0.997$). An apparent equivariance advantage
+that shows up most strongly on exactly the inputs a model cannot tell
+apart is evidence of an undertrained, undiscriminative embedding, not of
+sinusoidal positional structure, so we do not report it as a finding.
+
+Instead we ask a narrower, defensible question using only stable models:
+how much does V8's (and V10's) learned positional embedding change under
+translation, relative to each model's \emph{own} baseline sensitivity to
+unrelated content? For three configurations (glider, and two random grids
+at densities $0.35$ and $0.65$) we measure post-Transformer cosine
+similarity between (i) a grid's embedding and a translated copy's
+embedding (``translation similarity''), and (ii) embeddings of the
+different, untranslated configurations against each other (``content
+baseline''). A real, non-trivial equivariance signal should show (i)
+clearly above (ii), without (ii) itself being suspiciously close to $1.0$
+(collapse). V8 shows translation similarity $0.890$ against a content
+baseline of $0.803$ (gap $+0.087$); V10 shows translation similarity
+$0.690$ against a content baseline of $0.494$ (gap $+0.197$)
+(Figure~\ref{fig:pe-verify}, top). Both models are well short of exact
+equivariance (similarity $1.0$), but both show a translation-specific
+signal clearly separated from their own content-discrimination baseline
+--- and that separation is over twice as large in V10, our larger, more
+capable model, even though V10 is also more discriminative overall (its
+lower content baseline). Scaling model capacity did not erode this
+partial equivariance signal; if anything it grew alongside the model's
+general discriminative power.
 
 \section{Independent verification: polynomial activations for GoL}
 
@@ -189,7 +211,7 @@ paper's reported parameter counts exactly (ReLU: 25 params, polynomial:
 ReLU converges to perfect validation accuracy in only $1/10$ seeds (mean
 final accuracy $89.4\%$), while the polynomial activation converges in
 $10/10$ seeds ($100.0\%$ mean accuracy), confirming the claim on our own
-toroidal GoL setup (Figure~\ref{fig:v2v8-verify}, bottom). We then
+toroidal GoL setup (Figure~\ref{fig:pe-verify}, bottom). We then
 attempted to transfer this activation into our larger multi-step model
 (same size as V8) by replacing GELU with polynomial activations in the
 CNN stage; this \textbf{failed}, diverging sharply after epoch 5 under
@@ -201,15 +223,16 @@ not yet pursued.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.85\linewidth]{figures/v2_v8_equivariance.png}\\[0.5em]
+\includegraphics[width=0.6\linewidth]{figures/pe_equivariance_v8_v10.png}\\[0.5em]
 \includegraphics[width=0.75\linewidth]{figures/relu_vs_poly_convergence.png}
-\caption{Top: post-Transformer embedding cosine similarity under
-translation, sinusoidal PE (V2) vs.\ learned PE (V8); higher means less
-change under translation, i.e.\ more equivariant. Bottom: validation
-accuracy over training, 10 seeds per activation, on a minimal 25/34-
-parameter CNN; polynomial activation converges reliably where ReLU does
-not.}
-\label{fig:v2v8-verify}
+\caption{Top: for each stable model (V8, V10), post-Transformer cosine
+similarity under translation (``translation similarity'') vs.\ between
+different untranslated configurations (``content baseline''); the gap
+between the two bars is the model's translation-specific signal, net of
+its own baseline sensitivity to content. Bottom: validation accuracy over
+training, 10 seeds per activation, on a minimal 25/34-parameter CNN;
+polynomial activation converges reliably where ReLU does not.}
+\label{fig:pe-verify}
 \end{figure}
 
 \section{Conclusion}
