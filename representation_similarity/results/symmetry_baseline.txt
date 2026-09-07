@@ -1,0 +1,72 @@
+device=mps:0
+
+Delta-consistency of raw V8 pooled embeddings  (N=192 grids)
+stage      stratum           dir_cons  mag_resid  rel_move
+cnn        transl_4cell        0.0583    15.2742    0.0000
+cnn        transl_subpatch     0.0538    17.9619    0.0000
+tokens_in  transl_4cell        0.0618    15.8381    0.0000
+tokens_in  transl_subpatch     0.0625    13.4428    0.0570
+tf_L1      transl_4cell        0.0523    16.8416    0.0058
+tf_L1      transl_subpatch     0.0587    14.6896    0.0813
+tf_L2      transl_4cell        0.0549    16.1871    0.0056
+tf_L2      transl_subpatch     0.0591    14.4533    0.0845
+tf_L3      transl_4cell        0.0517    16.5413    0.0072
+tf_L3      transl_subpatch     0.0579    14.4437    0.1031
+tf_L4      transl_4cell        0.0613    13.7349    0.0093
+tf_L4      transl_subpatch     0.0566    14.3992    0.1105
+
+dir_cons -> 1 = transformation is a content-independent direction
+mag_resid -> 0 = also content-independent in magnitude
+
+D4 equivariance of raw V8 pooled embeddings  (fit optimal linear rho(r) on 60%, residual on 40%)
+stage      r          id_resid  lin_resid
+cnn        r90          0.0038     0.0331
+cnn        r180         0.0023     0.0330
+cnn        r270         0.0036     0.0331
+cnn        flip_v       0.0032     0.0330
+cnn        flip_h       0.0031     0.0332
+cnn        transp       0.0025     0.0329
+cnn        atransp      0.0027     0.0329
+tokens_in  r90          0.0566     0.0524
+tokens_in  r180         0.0610     0.0567
+tokens_in  r270         0.0567     0.0517
+tokens_in  flip_v       0.0541     0.0498
+tokens_in  flip_h       0.0603     0.0534
+tokens_in  transp       0.0535     0.0508
+tokens_in  atransp      0.0534     0.0529
+tf_L1      r90          0.0839     0.0893
+tf_L1      r180         0.0883     0.1002
+tf_L1      r270         0.0820     0.0850
+tf_L1      flip_v       0.0777     0.0791
+tf_L1      flip_h       0.0860     0.1055
+tf_L1      transp       0.0784     0.0808
+tf_L1      atransp      0.0832     0.0968
+tf_L2      r90          0.0865     0.0912
+tf_L2      r180         0.0923     0.1023
+tf_L2      r270         0.0861     0.0850
+tf_L2      flip_v       0.0805     0.0814
+tf_L2      flip_h       0.0911     0.1087
+tf_L2      transp       0.0822     0.0838
+tf_L2      atransp      0.0860     0.0998
+tf_L3      r90          0.1094     0.1129
+tf_L3      r180         0.1160     0.1218
+tf_L3      r270         0.1066     0.0995
+tf_L3      flip_v       0.0967     0.1003
+tf_L3      flip_h       0.1086     0.1373
+tf_L3      transp       0.0972     0.0923
+tf_L3      atransp      0.1104     0.1246
+tf_L4      r90          0.1132     0.1283
+tf_L4      r180         0.1240     0.1271
+tf_L4      r270         0.1146     0.0968
+tf_L4      flip_v       0.1065     0.1069
+tf_L4      flip_h       0.1093     0.1389
+tf_L4      transp       0.1054     0.0980
+tf_L4      atransp      0.1119     0.1269
+
+id_resid  = ||psi(r.x) - psi(x)|| / ||psi(r.x)||   (how far r moves psi)
+lin_resid = residual after best linear rho(r); -> 0 = psi is linearly D4-equivariant
+
+Timing:  V8 tf-stage extraction = 0.593 ms/grid  (batched)
+  train N=20000 batch=64 k=8 epochs=20:  ~1.8 min/epoch (V8 fwd only)  ~0.59 h total (V8 fwd only; adapter+decoder+backward extra)
+  train N=20000 batch=64 k=16 epochs=20:  ~3.4 min/epoch (V8 fwd only)  ~1.12 h total (V8 fwd only; adapter+decoder+backward extra)
+  train N=40000 batch=64 k=8 epochs=30:  ~3.6 min/epoch (V8 fwd only)  ~1.78 h total (V8 fwd only; adapter+decoder+backward extra)
