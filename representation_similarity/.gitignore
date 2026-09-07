@@ -2,3 +2,4 @@
 data/
 results/*.npz
 __pycache__/
+checkpoints/
