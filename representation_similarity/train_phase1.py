@@ -157,18 +157,22 @@ def evaluate(v8, adapter, decoder, sym, val_np, dev):
     def _u(v):
         return v / (np.linalg.norm(v, axis=-1, keepdims=True) + 1e-12)
 
-    sp = subpatch_offsets()
-    dir_c, mag_r = [], []
-    for (dr, dc) in sp:
-        d = emb_fn(translate(val_np, dr, dc)) - base
-        dbar = d.mean(0, keepdims=True)
-        dir_c.append(float((_u(d) * _u(dbar)).sum(1).mean()))
-        mag_r.append(float(np.linalg.norm(d - dbar, axis=1).mean()
-                           / (np.linalg.norm(dbar) + 1e-12)))
-    subpatch_dir = float(np.mean(dir_c)); subpatch_magres = float(np.mean(mag_r))
+    base_norm = np.linalg.norm(base, axis=1).mean() + 1e-12
+
+    def transl_relmove_dir(offsets):
+        rm, dir_c = [], []
+        for (dr, dc) in offsets:
+            d = emb_fn(translate(val_np, dr, dc)) - base
+            rm.append(float(np.linalg.norm(d, axis=1).mean() / base_norm))
+            dbar = d.mean(0, keepdims=True)
+            dir_c.append(float((_u(d) * _u(dbar)).sum(1).mean()))
+        return float(np.mean(rm)), float(np.mean(dir_c))
+
+    subpatch_relmove, subpatch_dir = transl_relmove_dir(subpatch_offsets())
+    fourcell_relmove, _ = transl_relmove_dir(fourcell_offsets(np.random.default_rng(0), 16))
 
     ops = list(d4_ops().items())
-    rho_all = sym.rho_all(dev).cpu().numpy()
+    rho_all = sym.rho_all(dev).detach().cpu().numpy()
     d4_learned, d4_id = [], []
     for ridx, (nm, op) in enumerate(ops):
         if nm == "e":
@@ -178,7 +182,8 @@ def evaluate(v8, adapter, decoder, sym, val_np, dev):
         d4_learned.append(float(np.linalg.norm(tgt - pred) / (np.linalg.norm(tgt) + 1e-12)))
         d4_id.append(float(np.linalg.norm(tgt - base) / (np.linalg.norm(tgt) + 1e-12)))
     return dict(f1=f1, prec=prec, rec=rec,
-                subpatch_dir=subpatch_dir, subpatch_magres=subpatch_magres,
+                subpatch_relmove=subpatch_relmove, subpatch_dir=subpatch_dir,
+                fourcell_relmove=fourcell_relmove,
                 d4_learned_resid=float(np.mean(d4_learned)),
                 d4_id_resid=float(np.mean(d4_id)))
 
@@ -192,6 +197,7 @@ def main():
     ap.add_argument("--k", type=int, default=9)
     ap.add_argument("--k-pred", type=int, default=3)
     ap.add_argument("--lr", type=float, default=3e-4)
+    ap.add_argument("--rho-lr-mult", type=float, default=10.0)
     ap.add_argument("--lam-trans", type=float, default=1.0)
     ap.add_argument("--lam-d4", type=float, default=1.0)
     ap.add_argument("--lam-mixed", type=float, default=1.0)
@@ -210,9 +216,15 @@ def main():
     adapter = Adapter().to(dev)
     decoder = Decoder().to(dev)
     sym = SymParams().to(dev)
-    params = list(adapter.parameters()) + list(decoder.parameters()) + list(sym.parameters())
-    opt = torch.optim.AdamW(params, lr=args.lr, weight_decay=1e-4)
-    n_params = sum(p.numel() for p in params)
+    rho_params = [sym.rho_ne]
+    base_params = ([p for n, p in adapter.named_parameters()]
+                   + [p for n, p in decoder.named_parameters()]
+                   + [sym.delta_lin.weight])
+    opt = torch.optim.AdamW(
+        [dict(params=base_params, lr=args.lr),
+         dict(params=rho_params, lr=args.lr * args.rho_lr_mult, weight_decay=0.0)],
+        lr=args.lr, weight_decay=1e-4)
+    n_params = sum(p.numel() for p in base_params + rho_params)
 
     lam = dict(trans=args.lam_trans, d4=args.lam_d4, mixed=args.lam_mixed,
                glaw=args.lam_glaw, pred_aug=args.lam_pred_aug)
@@ -264,14 +276,16 @@ def main():
                    sec=time.time() - t0)
         hist.append(row)
         line = (f"ep {ep:2d}/{args.epochs}  F1={ev['f1']:.4f} p={ev['prec']:.3f} r={ev['rec']:.3f}  "
-                f"subpatch_dir={ev['subpatch_dir']:.3f} magres={ev['subpatch_magres']:.2f}  "
-                f"d4_lin={ev['d4_learned_resid']:.3f} (id {ev['d4_id_resid']:.3f})  "
-                f"| L_pred={acc['pred']:.3f} trans={acc['trans']:.3f} d4={acc['d4']:.3f} "
-                f"mix={acc['mixed']:.3f} glaw={acc['glaw']:.4f}  {row['sec']:.0f}s")
+                f"sp_relmove={ev['subpatch_relmove']:.4f} (dir {ev['subpatch_dir']:.3f}) "
+                f"4c_relmove={ev['fourcell_relmove']:.4f}  "
+                f"d4_lin={ev['d4_learned_resid']:.4f} (id {ev['d4_id_resid']:.4f})  "
+                f"| L_pred={acc['pred']:.3f} trans={acc['trans']:.4f} d4={acc['d4']:.4f} "
+                f"mix={acc['mixed']:.4f} glaw={acc['glaw']:.4f}  {row['sec']:.0f}s")
         print(line, flush=True)
         with open(log_path, "a") as f:
             f.write(line + "\n")
-        score = ev["f1"] + ev["subpatch_dir"] - ev["d4_learned_resid"]
+        # reward accuracy, sub-patch invariance, and D4 linear-equivariance
+        score = ev["f1"] - 3 * ev["subpatch_relmove"] - 2 * ev["d4_learned_resid"]
         if score > best:
             best = score
             torch.save(dict(adapter=adapter.state_dict(), decoder=decoder.state_dict(),
