@@ -62,8 +62,13 @@ def train_step(v8, adapter, decoder, sym, opt, batch, k, k_pred, lam, dev, rng):
     for i in range(k):
         kind = ("trans", "d4", "mixed")[i % 3]
         r = int(rng.integers(1, N_D4)) if kind != "trans" else 0
-        dr = int(rng.integers(0, 40)) if kind != "d4" else 0
-        dc = int(rng.integers(0, 40)) if kind != "d4" else 0
+        if kind == "d4":
+            dr = dc = 0
+        elif rng.random() < 0.65:
+            # concentrate on the 16 sub-patch phases — the actual target
+            dr = int(rng.integers(0, 4)); dc = int(rng.integers(0, 4))
+        else:
+            dr = int(rng.integers(0, 40)); dc = int(rng.integers(0, 40))
         xg = x
         if r:
             xg = torch_d4(xg, r)
