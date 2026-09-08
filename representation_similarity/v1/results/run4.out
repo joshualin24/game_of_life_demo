@@ -1,4 +1,4 @@
-device=mps params=62336 lam={'trans': 20.0, 'd4': 20.0, 'mixed': 20.0, 'glaw': 0.1, 'pred_aug': 0.5, 'disc': 1.0}
+device=mps  decoder=frozen  trainable params=62,336  lam={'trans': 20.0, 'd4': 20.0, 'mixed': 20.0, 'glaw': 0.1, 'pred_aug': 0.5, 'disc': 1.0}  unrel_target=3.2004
 ep  1/30 λ=0.20  F1=0.9998 r=1.000  ‖ψ‖=4.55 unrel=0.762  sym/unrel: sp=0.130 d4=0.120  sp_rm=0.0990 d4_id=0.0915 d4_lin=0.0895  | Lpred=0.045 disc=0.001 tr=0.0147 d4=0.0135 mix=0.0152  114s
 ep  2/30 λ=0.40  F1=0.9993 r=0.999  ‖ψ‖=4.46 unrel=0.743  sym/unrel: sp=0.107 d4=0.099  sp_rm=0.0794 d4_id=0.0738 d4_lin=0.0747  | Lpred=0.053 disc=0.002 tr=0.0085 d4=0.0089 mix=0.0100  114s
 ep  3/30 λ=0.60  F1=0.9993 r=0.999  ‖ψ‖=3.99 unrel=0.830  sym/unrel: sp=0.094 d4=0.086  sp_rm=0.0781 d4_id=0.0717 d4_lin=0.0736  | Lpred=0.058 disc=0.002 tr=0.0064 d4=0.0066 mix=0.0072  115s
@@ -29,3 +29,4 @@ ep 27/30 λ=1.00  F1=0.9990 r=0.998  ‖ψ‖=5.44 unrel=0.663  sym/unrel: sp=0.
 ep 28/30 λ=1.00  F1=0.9990 r=0.998  ‖ψ‖=5.46 unrel=0.663  sym/unrel: sp=0.067 d4=0.061  sp_rm=0.0443 d4_id=0.0406 d4_lin=0.0300  | Lpred=0.034 disc=0.000 tr=0.0018 d4=0.0009 mix=0.0011  112s
 ep 29/30 λ=1.00  F1=0.9990 r=0.998  ‖ψ‖=5.46 unrel=0.662  sym/unrel: sp=0.067 d4=0.061  sp_rm=0.0443 d4_id=0.0406 d4_lin=0.0299  | Lpred=0.034 disc=0.000 tr=0.0018 d4=0.0009 mix=0.0011  115s
 ep 30/30 λ=1.00  F1=0.9990 r=0.998  ‖ψ‖=5.46 unrel=0.662  sym/unrel: sp=0.067 d4=0.061  sp_rm=0.0443 d4_id=0.0406 d4_lin=0.0299  | Lpred=0.034 disc=0.000 tr=0.0018 d4=0.0009 mix=0.0011  115s
+best composite score=0.8744  -> /Users/Hao-Yuan/game_of_life_demo/.claude/worktrees/representation-similarity/representation_similarity/v1/checkpoints/best.pt

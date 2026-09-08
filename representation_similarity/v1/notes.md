@@ -65,12 +65,53 @@ Run:  `python train.py --epochs N ...`  → `results/train_log.txt`,
 5. **Accuracy cost ~3.4 F1** (0.998 → 0.964, mostly recall) — with a fresh
    decoder that also confounds "undertrained head" with "symmetry cost".
 
-## Next (planned): "Design A" clean run
+## Design A — run 4 (frozen `patch_head` + near-identity adapter + disc reg)
 
-- **Decoder = V8's frozen `patch_head`**; adapter = pure residual with zero-init
-  blocks → `z = tf_L4` at init → F1 starts at 0.998. Read the F1↔symmetry frontier.
-- Add a **discriminability regularizer**: keep `E‖ψ(x)−ψ(x′)‖` near its raw-V8
-  value so "invariance" can't be earned by shrinking everything.
-- Metrics: **sym/unrelated ratio** primary, plus F1 and mean ‖ψ‖ every epoch.
-- λ warmup (0→target over ~5 ep) + cosine LR decay. Checkpoint select hard-
-  prioritizes F1.
+30 epochs, λ 20/20/20 warmed 0→1 over 5 ep, cosine LR, `λ_disc`=1.
+Checkpoint select = min sym/unrel ratio among F1≥0.995 epochs → **epoch 16**.
+`train.py` defaults now = this config. Log: `results/run4.out`,
+`results/train_log.txt`; diagnostic: `results/run4_diag.txt`.
+
+| | raw V8 pooled `tf_L4` | v1 adapter (ep 16) |
+|---|---|---|
+| next-state **F1** | 0.9985 | **0.9990** (prec .9998 / rec .9981) |
+| sub-patch `rel_move` = ‖Δ‖/‖ψ‖ | 0.110 | 0.051 |
+| D4 `id_resid` | 0.110 | 0.047 |
+| D4 learned `ρ(r)` | — | 0.042 (now beats identity; bestlin 0.035) |
+| unrelated-pair dist ‖ψ(x)−ψ(x′)‖ | 3.27 | **3.56** (held / up) |
+| **sym / unrelated ratio** — sub-patch | **0.377** | **0.064** |
+| **sym / unrelated ratio** — D4 | **0.370** | **0.062** |
+| mean ‖ψ‖ | 11.34 | 4.76 |
+| mean pairwise cosine across grids | 0.955 | 0.777 |
+| effective dim (participation ratio) | 2.4 | 1.8 |
+
+### Result
+
+**Accuracy fully maintained** (F1 0.999 = V8) **while a symmetry transform now
+perturbs `ψ` ~6× less than an unrelated grid does** (sym/unrel 0.37 → 0.06).
+
+**Not a collapse.** The discriminability regularizer held: unrelated-grid L2
+distance is 3.56 (up from 3.27), and directional spread *increased* (mean
+pairwise cosine 0.955 → 0.777 — grids fan out more). `‖ψ‖` shrank 11.3 → 4.8
+because the large uninformative shared/DC component was removed.
+
+### Flags / open
+
+1. **Pooled `ψ` effective dim 2.4 → 1.8** — it's become a compact symmetry-clean
+   *summary*; the rich content the decoder needs still lives in the token rep
+   `z` (which the frozen `patch_head` reads). Worth probing whether 1.8-dim `ψ`
+   loses anything task-relevant.
+2. **Mechanism is still invariance**, not structured displacement (`dir_cons`≈0,
+   learned `δ`≈0). D4's learned `ρ(r)` finally beats identity but only slightly.
+3. **`z` itself not measured** — we only made the *pooled* readout symmetric.
+   Does `z` (100×64) also become more symmetric? And how do V8's intermediate
+   layers look through this adapter? (the "how do layers react" question)
+
+### Next candidates
+
+- Probe (1)/(3): measure symmetry + discriminability of `z` (not just pooled),
+  and of each `tf_Lk` fed through the adapter.
+- v2 = token-level ("option b"): make `z` itself equivariant — where the D4
+  operator and 4-cell patch-permutation are non-trivial, not just invariance.
+- Try pushing further (higher λ / more epochs) to see if sym/unrel < 0.06 is
+  reachable before F1 gives.
