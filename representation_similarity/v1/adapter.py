@@ -72,23 +72,28 @@ def v8_tfL4(model, x: torch.Tensor) -> torch.Tensor:
 
 # ── Adapter ────────────────────────────────────────────────────────────────
 class Adapter(nn.Module):
+    """Pure residual on the tokens: z = tok + sum_b block_b(LN(tok_b)).
+    Each block's last Linear is zero-initialised, so at init z == tok exactly
+    (a frozen patch_head then reproduces V8's predictions bit-for-bit)."""
+
     def __init__(self, d_model: int = 64, hidden: int = 128, depth: int = 2):
         super().__init__()
-        self.in_norm = nn.LayerNorm(d_model)
         blocks = []
         for _ in range(depth):
+            lin2 = nn.Linear(hidden, d_model)
+            nn.init.zeros_(lin2.weight); nn.init.zeros_(lin2.bias)
             blocks.append(nn.Sequential(
+                nn.LayerNorm(d_model),
                 nn.Linear(d_model, hidden), nn.GELU(),
-                nn.Linear(hidden, d_model),
+                lin2,
             ))
         self.blocks = nn.ModuleList(blocks)
-        self.out_norm = nn.LayerNorm(d_model)
 
     def forward(self, tok: torch.Tensor) -> torch.Tensor:      # (B,100,64)
-        z = self.in_norm(tok)
+        z = tok
         for blk in self.blocks:
             z = z + blk(z)
-        return self.out_norm(z)
+        return z
 
 
 # ── Decoder (mirror of patch_head) ─────────────────────────────────────────
@@ -105,6 +110,14 @@ class Decoder(nn.Module):
         logits = self.head(z).reshape(B, hh, hh, p, p)
         logits = logits.permute(0, 1, 3, 2, 4).reshape(B, 1, self.grid, self.grid)
         return logits
+
+    def load_v8_head(self, v8) -> "Decoder":
+        """Copy V8's frozen patch_head weights (same shape) and freeze."""
+        self.head.weight.data.copy_(v8.patch_head.weight.data)
+        self.head.bias.data.copy_(v8.patch_head.bias.data)
+        for p in self.parameters():
+            p.requires_grad_(False)
+        return self
 
 
 # ── Symmetry parameters ───────────────────────────────────────────────────
