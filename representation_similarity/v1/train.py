@@ -23,9 +23,11 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+_HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _HERE)
+sys.path.insert(0, os.path.join(_HERE, ".."))
 from load_models import load_v8, DEVICE
-from phase1_model import (Adapter, Decoder, SymParams, v8_tfL4, CAYLEY,
+from adapter import (Adapter, Decoder, SymParams, v8_tfL4, CAYLEY,
                           torch_translate, torch_d4, gol_step_torch, N_D4)
 from symmetry import subpatch_offsets, fourcell_offsets, translate, d4_ops, stage_names
 
@@ -256,7 +258,7 @@ def main():
         print(f"[trial] quick eval (undertrained): {ev}")
         return
 
-    log_path = os.path.join(RESULTS, "phase1_log.txt")
+    log_path = os.path.join(RESULTS, "train_log.txt")
     hist = []
     best = -1e9
     with open(log_path, "w") as f:
@@ -290,10 +292,10 @@ def main():
             best = score
             torch.save(dict(adapter=adapter.state_dict(), decoder=decoder.state_dict(),
                             sym=sym.state_dict(), epoch=ep, metrics=ev, args=vars(args)),
-                       os.path.join(CKPT, "phase1_best.pt"))
-        with open(os.path.join(RESULTS, "phase1_metrics.json"), "w") as f:
+                       os.path.join(CKPT, "best.pt"))
+        with open(os.path.join(RESULTS, "metrics.json"), "w") as f:
             json.dump(hist, f, indent=2)
-    print(f"best composite score={best:.4f}  -> {CKPT}/phase1_best.pt")
+    print(f"best composite score={best:.4f}  -> {CKPT}/best.pt")
 
 
 if __name__ == "__main__":

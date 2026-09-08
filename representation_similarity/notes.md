@@ -58,14 +58,31 @@ From `CNNTransformerV4.forward` (all for a single input grid `x: (B, 1, 40, 40)`
 
 No CLS token; the reconstruction head is per-patch. `n_patches = (40/4)^2 = 100`.
 
-## Questions
+## Topic: symmetry-respecting representations
 
-- (fill in — user has a specific direction in mind, TBD)
+GoL commutes with `G = (ℤ₄₀×ℤ₄₀) ⋊ D4` (toroidal translation + rotation/reflection).
+V8/V10's learned representations respect this poorly (the transformer breaks the
+symmetry with depth — see `symmetry.py` baseline). Goal: build a map on top of a
+frozen base model that produces representations which better respect `G` **while
+keeping t→t+1 accuracy**.
+
+Attempts live in numbered subfolders, each self-contained (own `train.py`,
+`diag.py`, `notes.md`, `results/`, `checkpoints/`):
+
+- **`v1/`** — hybrid adapter on frozen V8, pooled 64-d readout `ψ = mean_tok`.
+  Result: `ψ` becomes ~3× more symmetric (sym-move / unrelated-move 0.377→0.122)
+  by moving toward *invariance*; learned D4 operator is moot at the pooled level;
+  ~3.4 F1 cost with a fresh decoder. See `v1/notes.md`.
+
+Shared tooling stays at this level: `model.py` `load_models.py` `common.py`
+`extract.py` `stimuli.py` `symmetry.py` (group action + baseline metrics) and the
+Build-1 analyses.
 
 ## Layout
 
 - `data/`    — cached grids / extracted representation tensors
-- `results/` — figures and numeric summaries
+- `results/` — Build-1 figures + `symmetry_baseline.txt` (raw-V8 baseline)
+- `vN/`      — attempt N
 
 ---
 

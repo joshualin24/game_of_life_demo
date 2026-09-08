@@ -1,1 +1,0 @@
-device=mps  trainable params=63,376  lam={'trans': 40.0, 'd4': 50.0, 'mixed': 40.0, 'glaw': 0.1, 'pred_aug': 0.5}
