@@ -1,0 +1,13 @@
+device=mps  trainable params=63,376  lam={'trans': 40.0, 'd4': 50.0, 'mixed': 40.0, 'glaw': 0.1, 'pred_aug': 0.5}
+ep  1/30  F1=0.0029 p=0.992 r=0.001  sp_relmove=0.0166 (dir 0.023) 4c_relmove=0.0019  d4_lin=0.0342 (id 0.0162)  | L_pred=0.544 trans=0.0013 d4=0.0040 mix=0.0041 glaw=0.0005  113s
+ep  2/30  F1=0.6698 p=0.930 r=0.523  sp_relmove=0.0237 (dir 0.021) 4c_relmove=0.0036  d4_lin=0.0331 (id 0.0232)  | L_pred=0.359 trans=0.0005 d4=0.0014 mix=0.0015 glaw=0.0010  114s
+ep  3/30  F1=0.8544 p=0.954 r=0.773  sp_relmove=0.0287 (dir 0.022) 4c_relmove=0.0047  d4_lin=0.0322 (id 0.0279)  | L_pred=0.237 trans=0.0008 d4=0.0012 mix=0.0013 glaw=0.0013  114s
+ep  4/30  F1=0.8952 p=0.978 r=0.825  sp_relmove=0.0288 (dir 0.022) 4c_relmove=0.0049  d4_lin=0.0337 (id 0.0280)  | L_pred=0.179 trans=0.0009 d4=0.0012 mix=0.0014 glaw=0.0014  113s
+ep  5/30  F1=0.9407 p=0.967 r=0.916  sp_relmove=0.0300 (dir 0.022) 4c_relmove=0.0053  d4_lin=0.0300 (id 0.0293)  | L_pred=0.150 trans=0.0009 d4=0.0011 mix=0.0012 glaw=0.0015  113s
+ep  6/30  F1=0.9538 p=0.975 r=0.934  sp_relmove=0.0306 (dir 0.022) 4c_relmove=0.0055  d4_lin=0.0336 (id 0.0300)  | L_pred=0.133 trans=0.0009 d4=0.0011 mix=0.0012 glaw=0.0015  114s
+ep  7/30  F1=0.9644 p=0.977 r=0.953  sp_relmove=0.0305 (dir 0.023) 4c_relmove=0.0055  d4_lin=0.0325 (id 0.0299)  | L_pred=0.126 trans=0.0009 d4=0.0012 mix=0.0012 glaw=0.0016  114s
+ep  8/30  F1=0.9657 p=0.975 r=0.957  sp_relmove=0.0313 (dir 0.023) 4c_relmove=0.0057  d4_lin=0.0355 (id 0.0309)  | L_pred=0.128 trans=0.0009 d4=0.0012 mix=0.0013 glaw=0.0017  114s
+ep  9/30  F1=0.9627 p=0.982 r=0.944  sp_relmove=0.0315 (dir 0.023) 4c_relmove=0.0059  d4_lin=0.0304 (id 0.0310)  | L_pred=0.131 trans=0.0010 d4=0.0011 mix=0.0012 glaw=0.0017  114s
+ep 10/30  F1=0.9620 p=0.984 r=0.941  sp_relmove=0.0322 (dir 0.023) 4c_relmove=0.0061  d4_lin=0.0305 (id 0.0318)  | L_pred=0.133 trans=0.0010 d4=0.0011 mix=0.0012 glaw=0.0016  114s
+ep 11/30  F1=0.9570 p=0.991 r=0.925  sp_relmove=0.0330 (dir 0.023) 4c_relmove=0.0063  d4_lin=0.0353 (id 0.0327)  | L_pred=0.154 trans=0.0011 d4=0.0013 mix=0.0015 glaw=0.0018  114s
+ep 12/30  F1=0.9487 p=0.986 r=0.914  sp_relmove=0.0357 (dir 0.023) 4c_relmove=0.0070  d4_lin=0.0378 (id 0.0353)  | L_pred=0.182 trans=0.0012 d4=0.0013 mix=0.0014 glaw=0.0018  113s

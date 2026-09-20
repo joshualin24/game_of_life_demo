@@ -1,0 +1,3 @@
+device=mps  trainable params=63,376  lam={'trans': 25.0, 'd4': 15.0, 'mixed': 25.0, 'glaw': 0.1, 'pred_aug': 0.5}
+ep  1/25  F1=0.6544 p=0.846 r=0.534  subpatch_dir=0.019 magres=48.53  d4_lin=0.034 (id 0.033)  | L_pred=0.486 trans=0.001 d4=0.001 mix=0.001 glaw=0.0000  103s
+ep  2/25  F1=0.9189 p=0.966 r=0.876  subpatch_dir=0.021 magres=44.35  d4_lin=0.036 (id 0.036)  | L_pred=0.219 trans=0.001 d4=0.001 mix=0.001 glaw=0.0000  114s

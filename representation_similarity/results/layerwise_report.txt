@@ -1,0 +1,16 @@
+  V8
+    cnn        spread=+0.585  align_cnn=+1.000  step_cka=1.000  part_ratio=  1.07
+    tokens_in  spread=+0.957  align_cnn=+0.020  step_cka=0.833  part_ratio=  1.87
+    tf_L1      spread=+0.947  align_cnn=+0.011  step_cka=0.993  part_ratio=  2.15
+    tf_L2      spread=+0.942  align_cnn=+0.009  step_cka=0.999  part_ratio=  2.21
+    tf_L3      spread=+0.936  align_cnn=+0.017  step_cka=0.982  part_ratio=  2.41
+    tf_L4      spread=+0.937  align_cnn=+0.016  step_cka=0.995  part_ratio=  2.51
+  V10
+    cnn        spread=+0.642  align_cnn=+1.000  step_cka=1.000  part_ratio=  1.38
+    tokens_in  spread=+0.857  align_cnn=-0.137  step_cka=0.484  part_ratio=  1.58
+    tf_L1      spread=+0.857  align_cnn=-0.136  step_cka=0.998  part_ratio=  1.67
+    tf_L2      spread=+0.854  align_cnn=-0.130  step_cka=0.986  part_ratio=  1.95
+    tf_L3      spread=+0.857  align_cnn=-0.123  step_cka=0.990  part_ratio=  2.16
+    tf_L4      spread=+0.859  align_cnn=-0.122  step_cka=1.000  part_ratio=  2.18
+    tf_L5      spread=+0.859  align_cnn=-0.122  step_cka=1.000  part_ratio=  2.19
+    tf_L6      spread=+0.858  align_cnn=-0.122  step_cka=1.000  part_ratio=  2.20

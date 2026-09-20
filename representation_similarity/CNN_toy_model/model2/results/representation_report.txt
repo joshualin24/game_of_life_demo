@@ -1,0 +1,358 @@
+Last-layer (feat_can) invariance under D4 AND translation, Model 2
+====================================================================
+cos(vec(x), vec(g.x)) / cos(vec(x), vec(shift(x,d))).
+1.0000 = exactly the same vector. feat = pre-canonicalization,
+feat_can = post-canonicalization (the actual 'last layer' claim).
+Unlike Model 1, translation is now explicitly canonicalized too.
+
+####################################################################
+# Well-known patterns (including the ones broken in Model 1)
+####################################################################
+
+pattern: glider  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9905  |              1.0000             1.0000
+r180              1.0000         0.9905  |              1.0000             1.0000
+r270              1.0000         0.9905  |              1.0000             1.0000
+flip_v            1.0000         0.9905  |              1.0000             1.0000
+flip_h            1.0000         0.9905  |              1.0000             1.0000
+transp            1.0000         0.9994  |              1.0000             1.0000
+atransp           1.0000         0.9905  |              1.0000             1.0000
+pattern: glider  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9931  |              1.0000             1.0000
+(0,1)             1.0000         0.9924  |              1.0000             1.0000
+(3,-2)            1.0000         0.9912  |              1.0000             1.0000
+(-5,7)            1.0000         0.9905  |              1.0000             1.0000
+(10,15)           1.0000         0.9905  |              1.0000             1.0000
+(-12,-18)         1.0000         0.9905  |              1.0000             1.0000
+
+pattern: lwss  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9828  |              1.0000             1.0000
+r180              1.0000         0.9828  |              1.0000             1.0000
+r270              1.0000         0.9828  |              1.0000             1.0000
+flip_v            1.0000         0.9828  |              1.0000             1.0000
+flip_h            1.0000         0.9828  |              1.0000             1.0000
+transp            1.0000         0.9829  |              1.0000             1.0000
+atransp           1.0000         0.9828  |              1.0000             1.0000
+pattern: lwss  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9907  |              1.0000             1.0000
+(0,1)             1.0000         0.9913  |              1.0000             1.0000
+(3,-2)            1.0000         0.9865  |              1.0000             1.0000
+(-5,7)            1.0000         0.9828  |              1.0000             1.0000
+(10,15)           1.0000         0.9828  |              1.0000             1.0000
+(-12,-18)         1.0000         0.9828  |              1.0000             1.0000
+
+pattern: pulsar  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.7937  |              1.0000             1.0000
+r180              1.0000         0.7871  |              1.0000             1.0000
+r270              1.0000         0.7937  |              1.0000             1.0000
+flip_v            1.0000         0.7937  |              1.0000             1.0000
+flip_h            1.0000         0.7937  |              1.0000             1.0000
+transp            1.0000         1.0000  |              1.0000             1.0000
+atransp           1.0000         0.7871  |              1.0000             1.0000
+pattern: pulsar  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.7937  |              1.0000             1.0000
+(0,1)             1.0000         0.7937  |              1.0000             1.0000
+(3,-2)            1.0000         0.7786  |              1.0000             1.0000
+(-5,7)            1.0000         0.7738  |              1.0000             1.0000
+(10,15)           1.0000         0.7700  |              1.0000             0.7786
+(-12,-18)         1.0000         0.7700  |              1.0000             0.7700
+
+pattern: block  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9964  |              1.0000             1.0000
+r180              1.0000         0.9949  |              1.0000             1.0000
+r270              1.0000         0.9964  |              1.0000             1.0000
+flip_v            1.0000         0.9964  |              1.0000             1.0000
+flip_h            1.0000         0.9964  |              1.0000             1.0000
+transp            1.0000         1.0000  |              1.0000             1.0000
+atransp           1.0000         0.9949  |              1.0000             1.0000
+pattern: block  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9987  |              1.0000             1.0000
+(0,1)             1.0000         0.9987  |              1.0000             1.0000
+(3,-2)            1.0000         0.9941  |              1.0000             1.0000
+(-5,7)            1.0000         0.9939  |              1.0000             1.0000
+(10,15)           1.0000         0.9939  |              1.0000             1.0000
+(-12,-18)         1.0000         0.9939  |              1.0000             1.0000
+
+pattern: beehive  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9931  |              1.0000             1.0000
+r180              1.0000         0.9864  |              1.0000             1.0000
+r270              1.0000         0.9931  |              1.0000             1.0000
+flip_v            1.0000         0.9864  |              1.0000             1.0000
+flip_h            1.0000         1.0000  |              1.0000             1.0000
+transp            1.0000         0.9931  |              1.0000             1.0000
+atransp           1.0000         0.9931  |              1.0000             1.0000
+pattern: beehive  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9864  |              1.0000             1.0000
+(0,1)             1.0000         0.9924  |              1.0000             1.0000
+(3,-2)            1.0000         0.9876  |              1.0000             1.0000
+(-5,7)            1.0000         0.9865  |              1.0000             1.0000
+(10,15)           1.0000         0.9865  |              1.0000             1.0000
+(-12,-18)         1.0000         0.9865  |              1.0000             1.0000
+
+pattern: blinker  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9966  |              1.0000             1.0000
+r180              1.0000         0.9954  |              1.0000             1.0000
+r270              1.0000         0.9966  |              1.0000             1.0000
+flip_v            1.0000         0.9954  |              1.0000             1.0000
+flip_h            1.0000         0.9990  |              1.0000             1.0000
+transp            1.0000         0.9981  |              1.0000             1.0000
+atransp           1.0000         0.9959  |              1.0000             1.0000
+pattern: blinker  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9983  |              1.0000             1.0000
+(0,1)             1.0000         0.9990  |              1.0000             1.0000
+(3,-2)            1.0000         0.9954  |              1.0000             1.0000
+(-5,7)            1.0000         0.9954  |              1.0000             1.0000
+(10,15)           1.0000         0.9954  |              1.0000             1.0000
+(-12,-18)         1.0000         0.9954  |              1.0000             1.0000
+
+pattern: beacon  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9895  |              1.0000             1.0000
+r180              1.0000         0.9895  |              1.0000             1.0000
+r270              1.0000         0.9895  |              1.0000             1.0000
+flip_v            1.0000         0.9895  |              1.0000             1.0000
+flip_h            1.0000         0.9895  |              1.0000             1.0000
+transp            1.0000         1.0000  |              1.0000             1.0000
+atransp           1.0000         0.9895  |              1.0000             1.0000
+pattern: beacon  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9956  |              1.0000             1.0000
+(0,1)             1.0000         0.9956  |              1.0000             1.0000
+(3,-2)            1.0000         0.9899  |              1.0000             1.0000
+(-5,7)            1.0000         0.9895  |              1.0000             1.0000
+(10,15)           1.0000         0.9895  |              1.0000             1.0000
+(-12,-18)         1.0000         0.9895  |              1.0000             0.9895
+
+pattern: toad  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9921  |              1.0000             1.0000
+r180              1.0000         0.9920  |              1.0000             1.0000
+r270              1.0000         0.9921  |              1.0000             1.0000
+flip_v            1.0000         0.9926  |              1.0000             1.0000
+flip_h            1.0000         0.9920  |              1.0000             1.0000
+transp            1.0000         0.9937  |              1.0000             1.0000
+atransp           1.0000         0.9920  |              1.0000             1.0000
+pattern: toad  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9950  |              1.0000             1.0000
+(0,1)             1.0000         0.9949  |              1.0000             1.0000
+(3,-2)            1.0000         0.9933  |              1.0000             1.0000
+(-5,7)            1.0000         0.9920  |              1.0000             1.0000
+(10,15)           1.0000         0.9920  |              1.0000             1.0000
+(-12,-18)         1.0000         0.9920  |              1.0000             0.9920
+
+pattern: pentadecathlon  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9773  |              1.0000             1.0000
+r180              1.0000         0.9773  |              1.0000             1.0000
+r270              1.0000         0.9773  |              1.0000             1.0000
+flip_v            1.0000         0.9773  |              1.0000             1.0000
+flip_h            1.0000         0.9865  |              1.0000             1.0000
+transp            1.0000         0.9850  |              1.0000             1.0000
+atransp           1.0000         0.9773  |              1.0000             1.0000
+pattern: pentadecathlon  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9919  |              1.0000             1.0000
+(0,1)             1.0000         0.9990  |              1.0000             1.0000
+(3,-2)            1.0000         0.9773  |              1.0000             1.0000
+(-5,7)            1.0000         0.9773  |              1.0000             1.0000
+(10,15)           1.0000         0.9773  |              1.0000             1.0000
+(-12,-18)         1.0000         0.9773  |              1.0000             0.9773
+
+####################################################################
+# Random-density distributions
+####################################################################
+
+random density=0.1 seed=1  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.8240  |              1.0000             1.0000
+r180              1.0000         0.8227  |              1.0000             1.0000
+r270              1.0000         0.8240  |              1.0000             1.0000
+flip_v            1.0000         0.8592  |              1.0000             1.0000
+flip_h            1.0000         0.8466  |              1.0000             1.0000
+transp            1.0000         0.8434  |              1.0000             1.0000
+atransp           1.0000         0.8453  |              1.0000             1.0000
+random density=0.1 seed=1  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9311  |              1.0000             0.9311
+(0,1)             1.0000         0.9401  |              1.0000             0.8252
+(3,-2)            1.0000         0.8224  |              1.0000             0.8243
+(-5,7)            1.0000         0.8226  |              1.0000             0.8302
+(10,15)           1.0000         0.8392  |              1.0000             0.8328
+(-12,-18)         1.0000         0.8293  |              1.0000             0.8387
+
+random density=0.1 seed=2  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.8674  |              1.0000             1.0000
+r180              1.0000         0.8669  |              1.0000             1.0000
+r270              1.0000         0.8674  |              1.0000             1.0000
+flip_v            1.0000         0.8821  |              1.0000             1.0000
+flip_h            1.0000         0.8800  |              1.0000             1.0000
+transp            1.0000         0.8873  |              1.0000             1.0000
+atransp           1.0000         0.8744  |              1.0000             1.0000
+random density=0.1 seed=2  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.9471  |              1.0000             0.8674
+(0,1)             1.0000         0.9464  |              1.0000             0.9464
+(3,-2)            1.0000         0.8608  |              1.0000             0.8708
+(-5,7)            1.0000         0.8753  |              1.0000             0.8667
+(10,15)           1.0000         0.8664  |              1.0000             0.8841
+(-12,-18)         1.0000         0.8634  |              1.0000             0.8664
+
+random density=0.3 seed=1  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.1184  |              1.0000             1.0000
+r180              1.0000         0.1545  |              1.0000             1.0000
+r270              1.0000         0.1184  |              1.0000             1.0000
+flip_v            1.0000         0.1646  |              1.0000             1.0000
+flip_h            1.0000         0.4594  |              1.0000             1.0000
+transp            1.0000         0.1251  |              1.0000             1.0000
+atransp           1.0000         0.1526  |              1.0000             1.0000
+random density=0.3 seed=1  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.4295  |              1.0000             0.4295
+(0,1)             1.0000         0.4237  |              1.0000             0.4237
+(3,-2)            1.0000         0.1329  |              1.0000             0.1329
+(-5,7)            1.0000         0.1763  |              1.0000             0.1339
+(10,15)           1.0000         0.1548  |              1.0000             0.1376
+(-12,-18)         1.0000         0.1329  |              1.0000             0.1512
+
+random density=0.3 seed=2  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.1446  |              1.0000             1.0000
+r180              1.0000         0.1340  |              1.0000             1.0000
+r270              1.0000         0.1446  |              1.0000             1.0000
+flip_v            1.0000         0.1137  |              1.0000             1.0000
+flip_h            1.0000         0.1855  |              1.0000             1.0000
+transp            1.0000         0.1134  |              1.0000             1.0000
+atransp           1.0000         0.1267  |              1.0000             1.0000
+random density=0.3 seed=2  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.3787  |              1.0000             0.3787
+(0,1)             1.0000         0.4416  |              1.0000             1.0000
+(3,-2)            1.0000         0.1337  |              1.0000             0.1201
+(-5,7)            1.0000         0.1880  |              1.0000             0.1219
+(10,15)           1.0000         0.1419  |              1.0000             0.1585
+(-12,-18)         1.0000         0.1214  |              1.0000             0.1274
+
+random density=0.5 seed=1  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.2534  |              1.0000             1.0000
+r180              1.0000         0.1730  |              1.0000             1.0000
+r270              1.0000         0.2534  |              1.0000             1.0000
+flip_v            1.0000         0.2316  |              1.0000             1.0000
+flip_h            1.0000         0.3827  |              1.0000             1.0000
+transp            1.0000         0.2229  |              1.0000             1.0000
+atransp           1.0000         0.2393  |              1.0000             1.0000
+random density=0.5 seed=1  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.6334  |              1.0000             0.6334
+(0,1)             1.0000         0.6170  |              1.0000             0.6170
+(3,-2)            1.0000         0.2392  |              1.0000             0.2392
+(-5,7)            1.0000         0.2099  |              1.0000             0.2099
+(10,15)           1.0000         0.2399  |              1.0000             0.2098
+(-12,-18)         1.0000         0.1948  |              1.0000             0.1767
+
+random density=0.5 seed=2  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.2495  |              1.0000             1.0000
+r180              1.0000         0.2968  |              1.0000             1.0000
+r270              1.0000         0.2495  |              1.0000             1.0000
+flip_v            1.0000         0.2776  |              1.0000             1.0000
+flip_h            1.0000         0.3176  |              1.0000             1.0000
+transp            1.0000         0.1921  |              1.0000             1.0000
+atransp           1.0000         0.2781  |              1.0000             1.0000
+random density=0.5 seed=2  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.6333  |              1.0000             0.2304
+(0,1)             1.0000         0.5768  |              1.0000             0.2427
+(3,-2)            1.0000         0.2424  |              1.0000             0.2424
+(-5,7)            1.0000         0.2628  |              1.0000             0.2338
+(10,15)           1.0000         0.2194  |              1.0000             0.2342
+(-12,-18)         1.0000         0.2368  |              1.0000             0.2998
+
+random density=0.8 seed=1  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.6791  |              1.0000             1.0000
+r180              1.0000         0.6626  |              1.0000             1.0000
+r270              1.0000         0.6791  |              1.0000             1.0000
+flip_v            1.0000         0.6971  |              1.0000             1.0000
+flip_h            1.0000         0.6875  |              1.0000             1.0000
+transp            1.0000         0.6996  |              1.0000             1.0000
+atransp           1.0000         0.6619  |              1.0000             1.0000
+random density=0.8 seed=1  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.8592  |              1.0000             0.7006
+(0,1)             1.0000         0.8586  |              1.0000             0.8586
+(3,-2)            1.0000         0.6758  |              1.0000             0.6380
+(-5,7)            1.0000         0.6739  |              1.0000             0.7095
+(10,15)           1.0000         0.6672  |              1.0000             0.6588
+(-12,-18)         1.0000         0.6798  |              1.0000             0.6633
+
+random density=0.8 seed=2  -- D4
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.6406  |              1.0000             1.0000
+r180              1.0000         0.6664  |              1.0000             1.0000
+r270              1.0000         0.6406  |              1.0000             1.0000
+flip_v            1.0000         0.6611  |              1.0000             1.0000
+flip_h            1.0000         0.6793  |              1.0000             1.0000
+transp            1.0000         0.6601  |              1.0000             1.0000
+atransp           1.0000         0.6509  |              1.0000             1.0000
+random density=0.8 seed=2  -- translation (NEW in Model 2; Model 1 never canonicalized this)
+shift      feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+(0,0)             1.0000         1.0000  |              1.0000             1.0000
+(1,0)             1.0000         0.8447  |              1.0000             0.6603
+(0,1)             1.0000         0.8420  |              1.0000             0.6469
+(3,-2)            1.0000         0.6516  |              1.0000             0.6516
+(-5,7)            1.0000         0.6646  |              1.0000             0.6417
+(10,15)           1.0000         0.6431  |              1.0000             0.6663
+(-12,-18)         1.0000         0.6452  |              1.0000             0.6627
+
+Discriminability across 5 UNRELATED grids (feat_can, same-placement each):
+  flattened cos: mean=0.5393  min=0.2090  max=0.9903
+  pooled    cos: mean=0.9655  min=0.9309  max=1.0000

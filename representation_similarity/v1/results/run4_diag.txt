@@ -1,0 +1,37 @@
+loaded /Users/Hao-Yuan/game_of_life_demo/.claude/worktrees/representation-similarity/representation_similarity/v1/checkpoints/best.pt  (epoch 16)
+
+sub-patch translation:
+  rel_move  = 0.0508   (0 => psi invariant to sub-patch shift)
+  dir_cons  = 0.0250   (1 => single content-independent direction)
+  delta_fit = 1.0008   (residual of learned delta vs actual displacement)
+4-cell translation:
+  rel_move  = 0.0110
+
+D4:
+  r          id_resid   learned   bestlin
+  r90          0.0487    0.0387    0.0352
+  r180         0.0481    0.0391    0.0350
+  r270         0.0488    0.0514    0.0350
+  flip_v       0.0485    0.0396    0.0352
+  flip_h       0.0460    0.0418    0.0339
+  transp       0.0435    0.0424    0.0340
+  atransp      0.0432    0.0374    0.0344
+  mean         0.0467    0.0415    0.0347
+
+accuracy:  F1=0.9990  prec=0.9998  rec=0.9981
+
+=== discriminability / collapse check (1200 val grids) ===
+                  ||psi||   unrel_dist   sym/unrel(sp)  sym/unrel(d4)  mean_cos  eff_dim
+raw V8            11.335    3.268        0.377          0.370          0.955     2.4
+v1 adapter ep16    4.762    3.556        0.064          0.062          0.777     1.8
+
+readings:
+- accuracy fully maintained (F1 0.999 vs V8 ~0.9985); rec 0.998
+- a symmetry transform moves psi ~6x less than an unrelated grid does (0.06 vs 0.37 raw)
+- NOT a collapse: unrelated-pair L2 distance held (3.27 -> 3.56, up); directional
+  spread increased (mean pairwise cosine 0.955 -> 0.777)
+- ||psi|| shrank 11.3 -> 4.8: the large uninformative shared/DC component removed
+- FLAG: pooled psi effective dim 2.4 -> 1.8 -- it is now a compact symmetry-clean
+  summary; rich content still lives in the token rep z that the decoder reads
+- mechanism is invariance (dir_cons ~0, learned delta ~0), not structured displacement;
+  learned rho(r) now modestly beats identity on D4 (0.042 vs 0.047) but bestlin 0.035

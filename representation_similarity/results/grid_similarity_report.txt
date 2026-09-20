@@ -1,0 +1,47 @@
+### Probe A — same-future pairs  (cos: A~B doomed-cell pair | A~unrelated)
+    V8 cnn        same_future=1.0000   unrelated=0.9998   gap=+0.0002
+    V8 tokens_in  same_future=1.0000   unrelated=0.9991   gap=+0.0009
+    V8 tf_L1      same_future=1.0000   unrelated=0.9983   gap=+0.0017
+    V8 tf_L2      same_future=1.0000   unrelated=0.9982   gap=+0.0018
+    V8 tf_L3      same_future=1.0000   unrelated=0.9976   gap=+0.0024
+    V8 tf_L4      same_future=1.0000   unrelated=0.9974   gap=+0.0026
+   V10 cnn        same_future=1.0000   unrelated=0.9996   gap=+0.0004
+   V10 tokens_in  same_future=1.0000   unrelated=0.9978   gap=+0.0022
+   V10 tf_L1      same_future=1.0000   unrelated=0.9972   gap=+0.0028
+   V10 tf_L2      same_future=1.0000   unrelated=0.9963   gap=+0.0037
+   V10 tf_L3      same_future=1.0000   unrelated=0.9958   gap=+0.0042
+   V10 tf_L4      same_future=1.0000   unrelated=0.9956   gap=+0.0044
+   V10 tf_L5      same_future=1.0000   unrelated=0.9955   gap=+0.0045
+   V10 tf_L6      same_future=1.0000   unrelated=0.9953   gap=+0.0047
+
+### Probe B — phase clustering  (within-pattern cos | between-pattern cos)
+    V8 cnn        within=0.9990   between=0.9987   sep=+0.0003
+    V8 tokens_in  within=0.9996   between=0.9996   sep=+0.0001
+    V8 tf_L1      within=0.9992   between=0.9991   sep=+0.0001
+    V8 tf_L2      within=0.9991   between=0.9990   sep=+0.0001
+    V8 tf_L3      within=0.9987   between=0.9986   sep=+0.0000
+    V8 tf_L4      within=0.9985   between=0.9985   sep=+0.0000
+   V10 cnn        within=0.9966   between=0.9916   sep=+0.0050
+   V10 tokens_in  within=0.9989   between=0.9884   sep=+0.0105
+   V10 tf_L1      within=0.9989   between=0.9865   sep=+0.0124
+   V10 tf_L2      within=0.9988   between=0.9855   sep=+0.0133
+   V10 tf_L3      within=0.9988   between=0.9851   sep=+0.0138
+   V10 tf_L4      within=0.9988   between=0.9849   sep=+0.0139
+   V10 tf_L5      within=0.9988   between=0.9848   sep=+0.0140
+   V10 tf_L6      within=0.9988   between=0.9847   sep=+0.0141
+
+### Probe C — corr(|Δdensity|, cosine sim) over random grids  (want negative)
+    V8 cnn        r=-0.8193
+    V8 tokens_in  r=-0.8281
+    V8 tf_L1      r=-0.8188
+    V8 tf_L2      r=-0.8212
+    V8 tf_L3      r=-0.8095
+    V8 tf_L4      r=-0.8059
+   V10 cnn        r=-0.9051
+   V10 tokens_in  r=-0.6069
+   V10 tf_L1      r=-0.5793
+   V10 tf_L2      r=-0.5357
+   V10 tf_L3      r=-0.5278
+   V10 tf_L4      r=-0.5239
+   V10 tf_L5      r=-0.5214
+   V10 tf_L6      r=-0.5201

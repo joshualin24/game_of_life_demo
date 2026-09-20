@@ -1,0 +1,5 @@
+# regenerable caches — keep figures/reports/json, drop the heavy arrays
+data/
+results/*.npz
+__pycache__/
+checkpoints/
