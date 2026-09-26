@@ -1,0 +1,204 @@
+Last-layer (feat_can) invariance under D4 transforms, Model 1 v2
+=================================================================
+cos(vec(x), vec(g.x)) for each of the 8 D4 elements g.
+1.0000 = exactly the same vector. feat = pre-canonicalization,
+feat_can = post-canonicalization (the actual 'last layer' claim).
+
+#################################################################
+# Well-known patterns
+#################################################################
+
+pattern: glider
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9917  |              1.0000             1.0000
+r180              1.0000         0.9917  |              1.0000             1.0000
+r270              1.0000         0.9917  |              1.0000             1.0000
+flip_v            1.0000         0.9917  |              1.0000             1.0000
+flip_h            1.0000         0.9917  |              1.0000             1.0000
+transp            1.0000         0.9994  |              1.0000             1.0000
+atransp           1.0000         0.9917  |              1.0000             1.0000
+
+pattern: lwss
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9844  |              1.0000             1.0000
+r180              1.0000         0.9844  |              1.0000             1.0000
+r270              1.0000         0.9844  |              1.0000             1.0000
+flip_v            1.0000         0.9844  |              1.0000             1.0000
+flip_h            1.0000         0.9844  |              1.0000             1.0000
+transp            1.0000         0.9844  |              1.0000             1.0000
+atransp           1.0000         0.9844  |              1.0000             1.0000
+
+pattern: pulsar
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.8410  |              1.0000             0.8410
+r180              1.0000         0.8354  |              1.0000             0.8354
+r270              1.0000         0.8410  |              1.0000             0.8410
+flip_v            1.0000         0.8410  |              1.0000             0.8410
+flip_h            1.0000         0.8410  |              1.0000             0.8410
+transp            1.0000         1.0000  |              1.0000             1.0000
+atransp           1.0000         0.8354  |              1.0000             0.8354
+
+pattern: block
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9966  |              1.0000             0.9966
+r180              1.0000         0.9952  |              1.0000             0.9952
+r270              1.0000         0.9966  |              1.0000             0.9966
+flip_v            1.0000         0.9966  |              1.0000             0.9966
+flip_h            1.0000         0.9966  |              1.0000             0.9966
+transp            1.0000         1.0000  |              1.0000             1.0000
+atransp           1.0000         0.9952  |              1.0000             0.9952
+
+pattern: beehive
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9948  |              1.0000             0.9898
+r180              1.0000         0.9898  |              1.0000             0.9898
+r270              1.0000         0.9948  |              1.0000             1.0000
+flip_v            1.0000         0.9898  |              1.0000             0.9898
+flip_h            1.0000         1.0000  |              1.0000             1.0000
+transp            1.0000         0.9948  |              1.0000             0.9898
+atransp           1.0000         0.9948  |              1.0000             1.0000
+
+pattern: blinker
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9966  |              1.0000             0.9954
+r180              1.0000         0.9954  |              1.0000             0.9954
+r270              1.0000         0.9966  |              1.0000             1.0000
+flip_v            1.0000         0.9954  |              1.0000             0.9954
+flip_h            1.0000         0.9991  |              1.0000             0.9991
+transp            1.0000         0.9981  |              1.0000             0.9954
+atransp           1.0000         0.9960  |              1.0000             0.9991
+
+pattern: beacon
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9899  |              1.0000             1.0000
+r180              1.0000         0.9899  |              1.0000             0.9899
+r270              1.0000         0.9899  |              1.0000             0.9899
+flip_v            1.0000         0.9899  |              1.0000             1.0000
+flip_h            1.0000         0.9899  |              1.0000             0.9899
+transp            1.0000         1.0000  |              1.0000             1.0000
+atransp           1.0000         0.9899  |              1.0000             0.9899
+
+pattern: toad
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9925  |              1.0000             0.9924
+r180              1.0000         0.9924  |              1.0000             0.9924
+r270              1.0000         0.9925  |              1.0000             1.0000
+flip_v            1.0000         0.9930  |              1.0000             1.0000
+flip_h            1.0000         0.9924  |              1.0000             0.9924
+transp            1.0000         0.9940  |              1.0000             1.0000
+atransp           1.0000         0.9924  |              1.0000             0.9924
+
+pattern: pentadecathlon
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.9781  |              1.0000             0.9781
+r180              1.0000         0.9781  |              1.0000             0.9781
+r270              1.0000         0.9781  |              1.0000             1.0000
+flip_v            1.0000         0.9781  |              1.0000             0.9781
+flip_h            1.0000         0.9871  |              1.0000             0.9871
+transp            1.0000         0.9855  |              1.0000             0.9781
+atransp           1.0000         0.9781  |              1.0000             0.9871
+
+#################################################################
+# Random-density distributions
+#################################################################
+
+random density=0.1 seed=1
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.8249  |              1.0000             1.0000
+r180              1.0000         0.8238  |              1.0000             1.0000
+r270              1.0000         0.8249  |              1.0000             1.0000
+flip_v            1.0000         0.8596  |              1.0000             1.0000
+flip_h            1.0000         0.8464  |              1.0000             1.0000
+transp            1.0000         0.8439  |              1.0000             1.0000
+atransp           1.0000         0.8463  |              1.0000             1.0000
+
+random density=0.1 seed=2
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.8664  |              1.0000             1.0000
+r180              1.0000         0.8657  |              1.0000             1.0000
+r270              1.0000         0.8664  |              1.0000             1.0000
+flip_v            1.0000         0.8813  |              1.0000             1.0000
+flip_h            1.0000         0.8784  |              1.0000             1.0000
+transp            1.0000         0.8860  |              1.0000             1.0000
+atransp           1.0000         0.8740  |              1.0000             1.0000
+
+random density=0.3 seed=1
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.1212  |              1.0000             1.0000
+r180              1.0000         0.1641  |              1.0000             1.0000
+r270              1.0000         0.1212  |              1.0000             1.0000
+flip_v            1.0000         0.1763  |              1.0000             1.0000
+flip_h            1.0000         0.4623  |              1.0000             1.0000
+transp            1.0000         0.1266  |              1.0000             1.0000
+atransp           1.0000         0.1524  |              1.0000             1.0000
+
+random density=0.3 seed=2
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.1491  |              1.0000             1.0000
+r180              1.0000         0.1371  |              1.0000             1.0000
+r270              1.0000         0.1491  |              1.0000             1.0000
+flip_v            1.0000         0.1181  |              1.0000             1.0000
+flip_h            1.0000         0.1902  |              1.0000             1.0000
+transp            1.0000         0.1179  |              1.0000             1.0000
+atransp           1.0000         0.1305  |              1.0000             1.0000
+
+random density=0.5 seed=1
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.2527  |              1.0000             1.0000
+r180              1.0000         0.1735  |              1.0000             1.0000
+r270              1.0000         0.2527  |              1.0000             1.0000
+flip_v            1.0000         0.2318  |              1.0000             1.0000
+flip_h            1.0000         0.3850  |              1.0000             1.0000
+transp            1.0000         0.2199  |              1.0000             1.0000
+atransp           1.0000         0.2413  |              1.0000             1.0000
+
+random density=0.5 seed=2
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.2473  |              1.0000             1.0000
+r180              1.0000         0.2969  |              1.0000             1.0000
+r270              1.0000         0.2473  |              1.0000             1.0000
+flip_v            1.0000         0.2799  |              1.0000             1.0000
+flip_h            1.0000         0.3226  |              1.0000             1.0000
+transp            1.0000         0.1944  |              1.0000             1.0000
+atransp           1.0000         0.2789  |              1.0000             1.0000
+
+random density=0.8 seed=1
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.6812  |              1.0000             1.0000
+r180              1.0000         0.6641  |              1.0000             1.0000
+r270              1.0000         0.6812  |              1.0000             1.0000
+flip_v            1.0000         0.7005  |              1.0000             1.0000
+flip_h            1.0000         0.6909  |              1.0000             1.0000
+transp            1.0000         0.7006  |              1.0000             1.0000
+atransp           1.0000         0.6640  |              1.0000             1.0000
+
+random density=0.8 seed=2
+op         feat pool cos  feat flat cos  |   feat_can pool cos  feat_can flat cos
+e                 1.0000         1.0000  |              1.0000             1.0000
+r90               1.0000         0.6419  |              1.0000             1.0000
+r180              1.0000         0.6675  |              1.0000             1.0000
+r270              1.0000         0.6419  |              1.0000             1.0000
+flip_v            1.0000         0.6637  |              1.0000             1.0000
+flip_h            1.0000         0.6827  |              1.0000             1.0000
+transp            1.0000         0.6624  |              1.0000             1.0000
+atransp           1.0000         0.6529  |              1.0000             1.0000
+
+Discriminability across 5 UNRELATED grids (feat_can, same-orientation each):
+  flattened cos: mean=0.5506  min=0.2070  max=0.9881
+  pooled    cos: mean=0.9670  min=0.9411  max=1.0000

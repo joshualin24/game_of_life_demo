@@ -140,6 +140,73 @@ boundary of Model 2's translation canonicalization, not a further bug to
 chase -- worth remembering if a later model tries to extend invariance
 claims to dense inputs.
 
+## Perturbation sensitivity of the representation
+
+`analysis_perturbation.py` adapts this repo's classic perturbation study
+(`../../perturbation.py`: flip one cell, measure output-trajectory
+divergence) to `feat_can` instead: flip every one of the 1600 cells, one at
+a time, and measure how much the last-layer representation moves. Motivated
+by a specific hypothesis: `canonical_transform` picks its D4 element and
+shift via **argmax over 8 discrete candidates** (see `net.py`), and argmax
+is a decision boundary -- a perturbation that flips which candidate wins
+should cause a discontinuous jump in `feat_can`, disproportionate to a
+single-cell input change. Confirmed, cleanly, and it splits into two very
+different regimes:
+
+| stimulus | mean cos_sim (1600 flips) | branch (gidx) changes | pattern |
+|---|---|---|---|
+| random_d0.1 (153 alive) | 0.9992 | 1/1600 | near-perfect, ONE sharp outlier |
+| random_d0.3 (474 alive) | 0.9967 | 0/1600 | near-perfect, no outliers |
+| random_d0.5 (799 alive) | 0.9977 | 2/1600 | near-perfect, TWO sharp adjacent outliers (cos as low as 0.236) |
+| glider (5 alive) | 0.9922 | 1471/1600 (92%) | mild, blocky spatial pattern |
+| block (4 alive) | 0.9951 | 1410/1600 (88%) | mild |
+| pulsar (48 alive) | **0.7871** | 1390/1600 (87%) | **widespread, substantial** (min 0.726) |
+
+**Random-density grids: smooth almost everywhere, with rare, sharp, exactly
+localized discontinuities.** Visually (`results/perturbation_maps_random_d0.5.png`):
+the sensitivity map is uniformly near-black (no representation change) except
+at 2 adjacent pixels that spike to cos=0.24 -- and those 2 pixels are
+*exactly* the 2 cells where `gidx` changed. For a large, generic (non-
+symmetric) configuration, the centroid is stable under one flip out of
+hundreds of cells, so the argmax rarely crosses a boundary -- but when it
+does, the jump is sharp and large, not gradual.
+
+**Small asymmetric patterns (glider, block): branch changes constantly, but
+barely matters.** These have so few alive cells that a single background
+flip meaningfully shifts the centroid (an extra cell is a large fraction of
+5, versus a rounding error against hundreds), so the argmax winner changes
+for ~90% of flips -- but the resulting `feat_can` barely moves (cos stays
+>=0.987), because a tiny object doesn't have much structure for a different
+discrete orientation label to meaningfully reorganize. The spatial pattern
+(`results/perturbation_maps_glider.png`) is visibly blocky/piecewise rather
+than smooth, reflecting the bounding-box criteria partitioning the grid
+into regions by which candidate wins there.
+
+**Pulsar is the interesting middle case, and it's the same root cause as
+its Model 1 problem.** It's large enough (48 cells, 13x13 footprint) that a
+branch change meaningfully reorients real structure, AND -- being highly
+symmetric -- it sits very close to a decision-boundary tie almost
+everywhere, so ~87% of flips cross it. Net effect: representation
+similarity around 0.79 on average from a *single-cell* perturbation, the
+weakest robustness of anything tested. Model 2 made pulsar's representation
+exactly correct under *exact* D4/translation transforms, but did not (and
+structurally cannot, with a discrete argmax) make it robust to *generic*
+perturbations near that same symmetry.
+
+**Reading:** discrete argmax-based canonicalization is not something to
+"fix" here -- discontinuities at decision boundaries are inherent to
+choosing among finitely many candidates, the same way a nearest-class
+decision boundary is inherent to any classifier. What's worth taking away:
+(1) representation robustness under generic perturbation is a *different*
+property from exact invariance under *exact* group transforms, and Model 2
+only ever targeted the latter; (2) proximity to a symmetric configuration
+predicts fragility under perturbation, which is a testable, useful
+diagnostic for any future model in this series; (3) this is a genuine
+research finding in its own right, structurally analogous to
+`../../perturbation.py`'s original study of GoL's own sensitivity to
+perturbation, just one level up -- in the *learned representation* instead
+of the physical dynamics.
+
 ## Files
 
 Self-contained, same convention as `../model1/`: `IsotropicConv2d`,
