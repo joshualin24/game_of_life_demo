@@ -214,6 +214,22 @@ across the board), rather than reducing fragility in general. The
 pulsar win is real and matches the original motivation, but it's a
 genuinely mixed result, not a validated win.
 
+**CORRECTION, from the Model 4 ablation (`../model4/notes.md`):** the
+comparison above confounds two things Model 2 and Model 3 changed at
+once -- the shift mechanism (fresh-per-candidate vs single upfront shift)
+and the rotation-scoring criterion (extremes vs moments). Model 4 isolates
+them: it's Model 3's exact shift mechanism paired with Model 1/2's
+extreme-based scoring. Result: **Model 4 reproduces pulsar's improved
+0.8504 exactly**, and **does NOT reproduce the `random_d0.1` regression**
+(stays at 0.9991, matching Model 2). So the actual decomposition is:
+pulsar's improvement came from the shift-mechanism fix, not from switching
+to quadrupole moments; the `random_d0.1` regression is specifically caused
+by moments (few alive cells -> few terms in the sum -> easier ties by
+chance), not the shift change. The quadrupole swap, isolated, is a net
+negative on this evidence (fixes nothing extremes-with-the-same-shift
+didn't already fix, and adds the sparse-grid regression) -- see
+`../model4/notes.md` for the full 3-way table.
+
 ## Files
 
 Same self-containment convention as Model 1/2: `IsotropicConv2d`,

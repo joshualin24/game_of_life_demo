@@ -6,7 +6,7 @@ tiny CNNs built specifically so that rotation, reflection, and translation
 are handled *explicitly and inspectably*, to study what those symmetries do
 to internal layer representations.
 
-Three models so far, each in its own self-contained folder (own `net.py`,
+Four models so far, each in its own self-contained folder (own `net.py`,
 `data.py`, `train.py`, `notes.md`, `results/`, `checkpoints/` — the last is
 gitignored, regenerate via `train.py`).
 
@@ -164,27 +164,69 @@ very moments being computed on recentered content.
   fixed. But a sparse random grid (density 0.1) newly regressed (0.945,
   worse than Model 2's 0.999), plausibly because fewer alive cells means
   the quadrupole sum has fewer terms and ties more easily by chance — the
-  same mechanism that makes pulsar fragile. **Reading: quadrupole moments
-  don't reduce perturbation fragility in general — they trade which
-  configurations are fragile (symmetric and sparse) for others, rather
-  than fixing the underlying argmax-decision-boundary issue.**
+  same mechanism that makes pulsar fragile.
+- **Important caveat, resolved by Model 4 below:** this comparison
+  confounds two things that changed at once (the shift mechanism *and* the
+  scoring criterion). Model 4 isolates them and shows the pulsar
+  improvement actually came from the shift fix, not from quadrupole
+  moments — see Model 4's entry.
 
 Full design history (both bugs, the exact math, and the final numbers):
 `model3/notes.md`.
+
+## Model 4 — `model4/`: controlled ablation (extremes + shift-first)
+
+**Why:** Model 2 and Model 3 differ in two dimensions at once — the
+translation mechanism (fresh shift per rotation candidate vs a single
+upfront shift) and the rotation-scoring criterion (extremes vs moments) —
+so Model 3's perturbation comparison was never a clean test of either
+alone. Model 4 = Model 3's shift mechanism (`canonical_shift`, copied
+verbatim) + Model 1/2's extreme-based rotation scoring, isolating the
+scoring criterion as the only remaining variable.
+
+**The 3-way comparison, mean `feat_can` cosine similarity under all 1600
+single-cell flips:**
+
+| stimulus | Model 2 (extremes, old shift) | Model 3 (quadrupole, new shift) | Model 4 (extremes, new shift) |
+|---|---|---|---|
+| pulsar | 0.7871 | 0.8504 | **0.8504 — identical to Model 3** |
+| random d0.1 | 0.9992 (1/1600 branch chg) | 0.9448 (612/1600) | **0.9991 (2/1600) — matches Model 2** |
+| random d0.3 | 0.9967 (0/1600) | 0.9969 (0/1600) | 0.9948 (4/1600) |
+
+**Decisive result:** pulsar's improvement came entirely from the
+shift-mechanism fix — Model 4 reproduces Model 3's exact 0.8504 using
+extremes, not moments. The `random_d0.1` regression is specific to
+quadrupole/cubic moments — Model 4 doesn't show it at all, confirming the
+"few alive cells → few terms in the moment sum → easier accidental ties"
+mechanism. A smaller new finding: Model 4 shows a handful of *new*
+decision-boundary crossings at d0.3/d0.5 that neither Model 2 nor Model 3
+show, with catastrophic cosine drops when they occur (as low as 0.164) —
+the shift-mechanism change isn't entirely free even paired with the
+original scoring criterion.
+
+**Takeaway:** the quadrupole swap, isolated from the shift fix, is a net
+negative on this evidence — it doesn't fix anything the shift fix alone
+didn't already fix, and it adds a new sparse-grid regression. The
+translation-canonicalization *mechanism* and the rotation *scoring
+criterion* are separable design choices with their own, largely
+independent effects — worth remembering before crediting any future result
+to the wrong one.
+
+Full design history and all numbers: `model4/notes.md`.
 
 ## Reproducing
 
 Each model folder is self-contained (`pytorch-env` conda environment):
 
 ```bash
-cd model1  # or model2 / model3
+cd model1  # or model2 / model3 / model4
 python sanity_check.py              # architectural guarantees, must pass before training
 python train.py --epochs 150        # model1: v1 (single-pattern data only)
 python train_v2.py --epochs 60      # model1: v2 (fixes the density gap) -- model1 only
-python train.py --epochs 60         # model2/model3: mixed data + scheduled sampling from the start
-python visualize.py                 # rollout / equivariance GIFs, feat_can comparison (model2/3)
-python analysis_representation.py   # D4 (+ translation, model2/3) invariance report
-python analysis_perturbation.py     # model2/model3: single-cell-flip sensitivity maps
+python train.py --epochs 60         # model2/3/4: mixed data + scheduled sampling from the start
+python visualize.py                 # rollout / equivariance GIFs, feat_can comparison -- model1/2 only
+python analysis_representation.py   # D4 (+ translation) invariance report -- model1/2 only
+python analysis_perturbation.py     # single-cell-flip sensitivity maps -- model2/3/4
 ```
 
 ## What's next (not yet done)
@@ -192,14 +234,17 @@ python analysis_perturbation.py     # model2/model3: single-cell-flip sensitivit
 - Extend the perturbation study to multi-cell / "move" perturbations,
   matching `../../perturbation_move.py`'s convention.
 - A model whose canonicalization is robust to generic perturbation, not
-  just exact under exact group transforms. Model 3 shows that swapping the
-  scoring statistic alone (extremes -> moments) doesn't get there — it
-  moves the fragility around rather than removing it. The argmax's
-  decision-boundary nature itself (picking a winner from finitely many
-  discrete candidates) seems like the actual thing that would need to
-  change, not just which statistic breaks the tie.
-- Investigate the `random_d0.1` regression found in Model 3 more directly
-  (the "few terms -> easier ties" explanation is plausible but not
-  independently verified).
+  just exact under exact group transforms. The Model 3/4 ablation shows
+  that swapping the scoring statistic alone (extremes -> moments) doesn't
+  get there — it moves the fragility around (trading pulsar for sparse
+  grids) rather than removing it, and the shift-mechanism choice matters
+  at least as much as the scoring criterion did. The argmax's decision-
+  boundary nature itself (picking a winner from finitely many discrete
+  candidates) seems like the actual thing that would need to change, not
+  just which statistic breaks the tie or how translation is handled.
+- Investigate Model 4's new d0.3/d0.5 decision-boundary crossings (absent
+  in both Model 2 and Model 3) more directly -- the "different candidates
+  being compared" explanation in `model4/notes.md` is plausible but not
+  independently verified.
 - Compare these toy models' representations directly against V8/V10's,
   using the shared tooling in `../common.py` / `../extract.py`.
