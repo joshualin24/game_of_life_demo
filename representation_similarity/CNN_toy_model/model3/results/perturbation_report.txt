@@ -1,0 +1,48 @@
+Perturbation sensitivity of feat_can (single-cell flips), Model 3
+====================================================================
+
+glider  (alive cells at t=0: 5)
+  cos_sim over all 1600 single-cell flips: mean=0.9892 min=0.9547 max=0.9987
+  canonicalization branch (gidx) changed for 1429/1600 flips
+    cos_sim WHEN branch changed:     mean=0.9892 min=0.9547
+    cos_sim when branch did NOT change: mean=0.9891 min=0.9806
+  cos_sim on alive cells (flip = kill):    mean=0.9954
+  cos_sim on dead cells (flip = birth):    mean=0.9892
+
+pulsar  (alive cells at t=0: 48)
+  cos_sim over all 1600 single-cell flips: mean=0.8504 min=0.6229 max=0.9999
+  canonicalization branch (gidx) changed for 1377/1600 flips
+    cos_sim WHEN branch changed:     mean=0.8488 min=0.6229
+    cos_sim when branch did NOT change: mean=0.8596 min=0.6387
+  cos_sim on alive cells (flip = kill):    mean=0.7190
+  cos_sim on dead cells (flip = birth):    mean=0.8544
+
+block  (alive cells at t=0: 4)
+  cos_sim over all 1600 single-cell flips: mean=0.9954 min=0.9943 max=0.9995
+  canonicalization branch (gidx) changed for 1369/1600 flips
+    cos_sim WHEN branch changed:     mean=0.9954 min=0.9943
+    cos_sim when branch did NOT change: mean=0.9953 min=0.9943
+  cos_sim on alive cells (flip = kill):    mean=0.9995
+  cos_sim on dead cells (flip = birth):    mean=0.9954
+
+random_d0.1  (alive cells at t=0: 153)
+  cos_sim over all 1600 single-cell flips: mean=0.9448 min=0.8367 max=0.9999
+  canonicalization branch (gidx) changed for 612/1600 flips
+    cos_sim WHEN branch changed:     mean=0.8570 min=0.8367
+    cos_sim when branch did NOT change: mean=0.9993 min=0.9927
+  cos_sim on alive cells (flip = kill):    mean=0.9457
+  cos_sim on dead cells (flip = birth):    mean=0.9447
+
+random_d0.3  (alive cells at t=0: 474)
+  cos_sim over all 1600 single-cell flips: mean=0.9969 min=0.9473 max=0.9999
+  canonicalization branch (gidx) changed for 0/1600 flips
+    cos_sim when branch did NOT change: mean=0.9969 min=0.9473
+  cos_sim on alive cells (flip = kill):    mean=0.9972
+  cos_sim on dead cells (flip = birth):    mean=0.9967
+
+random_d0.5  (alive cells at t=0: 799)
+  cos_sim over all 1600 single-cell flips: mean=0.9987 min=0.9889 max=1.0000
+  canonicalization branch (gidx) changed for 0/1600 flips
+    cos_sim when branch did NOT change: mean=0.9987 min=0.9889
+  cos_sim on alive cells (flip = kill):    mean=0.9987
+  cos_sim on dead cells (flip = birth):    mean=0.9987
