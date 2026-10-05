@@ -1,0 +1,48 @@
+Perturbation sensitivity of feat_can (single-cell flips), Model 5 (own predicted pose)
+======================================================================================
+
+glider  (alive cells at t=0: 5, gidx_used=7)
+  cos_sim over all 1600 single-cell flips: mean=0.9543 min=0.9464 max=0.9972
+  predicted-pose branch (gidx_used) changed for 1570/1600 flips
+    cos_sim WHEN branch changed:     mean=0.9541 min=0.9464
+    cos_sim when branch did NOT change: mean=0.9658 min=0.9490
+  cos_sim on alive cells (flip = kill):    mean=0.9859
+  cos_sim on dead cells (flip = birth):    mean=0.9542
+
+pulsar  (alive cells at t=0: 48, gidx_used=0)
+  cos_sim over all 1600 single-cell flips: mean=0.8479 min=0.7106 max=0.9993
+  predicted-pose branch (gidx_used) changed for 0/1600 flips
+    cos_sim when branch did NOT change: mean=0.8479 min=0.7106
+  cos_sim on alive cells (flip = kill):    mean=0.9122
+  cos_sim on dead cells (flip = birth):    mean=0.8460
+
+block  (alive cells at t=0: 4, gidx_used=0)
+  cos_sim over all 1600 single-cell flips: mean=0.9685 min=0.9637 max=0.9982
+  predicted-pose branch (gidx_used) changed for 1575/1600 flips
+    cos_sim WHEN branch changed:     mean=0.9683 min=0.9637
+    cos_sim when branch did NOT change: mean=0.9821 min=0.9684
+  cos_sim on alive cells (flip = kill):    mean=0.9910
+  cos_sim on dead cells (flip = birth):    mean=0.9684
+
+random_d0.1  (alive cells at t=0: 153, gidx_used=4)
+  cos_sim over all 1600 single-cell flips: mean=0.9969 min=0.9820 max=0.9997
+  predicted-pose branch (gidx_used) changed for 0/1600 flips
+    cos_sim when branch did NOT change: mean=0.9969 min=0.9820
+  cos_sim on alive cells (flip = kill):    mean=0.9971
+  cos_sim on dead cells (flip = birth):    mean=0.9969
+
+random_d0.3  (alive cells at t=0: 474, gidx_used=1)
+  cos_sim over all 1600 single-cell flips: mean=0.8390 min=0.3397 max=1.0000
+  predicted-pose branch (gidx_used) changed for 500/1600 flips
+    cos_sim WHEN branch changed:     mean=0.4876 min=0.3397
+    cos_sim when branch did NOT change: mean=0.9988 min=0.9935
+  cos_sim on alive cells (flip = kill):    mean=0.8232
+  cos_sim on dead cells (flip = birth):    mean=0.8457
+
+random_d0.5  (alive cells at t=0: 799, gidx_used=3)
+  cos_sim over all 1600 single-cell flips: mean=0.8584 min=0.5907 max=0.9999
+  predicted-pose branch (gidx_used) changed for 558/1600 flips
+    cos_sim WHEN branch changed:     mean=0.5951 min=0.5907
+    cos_sim when branch did NOT change: mean=0.9995 min=0.9984
+  cos_sim on alive cells (flip = kill):    mean=0.8683
+  cos_sim on dead cells (flip = birth):    mean=0.8486
